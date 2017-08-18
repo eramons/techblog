@@ -1,4 +1,4 @@
-baseurl = "eramons.github.io/techblog/"  # End your URL with a `/` trailing slash.
+baseurl = "https://eramons.github.io/techblog/"  # End your URL with a `/` trailing slash.
 publishDir = "docs"
 title = "Small Technical Blog"
 copyright = "&copy; 2017 E. Ramon"
