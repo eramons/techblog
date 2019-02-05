@@ -5,7 +5,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/post/asuschromebook_debian/</loc>
+      <loc>http://localhost:1313/techblog/post/asuschromebook_debian/</loc>
       <lastmod>2018-12-04T10:00:00+02:00</lastmod>
     </url>
     
@@ -14,7 +14,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/post/rock2_debian/</loc>
+      <loc>http://localhost:1313/techblog/post/rock2_debian/</loc>
       <lastmod>2017-07-27T15:03:58+02:00</lastmod>
     </url>
     
@@ -23,7 +23,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/tags/academic/</loc>
+      <loc>http://localhost:1313/techblog/tags/academic/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
     </url>
     
@@ -32,7 +32,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/post/</loc>
+      <loc>http://localhost:1313/techblog/post/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
     </url>
     
@@ -41,7 +41,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/categories/</loc>
+      <loc>http://localhost:1313/techblog/categories/</loc>
       <priority>0</priority>
     </url>
     
@@ -50,7 +50,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/publication_types/</loc>
+      <loc>http://localhost:1313/techblog/publication_types/</loc>
       <priority>0</priority>
     </url>
     
@@ -59,7 +59,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/</loc>
+      <loc>http://localhost:1313/techblog/</loc>
       <lastmod>2016-04-20T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -69,7 +69,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/tags/</loc>
+      <loc>http://localhost:1313/techblog/tags/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>

@@ -2,14 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Content tagged as &#39;Academic&#39; on Small Technical Blog</title>
-    <link>https://eramons.github.io/techblog/tags/academic/</link>
+    <link>http://localhost:1313/techblog/tags/academic/</link>
     <description>Recent content in Content tagged as &#39;Academic&#39; on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017 E. Ramon</copyright>
     <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://eramons.github.io/techblog/tags/academic/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/techblog/tags/academic/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>
