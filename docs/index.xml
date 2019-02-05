@@ -2,13 +2,602 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Small Technical Blog on Small Technical Blog</title>
-    <link>https://eramons.github.io/techblog/index.xml</link>
+    <link>https://eramons.github.io/techblog/</link>
     <description>Recent content in Small Technical Blog on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017 E. Ramon</copyright>
     <lastBuildDate>Wed, 20 Apr 2016 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/techblog/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/techblog/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Debian on Asus Chromebook Flip C101PA</title>
+      <link>https://eramons.github.io/techblog/post/asuschromebook_debian/</link>
+      <pubDate>Tue, 04 Dec 2018 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/asuschromebook_debian/</guid>
+      <description>
+
+&lt;p&gt;&lt;em&gt;The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&amp;rdquo; x 7.2&amp;rdquo; x 0.6&amp;rdquo; and weighing 1 kg.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Features:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor&lt;/li&gt;
+&lt;li&gt;4GB LPDDR3 RAM&lt;/li&gt;
+&lt;li&gt;10.1&amp;rdquo; 1280x800 LED display&lt;/li&gt;
+&lt;li&gt;Mali T860MP4 GPU&lt;/li&gt;
+&lt;li&gt;16GB eMMC&lt;/li&gt;
+&lt;li&gt;38 Whrs battery&lt;/li&gt;
+&lt;li&gt;2x USB 3.1 Type-C ports&lt;/li&gt;
+&lt;li&gt;1x USB 2.0 Type-A port&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ARM Chromebooks use Coreboot as the bootloader. The kernel is signed and packed in a custom format and must be flashed to a dedicated partiton on the sdcard or to he internal memory. Further reading:
+&lt;a href=&#34;https://www.chromium.org/chromium-os/chromiumos-design-docs/disk-format&#34; target=&#34;_blank&#34;&gt;Chromium: Disk Format&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;After enabling Developer Mode and USB Boot, it&amp;rsquo;s possible to boot either ChromeOS from the internal disk of the chromebook (Ctrl-D) or from USB (Ctrl-U).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal: run Debian on the ChromeOS&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Motivation:&lt;/strong&gt; the Asus C101PA is a light (and cheap) laptop - perfect to carry it everywhere. Using ChromeOS only was not an option for me, so I aimed to run Debian Linux on it.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Milestones:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Dual boot ChromeOS and Linux: run archlinux on a sdcard&lt;/li&gt;
+&lt;li&gt;Replace the archlinux filesystem with a Debian rootfs&lt;/li&gt;
+&lt;li&gt;Replace the kernel (ChromeOS) with the mainline Linux kernel&lt;/li&gt;
+&lt;li&gt;Troubleshooting: modify kernel options and install firmware&lt;/li&gt;
+&lt;li&gt;Flash the working kernel to the chromebook internal memory&lt;/li&gt;
+&lt;li&gt;Replace the kernel (Linux) with the latest Debian kernel&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Files and scripts available in github:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/eramons/chromebook&#34; target=&#34;_blank&#34;&gt;https://github.com/eramons/chromebook&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;1-archlinux&#34;&gt;1. Archlinux&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal: try out a working linux distribution on the Chromebook&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;On the chromebook&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I started taking a look at the excelent Arch Linux wiki:
+&lt;a href=&#34;https://archlinuxarm.org/platforms/armv8/rockchip/asus-chromebook-flip-c101palinuxarch&#34; target=&#34;_blank&#34;&gt;ArchLinuxArm&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This links provides instructions for the installation of Arch Linux from a sdcard in dual boot setup. I closely followed the instructions in order to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Enable Developer Mode&lt;/li&gt;
+&lt;li&gt;Enable booting from USB&lt;/li&gt;
+&lt;li&gt;Partition the sdcard&lt;/li&gt;
+&lt;li&gt;Download the tarball. The Arch Linux tarball includes the ChromeOS kernel and an Arch Linux filesystem.&lt;/li&gt;
+&lt;li&gt;Copy the file system to the second partition on the card&lt;/li&gt;
+&lt;li&gt;Flash the kernel into the first partition on the card&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;2-debian-root-file-system&#34;&gt;2. Debian Root File System&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal: running Debian system on the sdcard booting the ChromeOS kernel provided by archlinux and a debian filesystem.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;For the preparation of the debian rootfs, I inserted the sdcard in my laptop and mounted the partition which would host the rootfs. I used then debootstrap to install the base system.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;On the laptop&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Mount the second sdcard partition:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir rootfs
+sudo mount /dev/sdb2 rootfs
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use debootstrap in order to create a Debian sid root file system:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo debootstrap --arch=arm64 --verbose --foreign sid rootfs
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Changeroot to the new created filesystem:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo chroot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create a user and set the user&amp;rsquo;s and the root passwords:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;passwd
+adduser eramon
+passwd eramon
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Install following packages:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;apt-get install wicd-curses openssh-server sudo git xserver-xorg gnome
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Exit the chroot, umount the filesystem and sync:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;exit
+umount rootfs
+sync
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;Back on the chromebook&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Insert the sdcard on the chromebook and press CTRL-U as soon as the boot screen appears.&lt;/p&gt;
+
+&lt;p&gt;The firmware files and the modules will be missing on the system. Get them from the archlinux tarball:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo cp -r rootfs/lib/firmware /lib/
+sudo cp -r rootfs/lib/modules/* /lib/modules/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The module files in archlinux seem to be compressed: they have the extension .ko.gz. In order for them to work with the debian filesystem, I had to unzip them first:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;_TODO unzip_ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;3-mainline-linux-kernel&#34;&gt;3. Mainline Linux Kernel&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal: replace the ChromeOS kernel through the mainline linux kernel.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;As a reference, I read the instructions for building a package on the archlinux PKGBUILD file for linux-gru in order to figure out which steps needed to be done:
+&lt;a href=&#34;https://github.com/archlinuxarm/PKGBUILDs/blob/master/core/linux-gru/PKGBUILD&#34; target=&#34;_blank&#34;&gt;archlinuxarm/PKGBUILDS&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In order to avoid cross compiling issues and to keep things simple, I aimed to do all the compiling and even the flashing directly on the chromebook. At this stage I had already a working environment consisting on the chromeos kernel and the new debian filesystem.&lt;/p&gt;
+
+&lt;p&gt;First get the mainline kernel source code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Get into the source directory and generate a default configuration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd linux
+make defconfig
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compile the kernel:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;make Image Dtbs Modules
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Download the kernel.its file used by arch linux to build their package:
+&lt;a href=&#34;https://github.com/archlinuxarm/PKGBUILDs/blob/master/core/linux-gru/kernel.its&#34; target=&#34;_blank&#34;&gt;kernel.its&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;There are too many configuration in this file, we only need the first one. We also need to modify the path and name of the dtbs file.&lt;/p&gt;
+
+&lt;p&gt;I modified the file as follows:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/eramons/chromebook/mainlinekernel.its&#34; target=&#34;_blank&#34;&gt;https://github.com/eramons/chromebook/mainlinekernel.its&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/dts-v1/;
+
+/ {
+    description = &amp;quot;Chrome OS kernel image with one or more FDT blobs&amp;quot;;
+    images {
+        kernel@1{
+            description = &amp;quot;kernel&amp;quot;;
+            data = /incbin/(&amp;quot;../linux-git/arch/arm64/boot/Image&amp;quot;);
+            type = &amp;quot;kernel_noload&amp;quot;;
+            arch = &amp;quot;arm64&amp;quot;;
+            os = &amp;quot;linux&amp;quot;;
+            compression = &amp;quot;none&amp;quot;;
+            load = &amp;lt;0&amp;gt;;
+            entry = &amp;lt;0&amp;gt;;
+        };
+        fdt@1{
+            description = &amp;quot;rk3399-gru-bob.dtb&amp;quot;;
+            data = /incbin/(&amp;quot;../linux-git/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb&amp;quot;);
+            type = &amp;quot;flat_dt&amp;quot;;
+            arch = &amp;quot;arm64&amp;quot;;
+            compression = &amp;quot;none&amp;quot;;
+            hash@1{
+                algo = &amp;quot;sha1&amp;quot;;
+            };
+        };
+    };
+    configurations {
+        default = &amp;quot;conf@1&amp;quot;;
+        conf@1{
+            kernel = &amp;quot;kernel@1&amp;quot;;
+            fdt = &amp;quot;fdt@1&amp;quot;;
+        };
+    };
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Make image:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkimage -D &amp;quot;-I dts -O dtb -p 2048&amp;quot; -f mainlinekernel.its vmlinux.uimg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Prepare the cmdline:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;echo &amp;quot;console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty1 init=/sbin/init root=PARTUUID=%U/PARTNROFF=1 rootwait rw noinitrd loglevel=4&amp;quot; &amp;gt; cmdline_mainline
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Generate an empty bootloader.bin file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;dd if=/dev/zero of=bootloader.bin bs=512 count=1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run vbutil in order to generate a boot image for the chromebook:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vbutil_kernel
+        --pack vmlinux.kpart
+        --version 1
+        --vmlinuz vmlinux.uimg
+        --arch aarch64
+        --keyblock /usr/share/vboot/devkeys/kernel.keyblock
+        --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk
+        --config cmdline_mainline
+        --bootloader bootloader.bin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Flash the new generated image to the first partition of the sdcard, sync and reboot:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo dd if=vmlinuz.kpart of=/dev/mmcblk1p1
+sudo sync
+sudo reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The script with the aforementioned steps (mkimage, cmdline, vbutil) is available here:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/eramons/chromebook/blob/master/run.sh&#34; target=&#34;_blank&#34;&gt;https://github.com/eramons/chromebook/blob/master/run.sh&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In case the screen remains blank when trying to boot the new kernel: do serial port debugging with the help of a Suzy Cable:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Use the USB-C port close to the screen, since the other one does not offer a serial port connection.&lt;/li&gt;
+&lt;li&gt;Make sure the cable is plugged in the right position (the letters DBG have to be upside).&lt;/li&gt;
+&lt;li&gt;Use minicom to connect via serial port and follow the boot process&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;4-troubleshooting&#34;&gt;4. Troubleshooting&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal: modify the kernel configuration as needed in order to have all hardware working. Install missing firmware.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;After a first test run - compiling and flashing the kernel with the default configuration - I identified several flaws:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The wireless was not working&lt;/li&gt;
+&lt;li&gt;The touchscreen was not working&lt;/li&gt;
+&lt;li&gt;The touchpad was not working&lt;/li&gt;
+&lt;li&gt;The virtual terminals were not working: only the X&lt;/li&gt;
+&lt;li&gt;The sound was not working&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;wireless&#34;&gt;Wireless&lt;/h3&gt;
+
+&lt;p&gt;A look to dmesg revealed that the problem was just that the firmware files were missing.&lt;/p&gt;
+
+&lt;p&gt;Comparing with the running ChromeOS system on the same chromebook, I found out which firmware files were missing and which debian package will provide them:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;apt-get install firmware-libertas
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;Notes:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;In order to install this firmware the contrib non-free sources must be included in /etc/apt/sources.list&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Before getting the wi-fi to work, I used an ethernet cable and an usb-to-ethernet adapter&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;After installing the firmware package wireless networking worked perfectly.&lt;/p&gt;
+
+&lt;h3 id=&#34;touchscreen-touchpad&#34;&gt;Touchscreen &amp;amp; Touchpad&lt;/h3&gt;
+
+&lt;p&gt;In order for the touchscreen and the touchpad to work, we need to manually add the missing kernel modules to the kernel configuration and re-compile.&lt;/p&gt;
+
+&lt;p&gt;Edit .config to include the following devices as kernel modules:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;CONFIG_MOUSE_ELAN_I2C=m
+CONFIG_MOUSE_ELAN_I2C_I2C=m
+CONFIG_TOUCHSCREEN_ELAN=m
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Re-build the kernel with make, make a new version with mkimage and generate a chromebook bootable image with vbutil_kernel, same as before.&lt;/p&gt;
+
+&lt;p&gt;After this, we see the elan touchpad in /proc/bus/input/devices. The touchpad is working.&lt;/p&gt;
+
+&lt;h3 id=&#34;sound&#34;&gt;Sound&lt;/h3&gt;
+
+&lt;p&gt;The sound wasn&amp;rsquo;t working, although the corresponding modules seemed to be in place after comparing with a running ChromeOS system on the same device.&lt;/p&gt;
+
+&lt;p&gt;In addition, the sound settings in gnome only showed a &amp;ldquo;dummy output&amp;rdquo; as sound device. Apparently Debian does not include users in the audio group by default, so adding the user to the group improved the situation:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;adduser eramon audio 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Although the sound wasn&amp;rsquo;t still working, I was able to see two proper output devices in the sound settings in gnome.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;At the time of this writing, the sound is still not working.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;further-issues&#34;&gt;Further issues&lt;/h3&gt;
+
+&lt;p&gt;There is some other issues I did not go into:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;There is no support for virtual terminals or it is not working. Ctrl-Alt-Fn shows a blank screen. Luckily, X are working.&lt;/li&gt;
+&lt;li&gt;The system seems to recover well from suspend when it suspends in its own (after no pressing any key for a while). However, if closing the lid manually, the system is not able to recover.&lt;/li&gt;
+&lt;li&gt;The sound, brightness and other such keys (the top row on the Asus Chromebook keyboard) does not work as intended. Probably this is just some configuration missing.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;5-internal-memory&#34;&gt;5. Internal memory&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal: Instead of booting from the sdcard, boot from the chromebook internal memory&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Since we&amp;rsquo;ll need several tries in order for the custom built kernel to boot, it&amp;rsquo;s good to be able to boot both from the sdcard and from the internal memory. With Ctrl-D we&amp;rsquo;ll be able to boot with the kernel we are building and with Ctrl-U we&amp;rsquo;ll always be able to boot a working kernel from the sdcard.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Use gparted to resize the stateful partition&lt;/li&gt;
+&lt;li&gt;Create a new KERN-D and ROOT-D partitions and change the boot priorities&lt;/li&gt;
+&lt;li&gt;Flash the kernel to the KERN-D partition&lt;/li&gt;
+&lt;li&gt;Install a base debian system on ROOT-D using debootstrap&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Consequence: ChromeOS won&amp;rsquo;t boot anymore (although it would be easy to restore it afterwards).&lt;/p&gt;
+
+&lt;p&gt;If you plan to restore ChromeOS at some point, run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; cgpt show /dev/mmcblk1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Save the output. The values of the fields priority and retries are set to 0 after resizing the state partition. In order to have ChromeOS to boot again, the values of this fields must be set as they were originally (using cgpt).&lt;/p&gt;
+
+&lt;p&gt;I resized the so called &amp;ldquo;stateful partition&amp;rdquo; from 10.53 GB to 5.00 GB:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;     8671232    10485760       1  Label: &amp;quot;STATE&amp;quot;
+                                  Type: Linux data
+                                  UUID: 1F4D5818-8E6B-0746-B1F9-E2E206777C85
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I created two new partitions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For my debian kernel: KERN-D with size 100 MB&lt;/li&gt;
+&lt;li&gt;For my debian rootfs: ROOT-D with size 5.43 GB (e.g. all unallocated space after resize STATE and creating KERN-D)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;    30539776      204800      13  Label: &amp;quot;KERN-D&amp;quot;
+                                  Type: ChromeOS kernel
+                                  UUID: 9CAA153C-8A88-0A4D-B750-FA2F52FB3A2E
+                                  Attr: priority=10 tries=5 successful=1 
+    19156992    11382784      14  Label: &amp;quot;ROOT-D&amp;quot;
+                                  Type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+                                  UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use debootstrap to create a debian rootfs on the new ROOT-D:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo mount /dev/mmcblk1p14 dev/mnt
+sudo debootstrap sid dev/mnt
+sudo chroot dev/mnt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After chroot-ing to the new filesystem, I set the hostname, the root password and created an user with sudo privileges:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pwd
+adduser eramon
+cat &amp;quot;absinthe&amp;quot; &amp;gt; /etc/hostname
+exit
+sudo sync
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To test the new setup is working, I flashed the working mainline kernel we built before to KERN-D. First we need to modify the cmdline in order to get use ROOT-D as the rootfs.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cat &amp;quot;console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty1 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw noinitrd loglevel=4&amp;quot; &amp;gt; cmdline
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: the PARTUUID of the rootfs partition is hardcoded - it shouldn&amp;rsquo;t but I did not know how to do otherwise&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;To find the PARTUUID of ROOT-D:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -l /dev/disk/by-partuuid/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run vbutil as before using this modified cmdline:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vbutil_kernel 
+	--pack vmlinux.kpart 
+	--version 1 
+	--vmlinuz vmlinux.uimg 
+	--arch aarch64 
+	--keyblock /usr/share/vboot/devkeys/kernel.keyblock 
+	--signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk 
+	--config cmdline 
+	--bootloader bootloader.bin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Flash the modified kernel image to the KERN-D partition and reboot:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dd if=vmlinux.kpart of=/dev/mmcblk1p13
+sudo sync
+sudo reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After doing this, I was able to boot with Ctrl-D. Same as before, the virtual console is not working, so I had to use the Suzy cable in order to get the console output over serial. Once logged in over serial, we can install the X system and other necessary packages:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt-get install xserver-xorg gnome sudo wicd-curses firmware-libertas
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: same as before and before getting the wi-fi to work, I had to use a network cable.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;6-debian-kernel&#34;&gt;6. Debian Kernel&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal: replace the mainline linux kernel through the latest debian kernel.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Tasks:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Get the latest kernel source&lt;/li&gt;
+&lt;li&gt;Modify the kernel in order to include the modules for the touchpad and touchscreen to work&lt;/li&gt;
+&lt;li&gt;Build the debian package and install it&lt;/li&gt;
+&lt;li&gt;Modify the FDT image in order to include an initramfs since the debian kernel can&amp;rsquo;t boot without it&lt;/li&gt;
+&lt;li&gt;Build the kernel image&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Get the kernel source code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;apt-get install linux-source-4.19
+tar xaf /usr/src/linux-source-4.19.16.tar.xz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alternatively, clone the source directly from salsa:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://salsa.debian.org/kernel-team/linux.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Install following packages:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt-get install build-essential, fakeroot, build-dep, devscripts
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run the following command in order to generate the default configuration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;make defconfig
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Edit .config in order to include the necessary kernel modules we found out in the &amp;ldquo;Troubleshooting&amp;rdquo; section:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vi .config
+
+CONFIG_MOUSE_PS2_ELANTECH
+CONFIG_MOUSE_ELAN_I2C
+CONFIG_TOUCHSCREEN_ELAN
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;TODO: In order for the device to be supported in the future, submit a bug to the debian kernel team in order to suggest including the missing modules.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Build the kernel package:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;make deb-pkg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Install following file - generated by a succesfull build:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;dpkg -i linux-image-4.19.16-1_arm64.deb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will install -among others- the following files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/boot/initrd-img-4.19.16
+/boot/dtbs/rockchip/rk3399-gru-bob.dtb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Chromebooks don&amp;rsquo;t use a ramdisk for booting. For the mainline kernel we used before, we didn&amp;rsquo;t use one either. However in order for Debian to boot, a initramfs (or ramdisk) is mandatory.&lt;/p&gt;
+
+&lt;p&gt;Get the files we need for making the image and which will be referenced in kernel.its:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;kernel: get the Image file from the compiled source: arch/arm64/boot/Image&lt;/li&gt;
+&lt;li&gt;ramdisk: /boot/initrd-img-4.19.16 installed by dpkg before&lt;/li&gt;
+&lt;li&gt;dtb: arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb (also available under /boot/dtbs/rockchip/rk3399-gru-bob.dtb installed by dpkg before)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Edit the kernel.its file we used before in order to include a ramdisk:
+&lt;a href=&#34;https://github.com/eramons/chromebook/blob/master/debkernel.its&#34; target=&#34;_blank&#34;&gt;https://github.com/eramons/chromebook/blob/master/debkernel.its&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/dts-v1/;
+
+/ {
+    description = &amp;quot;Debian kernel image with one blob for the Asus C101 (Bob) and initramfs&amp;quot;;
+
+    images {
+        kernel@1{
+            description = &amp;quot;kernel&amp;quot;;
+            data = /incbin/(&amp;quot;linux-source-4.19/arch/arm64/boot/Image&amp;quot;);
+            type = &amp;quot;kernel_noload&amp;quot;;
+            arch = &amp;quot;arm64&amp;quot;;
+            os = &amp;quot;linux&amp;quot;;
+            compression = &amp;quot;none&amp;quot;;
+            load = &amp;lt;0&amp;gt;;
+            entry = &amp;lt;0&amp;gt;;
+        };
+        fdt@1{
+            description = &amp;quot;rk3399-gru-bob.dtb&amp;quot;;
+            data = /incbin/(&amp;quot;linux-source-4.19/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb&amp;quot;);
+            type = &amp;quot;flat_dt&amp;quot;;
+            arch = &amp;quot;arm64&amp;quot;;
+            compression = &amp;quot;none&amp;quot;;
+            hash@1{
+                algo = &amp;quot;sha1&amp;quot;;
+            };
+        };
+	ramdisk@1 {
+           description = &amp;quot;initramfs&amp;quot;;
+           data = /incbin/(&amp;quot;/boot/initrd.img-4.19.16&amp;quot;);
+           type = &amp;quot;ramdisk&amp;quot;;
+           arch = &amp;quot;arm64&amp;quot;;
+           compression = &amp;quot;gzip&amp;quot;;
+           hash@1 {
+                algo = &amp;quot;sha1&amp;quot;;
+           };
+	};
+    };
+    configurations {
+        default = &amp;quot;conf@1&amp;quot;;
+        conf@1{
+            kernel = &amp;quot;kernel@1&amp;quot;;
+            fdt = &amp;quot;fdt@1&amp;quot;;
+        };
+    };
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Make image:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkimage -D &amp;quot;-I dts -O dtb -p 2048&amp;quot; -f debkernel.its vmlinux.uimg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Find out the partition UID of the root partition:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -l /dev/disk/by-partuuid/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Prepare the cmdline:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;echo &amp;quot;console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty1 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw loglevel=4&amp;quot; &amp;gt; cmdline_debian
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Generate an empty bootloader.bin file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;dd if=/dev/zero of=bootloader.bin bs=512 count=1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run vbutil in order to generate a boot image for the chromebook:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vbutil_kernel 
+	--pack vmlinux.kpart 
+	--version 1 
+	--vmlinuz vmlinux.uimg 
+	--arch aarch64 
+	--keyblock /usr/share/vboot/devkeys/kernel.keyblock 
+	--signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk 
+	--config cmdline_debian 
+	--bootloader bootloader.bin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Flash the new generated image to the ROOT-D partition on the chromebook, sync and reboot:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo dd if=vmlinuz.kpart of=/dev/mmcblk1p14
+sudo sync
+sudo reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use the suzy cable to debug if a black screen is all you can see.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: it&amp;rsquo;s not working. Something is wrong with the ramdisk entry of the its file: either the syntax or the format of the initramfs or the parameters and their values.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;TODO (Next steps):&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Correct debkernel.its in order to boot a debian kernel with initramfs&lt;/li&gt;
+&lt;li&gt;The chromebook has only a little drive (16 GB). For a productive setup, it might be useful to have the /home partition on the sdcard and only the base system / on the ROOT_D partition.&lt;/li&gt;
+&lt;li&gt;Debian: what next? Support for the debian installer? Extend flash-kernel to support debian on chromebooks?&lt;/li&gt;
+&lt;li&gt;Coreboot: what next? Boot from KERN-D with another key-shortcut, for example Ctrl-L (L as for &amp;ldquo;Legacy&amp;rdquo; or &amp;ldquo;Linux&amp;rdquo;)?&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Debian on Radxa Rock Square</title>
