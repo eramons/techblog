@@ -158,7 +158,7 @@ I modified the file as follows:
     images {
         kernel@1{
             description = "kernel";
-            data = /incbin/("../linux-git/arch/arm64/boot/Image");
+            data = /incbin/("linux-git/arch/arm64/boot/Image");
             type = "kernel_noload";
             arch = "arm64";
             os = "linux";
@@ -168,7 +168,7 @@ I modified the file as follows:
         };
         fdt@1{
             description = "rk3399-gru-bob.dtb";
-            data = /incbin/("../linux-git/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb");
+            data = /incbin/("linux-git/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb");
             type = "flat_dt";
             arch = "arm64";
             compression = "none";
@@ -470,7 +470,7 @@ Edit the kernel.its file we used before in order to include a ramdisk:
     images {
         kernel@1{
             description = "kernel";
-            data = /incbin/("linux-source-4.19/arch/arm64/boot/Image");
+            data = /incbin/("linux/debian/arch/arm64/boot/Image");
             type = "kernel_noload";
             arch = "arm64";
             os = "linux";
@@ -480,7 +480,7 @@ Edit the kernel.its file we used before in order to include a ramdisk:
         };
         fdt@1{
             description = "rk3399-gru-bob.dtb";
-            data = /incbin/("linux-source-4.19/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb");
+            data = /incbin/("linux/debian/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb");
             type = "flat_dt";
             arch = "arm64";
             compression = "none";
