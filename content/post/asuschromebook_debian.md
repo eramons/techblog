@@ -408,11 +408,7 @@ apt-get install linux-source-4.19
 tar xaf /usr/src/linux-source-4.19.16.tar.xz
 ```
 
-_TODO: Replace for instructions to get the source from salsa_
-
-_TODO: Modify path accordingly on debian its file, both on github and here_
-
-To get the source code directly from salsa:
+Alternatively, clone the source directly from salsa:
 ```
 git clone https://salsa.debian.org/kernel-team/linux.git
 ```
@@ -474,7 +470,7 @@ Edit the kernel.its file we used before in order to include a ramdisk:
     images {
         kernel@1{
             description = "kernel";
-            data = /incbin/("../linux-source-4.19/arch/arm64/boot/Image");
+            data = /incbin/("linux-source-4.19/arch/arm64/boot/Image");
             type = "kernel_noload";
             arch = "arm64";
             os = "linux";
@@ -484,7 +480,7 @@ Edit the kernel.its file we used before in order to include a ramdisk:
         };
         fdt@1{
             description = "rk3399-gru-bob.dtb";
-            data = /incbin/("../linux-source-4.19/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb");
+            data = /incbin/("linux-source-4.19/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dtb");
             type = "flat_dt";
             arch = "arm64";
             compression = "none";
