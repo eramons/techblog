@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Small Technical Blog on Small Technical Blog</title>
-    <link>http://localhost:1313/techblog/</link>
+    <link>https://eramons.github.io/techblog/</link>
     <description>Recent content in Small Technical Blog on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
@@ -12,10 +12,10 @@
     
     <item>
       <title>Debian on Asus Chromebook Flip C101PA</title>
-      <link>http://localhost:1313/techblog/post/asuschromebook_debian/</link>
+      <link>https://eramons.github.io/techblog/post/asuschromebook_debian/</link>
       <pubDate>Tue, 04 Dec 2018 10:00:00 +0200</pubDate>
       
-      <guid>http://localhost:1313/techblog/post/asuschromebook_debian/</guid>
+      <guid>https://eramons.github.io/techblog/post/asuschromebook_debian/</guid>
       <description>
 
 &lt;p&gt;&lt;em&gt;The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&amp;rdquo; x 7.2&amp;rdquo; x 0.6&amp;rdquo; and weighing 1 kg.&lt;/em&gt;&lt;/p&gt;
@@ -601,10 +601,10 @@ sudo reboot
     
     <item>
       <title>Debian on Radxa Rock Square</title>
-      <link>http://localhost:1313/techblog/post/rock2_debian/</link>
+      <link>https://eramons.github.io/techblog/post/rock2_debian/</link>
       <pubDate>Thu, 27 Jul 2017 15:03:58 +0200</pubDate>
       
-      <guid>http://localhost:1313/techblog/post/rock2_debian/</guid>
+      <guid>https://eramons.github.io/techblog/post/rock2_debian/</guid>
       <description>
 
 &lt;p&gt;&lt;em&gt;Radxa Rock 2 Square is a Rockchip RK3288 based solution.&lt;/em&gt;&lt;/p&gt;
