@@ -292,7 +292,7 @@ There is some other issues I did not go into:
 * The system seems to recover well from suspend when it suspends in its own (after no pressing any key for a while). However, if closing the lid manually, the system is not able to recover. 
 * The sound, brightness and other such keys (the top row on the Asus Chromebook keyboard) does not work as intended. Probably this is just some configuration missing.
 
-## 5. Internal memory
+## 5. Kernel and rootfs on the chromebook disk 
 
 __Goal: Instead of booting from the sdcard, boot from the chromebook internal memory__
 
@@ -341,24 +341,27 @@ sudo debootstrap sid dev/mnt
 sudo chroot dev/mnt
 ```
 
-After chroot-ing to the new filesystem, I set the hostname, the root password and created an user with sudo privileges:
+After chroot-ing to the new filesystem, I set the hostname, the root password, created an user and installed some useful packages:
 
 ```
-pwd
+passwd
 adduser eramon
-cat "absinthe" > /etc/hostname
+cat "chupito" > /etc/hostname
+apt-get install locales wicd-curses sudo
+dpkg-reconfigure locales
+visudo
 exit
 sudo sync
 ```
 
-To test the new setup is working, I flashed the working mainline kernel we built before to KERN-D. First we need to modify the cmdline in order to get use ROOT-D as the rootfs. 
+To test the new setup is working, I flashed the working mainline kernel to KERN-D. For that, I modified the cmdline in order to use ROOT-D as the rootfs. 
 ```
 cat "console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty1 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw noinitrd loglevel=4" > cmdline
 ```
 
 _NOTE: the PARTUUID of the rootfs partition is hardcoded - it shouldn't but I did not know how to do otherwise_
 
-To find the PARTUUID of ROOT-D:
+To find out the PARTUUID of ROOT-D:
 ```
 ls -l /dev/disk/by-partuuid/
 ```
@@ -385,7 +388,7 @@ sudo reboot
 
 After doing this, I was able to boot with Ctrl-D. Same as before, the virtual console is not working, so I had to use the Suzy cable in order to get the console output over serial. Once logged in over serial, we can install the X system and other necessary packages:
 ```
-apt-get install xserver-xorg gnome sudo wicd-curses firmware-libertas
+apt-get install xserver-xorg gnome firmware-libertas
 ``` 
 
 _NOTE: same as before and before getting the wi-fi to work, I had to use a network cable._ 
@@ -402,6 +405,11 @@ Tasks:
 * Modify the FDT image in order to include an initramfs since the debian kernel can't boot without it
 * Build the kernel image
 
+Instructions for re-building a debian kernel package (see "Building a custom kernel from Debian kernel source"):
+
+[Rebuilding official Debian kernel packages](https://kernel-team.pages.debian.net/kernel-handbook/ch-common-tasks.html#s-common-official)
+
+
 Get the kernel source code:
 ```bash
 apt-get install linux-source-4.19
@@ -412,6 +420,8 @@ Alternatively, clone the source directly from salsa:
 ```
 git clone https://salsa.debian.org/kernel-team/linux.git
 ```
+
+_NOTE: I actually got the source installing the linux-source package. If cloning the kernel source from salsa, the following steps don't work since there is no Makefile._
 
 Install following packages:
 ```
