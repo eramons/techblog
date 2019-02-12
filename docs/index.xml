@@ -436,6 +436,9 @@ sudo reboot
 &lt;li&gt;Build the kernel image&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;Instructions for re-building a debian kernel package:
+&lt;a href=&#34;https://kernel-team.pages.debian.net/kernel-handbook/ch-common-tasks.html#s-common-official&#34; target=&#34;_blank&#34;&gt;Rebuilding official Debian kernel packages&lt;/a&gt;&lt;/p&gt;
+
 &lt;p&gt;Get the kernel source code:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;apt-get install linux-source-4.19
