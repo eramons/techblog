@@ -24,7 +24,11 @@ Features:
 * 2x USB 3.1 Type-C ports
 * 1x USB 2.0 Type-A port
 
-ARM Chromebooks use Coreboot as the bootloader. The kernel is signed and packed in a custom format and must be flashed to a dedicated partiton on the sdcard or to he internal memory. Further reading:
+ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload. Further reading:
+[Coreboot Website](https://www.coreboot.org)
+[Depthcharge Source Code](https://github.com/coreboot/depthcharge)
+
+The kernel is signed and packed in a custom format and must be flashed to a dedicated partiton on the sdcard or to he internal memory. Further reading:
 [Chromium: Disk Format](https://www.chromium.org/chromium-os/chromiumos-design-docs/disk-format)
 
 After enabling Developer Mode and USB Boot, it's possible to boot either ChromeOS from the internal disk of the chromebook (Ctrl-D) or from USB (Ctrl-U).
@@ -154,7 +158,7 @@ I modified the file as follows:
 /dts-v1/;
 
 / {
-    description = "Chrome OS kernel image with one or more FDT blobs";
+    description = "Linux mainline kernel image with one blob";
     images {
         kernel@1{
             description = "kernel";
@@ -241,7 +245,6 @@ After a first test run - compiling and flashing the kernel with the default conf
 - The wireless was not working
 - The touchscreen was not working
 - The touchpad was not working
-- The virtual terminals were not working: only the X
 - The sound was not working
 
 ### Wireless
@@ -288,15 +291,16 @@ _At the time of this writing, the sound is still not working._
 ### Further issues
 There is some other issues I did not go into:
 
-* There is no support for virtual terminals or it is not working. Ctrl-Alt-Fn shows a blank screen. Luckily, X are working. 
 * The system seems to recover well from suspend when it suspends in its own (after no pressing any key for a while). However, if closing the lid manually, the system is not able to recover. 
-* The sound, brightness and other such keys (the top row on the Asus Chromebook keyboard) does not work as intended. Probably this is just some configuration missing.
+* The sound, brightness and other such keys (the top row on the Asus Chromebook keyboard) does not work as intended. Maybe just a configuration issue.
 
 ## 5. Kernel and rootfs on the chromebook disk 
 
-__Goal: Instead of booting from the sdcard, boot from the chromebook internal memory__
+__Goal: Instead of booting from the sdcard, boot from the chromebook internal ssd__
 
-Since we'll need several tries in order for the custom built kernel to boot, it's good to be able to boot both from the sdcard and from the internal memory. With Ctrl-D we'll be able to boot with the kernel we are building and with Ctrl-U we'll always be able to boot a working kernel from the sdcard. 
+Since we'll need several tries in order for the custom built kernel to boot, it's good to be able to boot both from the sdcard and from the internal drive. With Ctrl-D we'll be able to boot with the experimental kernel we are building and with Ctrl-U we'll always be able to boot the already working mainline kernel on the sdcard first partition. 
+
+Tasks:
 
 * Use gparted to resize the stateful partition
 * Create a new KERN-D and ROOT-D partitions and change the boot priorities
@@ -310,9 +314,15 @@ If you plan to restore ChromeOS at some point, run:
 ```
  cgpt show /dev/mmcblk1
 ```
+_TODO Include output_
+
 Save the output. The values of the fields priority and retries are set to 0 after resizing the state partition. In order to have ChromeOS to boot again, the values of this fields must be set as they were originally (using cgpt).
 
-I resized the so called "stateful partition" from 10.53 GB to 5.00 GB: 
+_TODO Example restore priorities._
+
+
+I resized the so called "stateful partition" from 10.53 GB to 5.00 GB:
+_TODO Change: 1 GB_ 
 ```
      8671232    10485760       1  Label: "STATE"
                                   Type: Linux data
@@ -333,6 +343,12 @@ I created two new partitions:
                                   Type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
                                   UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
 ```
+
+TODO Set priority, tries, etc.
+
+
+
+_NOTE: the chromebook has only a little drive (16 GB). For a productive setup, I ended up moving my /home partition on the sdcard letting only the base system / on the ROOT_D partition._
 
 Use debootstrap to create a debian rootfs on the new ROOT-D:
 ```
@@ -356,7 +372,7 @@ sudo sync
 
 To test the new setup is working, I flashed the working mainline kernel to KERN-D. For that, I modified the cmdline in order to use ROOT-D as the rootfs. 
 ```
-cat "console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty1 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw noinitrd loglevel=4" > cmdline
+cat "console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty0 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw noinitrd loglevel=4" > cmdline
 ```
 
 _NOTE: the PARTUUID of the rootfs partition is hardcoded - it shouldn't but I did not know how to do otherwise_
@@ -386,7 +402,7 @@ sudo sync
 sudo reboot
 ```
 
-After doing this, I was able to boot with Ctrl-D. Same as before, the virtual console is not working, so I had to use the Suzy cable in order to get the console output over serial. Once logged in over serial, we can install the X system and other necessary packages:
+After doing this, I was able to boot with Ctrl-D. Once logged in over serial, we can install the X system and other necessary packages:
 ```
 apt-get install xserver-xorg gnome firmware-libertas
 ``` 
@@ -415,13 +431,6 @@ Get the kernel source code:
 apt-get install linux-source-4.19
 tar xaf /usr/src/linux-source-4.19.16.tar.xz
 ```
-
-Alternatively, clone the source directly from salsa:
-```
-git clone https://salsa.debian.org/kernel-team/linux.git
-```
-
-_NOTE: I actually got the source installing the linux-source package. If cloning the kernel source from salsa, the following steps don't work since there is no Makefile._
 
 Install following packages:
 ```
@@ -503,7 +512,7 @@ Edit the kernel.its file we used before in order to include a ramdisk:
            data = /incbin/("/boot/initrd.img-4.19.16");
            type = "ramdisk";
            arch = "arm64";
-           compression = "gzip";
+           compression = "none";
            hash@1 {
                 algo = "sha1";
            };
@@ -514,6 +523,7 @@ Edit the kernel.its file we used before in order to include a ramdisk:
         conf@1{
             kernel = "kernel@1";
             fdt = "fdt@1";
+            ramdisk = "ramdisk@1";
         };
     };
 };
@@ -531,7 +541,7 @@ ls -l /dev/disk/by-partuuid/
 
 Prepare the cmdline:
 ```
-echo "console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty1 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw loglevel=4" > cmdline_debian
+echo "console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty0 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw loglevel=4" > cmdline_debian
 ```
 
 Generate an empty bootloader.bin file:
@@ -559,13 +569,11 @@ sudo sync
 sudo reboot
 ```
 
-Use the suzy cable to debug if a black screen is all you can see. 
+Done :) Debian on the chromebook: a debian rootfs and a customized, self-built debian kernel. 
 
-_NOTE: it's not working. Something is wrong with the ramdisk entry of the its file: either the syntax or the format of the initramfs or the parameters and their values._ 
+_Next steps:_
+* Coreboot/Depthcharge: build a u-boot payload for the Asus C101. Extend flash-kernel to support the board.  
+* Alternatively, build a second depthcharge payload loaded through the legacy mechanism provided by the chromebooks (Ctrl-L) which loads the KERN-D kernel. 
 
-_TODO (Next steps):_
+See next post: TODO LINK
 
-* Correct debkernel.its in order to boot a debian kernel with initramfs
-* The chromebook has only a little drive (16 GB). For a productive setup, it might be useful to have the /home partition on the sdcard and only the base system / on the ROOT_D partition.
-* Debian: what next? Support for the debian installer? Extend flash-kernel to support debian on chromebooks? 
-* Coreboot: what next? Boot from KERN-D with another key-shortcut, for example Ctrl-L (L as for "Legacy" or "Linux")?  
