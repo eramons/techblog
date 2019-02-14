@@ -20,7 +20,7 @@
       <guid>https://eramons.github.io/techblog/post/asuschromebook_debian/</guid>
       <description>The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&amp;rdquo; x 7.2&amp;rdquo; x 0.6&amp;rdquo; and weighing 1 kg.
 Features:
- Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor 4GB LPDDR3 RAM 10.1&amp;rdquo; 1280x800 LED display Mali T860MP4 GPU 16GB eMMC 38 Whrs battery 2x USB 3.1 Type-C ports 1x USB 2.0 Type-A port  ARM Chromebooks use Coreboot as the bootloader.</description>
+ Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor 4GB LPDDR3 RAM 10.1&amp;rdquo; 1280x800 LED display Mali T860MP4 GPU 16GB eMMC 38 Whrs battery 2x USB 3.1 Type-C ports 1x USB 2.0 Type-A port  ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.</description>
     </item>
     
     <item>

@@ -33,7 +33,11 @@
 &lt;li&gt;1x USB 2.0 Type-A port&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;ARM Chromebooks use Coreboot as the bootloader. The kernel is signed and packed in a custom format and must be flashed to a dedicated partiton on the sdcard or to he internal memory. Further reading:
+&lt;p&gt;ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload. Further reading:
+&lt;a href=&#34;https://www.coreboot.org&#34; target=&#34;_blank&#34;&gt;Coreboot Website&lt;/a&gt;
+&lt;a href=&#34;https://github.com/coreboot/depthcharge&#34; target=&#34;_blank&#34;&gt;Depthcharge Source Code&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The kernel is signed and packed in a custom format and must be flashed to a dedicated partiton on the sdcard or to he internal memory. Further reading:
 &lt;a href=&#34;https://www.chromium.org/chromium-os/chromiumos-design-docs/disk-format&#34; target=&#34;_blank&#34;&gt;Chromium: Disk Format&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;After enabling Developer Mode and USB Boot, it&amp;rsquo;s possible to boot either ChromeOS from the internal disk of the chromebook (Ctrl-D) or from USB (Ctrl-U).&lt;/p&gt;
@@ -172,7 +176,7 @@ make defconfig
 &lt;pre&gt;&lt;code&gt;/dts-v1/;
 
 / {
-    description = &amp;quot;Chrome OS kernel image with one or more FDT blobs&amp;quot;;
+    description = &amp;quot;Linux mainline kernel image with one blob&amp;quot;;
     images {
         kernel@1{
             description = &amp;quot;kernel&amp;quot;;
@@ -262,7 +266,6 @@ sudo reboot
 &lt;li&gt;The wireless was not working&lt;/li&gt;
 &lt;li&gt;The touchscreen was not working&lt;/li&gt;
 &lt;li&gt;The touchpad was not working&lt;/li&gt;
-&lt;li&gt;The virtual terminals were not working: only the X&lt;/li&gt;
 &lt;li&gt;The sound was not working&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -317,16 +320,17 @@ CONFIG_TOUCHSCREEN_ELAN=m
 &lt;p&gt;There is some other issues I did not go into:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;There is no support for virtual terminals or it is not working. Ctrl-Alt-Fn shows a blank screen. Luckily, X are working.&lt;/li&gt;
 &lt;li&gt;The system seems to recover well from suspend when it suspends in its own (after no pressing any key for a while). However, if closing the lid manually, the system is not able to recover.&lt;/li&gt;
-&lt;li&gt;The sound, brightness and other such keys (the top row on the Asus Chromebook keyboard) does not work as intended. Probably this is just some configuration missing.&lt;/li&gt;
+&lt;li&gt;The sound, brightness and other such keys (the top row on the Asus Chromebook keyboard) does not work as intended. Maybe just a configuration issue.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;5-internal-memory&#34;&gt;5. Internal memory&lt;/h2&gt;
+&lt;h2 id=&#34;5-kernel-and-rootfs-on-the-chromebook-disk&#34;&gt;5. Kernel and rootfs on the chromebook disk&lt;/h2&gt;
 
-&lt;p&gt;&lt;strong&gt;Goal: Instead of booting from the sdcard, boot from the chromebook internal memory&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Goal: Instead of booting from the sdcard, boot from the chromebook internal ssd&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Since we&amp;rsquo;ll need several tries in order for the custom built kernel to boot, it&amp;rsquo;s good to be able to boot both from the sdcard and from the internal memory. With Ctrl-D we&amp;rsquo;ll be able to boot with the kernel we are building and with Ctrl-U we&amp;rsquo;ll always be able to boot a working kernel from the sdcard.&lt;/p&gt;
+&lt;p&gt;Since we&amp;rsquo;ll need several tries in order for the custom built kernel to boot, it&amp;rsquo;s good to be able to boot both from the sdcard and from the internal drive. With Ctrl-D we&amp;rsquo;ll be able to boot with the experimental kernel we are building and with Ctrl-U we&amp;rsquo;ll always be able to boot the already working mainline kernel on the sdcard first partition.&lt;/p&gt;
+
+&lt;p&gt;Tasks:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Use gparted to resize the stateful partition&lt;/li&gt;
@@ -342,9 +346,14 @@ CONFIG_TOUCHSCREEN_ELAN=m
 &lt;pre&gt;&lt;code&gt; cgpt show /dev/mmcblk1
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;&lt;em&gt;TODO Include output&lt;/em&gt;&lt;/p&gt;
+
 &lt;p&gt;Save the output. The values of the fields priority and retries are set to 0 after resizing the state partition. In order to have ChromeOS to boot again, the values of this fields must be set as they were originally (using cgpt).&lt;/p&gt;
 
-&lt;p&gt;I resized the so called &amp;ldquo;stateful partition&amp;rdquo; from 10.53 GB to 5.00 GB:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;TODO Example restore priorities.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I resized the so called &amp;ldquo;stateful partition&amp;rdquo; from 10.53 GB to 5.00 GB:
+&lt;em&gt;TODO Change: 1 GB&lt;/em&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;     8671232    10485760       1  Label: &amp;quot;STATE&amp;quot;
                                   Type: Linux data
@@ -367,6 +376,10 @@ CONFIG_TOUCHSCREEN_ELAN=m
                                   UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;TODO Set priority, tries, etc.&lt;/p&gt;
+
+&lt;p&gt;_NOTE: the chromebook has only a little drive (16 GB). For a productive setup, I ended up moving my /home partition on the sdcard letting only the base system / on the ROOT&lt;em&gt;D partition.&lt;/em&gt;&lt;/p&gt;
+
 &lt;p&gt;Use debootstrap to create a debian rootfs on the new ROOT-D:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;sudo mount /dev/mmcblk1p14 dev/mnt
@@ -374,23 +387,26 @@ sudo debootstrap sid dev/mnt
 sudo chroot dev/mnt
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;After chroot-ing to the new filesystem, I set the hostname, the root password and created an user with sudo privileges:&lt;/p&gt;
+&lt;p&gt;After chroot-ing to the new filesystem, I set the hostname, the root password, created an user and installed some useful packages:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;pwd
+&lt;pre&gt;&lt;code&gt;passwd
 adduser eramon
-cat &amp;quot;absinthe&amp;quot; &amp;gt; /etc/hostname
+cat &amp;quot;chupito&amp;quot; &amp;gt; /etc/hostname
+apt-get install locales wicd-curses sudo
+dpkg-reconfigure locales
+visudo
 exit
 sudo sync
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;To test the new setup is working, I flashed the working mainline kernel we built before to KERN-D. First we need to modify the cmdline in order to get use ROOT-D as the rootfs.&lt;/p&gt;
+&lt;p&gt;To test the new setup is working, I flashed the working mainline kernel to KERN-D. For that, I modified the cmdline in order to use ROOT-D as the rootfs.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;cat &amp;quot;console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty1 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw noinitrd loglevel=4&amp;quot; &amp;gt; cmdline
+&lt;pre&gt;&lt;code&gt;cat &amp;quot;console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty0 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw noinitrd loglevel=4&amp;quot; &amp;gt; cmdline
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;em&gt;NOTE: the PARTUUID of the rootfs partition is hardcoded - it shouldn&amp;rsquo;t but I did not know how to do otherwise&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;To find the PARTUUID of ROOT-D:&lt;/p&gt;
+&lt;p&gt;To find out the PARTUUID of ROOT-D:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;ls -l /dev/disk/by-partuuid/
 &lt;/code&gt;&lt;/pre&gt;
@@ -415,9 +431,9 @@ sudo sync
 sudo reboot
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;After doing this, I was able to boot with Ctrl-D. Same as before, the virtual console is not working, so I had to use the Suzy cable in order to get the console output over serial. Once logged in over serial, we can install the X system and other necessary packages:&lt;/p&gt;
+&lt;p&gt;After doing this, I was able to boot with Ctrl-D. Once logged in over serial, we can install the X system and other necessary packages:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;apt-get install xserver-xorg gnome sudo wicd-curses firmware-libertas
+&lt;pre&gt;&lt;code&gt;apt-get install xserver-xorg gnome firmware-libertas
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;em&gt;NOTE: same as before and before getting the wi-fi to work, I had to use a network cable.&lt;/em&gt;&lt;/p&gt;
@@ -436,18 +452,14 @@ sudo reboot
 &lt;li&gt;Build the kernel image&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Instructions for re-building a debian kernel package:
-&lt;a href=&#34;https://kernel-team.pages.debian.net/kernel-handbook/ch-common-tasks.html#s-common-official&#34; target=&#34;_blank&#34;&gt;Rebuilding official Debian kernel packages&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Instructions for re-building a debian kernel package (see &amp;ldquo;Building a custom kernel from Debian kernel source&amp;rdquo;):&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://kernel-team.pages.debian.net/kernel-handbook/ch-common-tasks.html#s-common-official&#34; target=&#34;_blank&#34;&gt;Rebuilding official Debian kernel packages&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Get the kernel source code:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;apt-get install linux-source-4.19
 tar xaf /usr/src/linux-source-4.19.16.tar.xz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Alternatively, clone the source directly from salsa:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone https://salsa.debian.org/kernel-team/linux.git
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Install following packages:&lt;/p&gt;
@@ -531,7 +543,7 @@ CONFIG_TOUCHSCREEN_ELAN
            data = /incbin/(&amp;quot;/boot/initrd.img-4.19.16&amp;quot;);
            type = &amp;quot;ramdisk&amp;quot;;
            arch = &amp;quot;arm64&amp;quot;;
-           compression = &amp;quot;gzip&amp;quot;;
+           compression = &amp;quot;none&amp;quot;;
            hash@1 {
                 algo = &amp;quot;sha1&amp;quot;;
            };
@@ -542,6 +554,7 @@ CONFIG_TOUCHSCREEN_ELAN
         conf@1{
             kernel = &amp;quot;kernel@1&amp;quot;;
             fdt = &amp;quot;fdt@1&amp;quot;;
+            ramdisk = &amp;quot;ramdisk@1&amp;quot;;
         };
     };
 };
@@ -559,7 +572,7 @@ CONFIG_TOUCHSCREEN_ELAN
 
 &lt;p&gt;Prepare the cmdline:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;echo &amp;quot;console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty1 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw loglevel=4&amp;quot; &amp;gt; cmdline_debian
+&lt;pre&gt;&lt;code&gt;echo &amp;quot;console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 console=tty0 init=/sbin/init root=PARTUUID=c5e4e377-6d8f-4747-aa1f-6a8eeddf031a rootwait rw loglevel=4&amp;quot; &amp;gt; cmdline_debian
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Generate an empty bootloader.bin file:&lt;/p&gt;
@@ -587,18 +600,13 @@ sudo sync
 sudo reboot
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Use the suzy cable to debug if a black screen is all you can see.&lt;/p&gt;
+&lt;p&gt;Done :) Debian on the chromebook: a debian rootfs and a customized, self-built debian kernel.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;NOTE: it&amp;rsquo;s not working. Something is wrong with the ramdisk entry of the its file: either the syntax or the format of the initramfs or the parameters and their values.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Next steps:&lt;/em&gt;
+* Coreboot/Depthcharge: build a u-boot payload for the Asus C101. Extend flash-kernel to support the board.&lt;br /&gt;
+* Alternatively, build a second depthcharge payload loaded through the legacy mechanism provided by the chromebooks (Ctrl-L) which loads the KERN-D kernel.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;TODO (Next steps):&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Correct debkernel.its in order to boot a debian kernel with initramfs&lt;/li&gt;
-&lt;li&gt;The chromebook has only a little drive (16 GB). For a productive setup, it might be useful to have the /home partition on the sdcard and only the base system / on the ROOT_D partition.&lt;/li&gt;
-&lt;li&gt;Debian: what next? Support for the debian installer? Extend flash-kernel to support debian on chromebooks?&lt;/li&gt;
-&lt;li&gt;Coreboot: what next? Boot from KERN-D with another key-shortcut, for example Ctrl-L (L as for &amp;ldquo;Legacy&amp;rdquo; or &amp;ldquo;Linux&amp;rdquo;)?&lt;br /&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;See next post: TODO LINK&lt;/p&gt;
 </description>
     </item>
     
