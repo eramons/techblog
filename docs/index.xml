@@ -11,6 +11,248 @@
     <atom:link href="/techblog/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Install coreboot on the Librem 13 v.1</title>
+      <link>https://eramons.github.io/techblog/post/coreboot_librem/</link>
+      <pubDate>Mon, 18 Feb 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/coreboot_librem/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;DISCLAIMER: try this at your own risk! The information below it&amp;rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Replace the propietary bootloader firmware shipped with the Librem 13 v.1 with coreboot&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Tasks:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Switch from an UEFI install to a BIOS one&lt;/li&gt;
+&lt;li&gt;Backup the firmware&lt;/li&gt;
+&lt;li&gt;Flash coreboot&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;1-migrate-to-a-non-uefi-installation&#34;&gt;1. Migrate to a non-UEFI installation&lt;/h2&gt;
+
+&lt;p&gt;The librem supports Coreboot with SeaBios as payload. Tianocore is not supported, so an UEFI installation won&amp;rsquo;t boot after replacing the bootloader.&lt;/p&gt;
+
+&lt;p&gt;Tasks:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Check if the debian system installed on the laptop is a UEFI or a BIOS install&lt;/li&gt;
+&lt;li&gt;Check if the partition layout is MBR or GPT&lt;/li&gt;
+&lt;li&gt;Resize the existing partitions in order to free 100 MB at the beginning of the disk&lt;/li&gt;
+&lt;li&gt;Create a new 100 MB partition&lt;/li&gt;
+&lt;li&gt;Re-install grub&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When I got my librem 13 on September 2016, I replaced the shipped OS (PureOS) through an UEFI-booted debian system. In order to make sure the OS is indeed installed on UEFI mode, I quickly checked:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;There is a /sys/firmware/efi on the rootfs&lt;/li&gt;
+&lt;li&gt;There is a fat32 partition (called &amp;ldquo;efi&amp;rdquo;) mounted on /boot/efi&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Two possible partition schemes exist:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;MBR (Master Boot Record): older&lt;/li&gt;
+&lt;li&gt;GPT (GUID Partition Table): newer - required to boot operating systems in UEFI mode&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It&amp;rsquo;s important to know which one is being used. Since the OS installation was an UEFI-mode debian, it was for sure that the disk scheme had to be GPT.&lt;/p&gt;
+
+&lt;p&gt;Anyway, it&amp;rsquo;s possible to check this for example looking at the output of fdisk:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo fdisk /dev/sda
+	...
+Disklabel type: gpt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or even better gdisk:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo gdisk /dev/sda
+	...
+Partition table scan:
+	MBR: protective
+	BSD: not present
+	APM: not present
+	GPT: present
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 1 MB partition at the start of the disk.&lt;/p&gt;
+
+&lt;p&gt;I looked at the partitions on my librem (you can use either gparted or gdisk):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;/dev/sda1 - boot:  ext4 partition mounted on /boot with size=500 MB (113 MB used)&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;/dev/sda2 - efi: fat32 partition mounted on /boot/efi with size=500 MB and flags &amp;ldquo;boot&amp;rdquo; and &amp;ldquo;esp&amp;rdquo; set&lt;/li&gt;
+&lt;li&gt;/dev/sda3 - system: crypt-luks (encrypted) partition&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The boot partition must be resized and moved in order to have a new 100 MB partition at the beginning of the disk. Since the partitions must be unmounted to do that, I created a live debian stretch usb drive:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dd if=/home/eramon/Downloads/debian-live-9.8.0-amd64-gnome.iso of=/dev/sdb bs=1M
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;Reboot to the live system on the usb.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Boot from the USB drive (pressing F2 to enter setup and selecting boot override).&lt;/p&gt;
+
+&lt;p&gt;On the live CD, I used gparted to resize the boot partition, freing 100 MB at the beginning of the disk.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo gparted
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;Reboot to the debian system.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I used gdisk to create the new 100 MB partition for grub:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Command (? for help): n
+Partition number (4-128, default 4):
+First sector (34-976773134, default = 2048) or {+-}size{KMGTP}:
+Last sector (2048-206847, default = 206847) or {+-}size{KMGTP}: +100M
+Current type is &#39;Linux filesystem&#39;
+Hex code or GUID (L to show codes, Enter = 8300): ef02
+Changed type of partition to &#39;BIOS boot partition&#39;
+
+Command (? for help): p 
+	...
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1          206848         1023999   399.0 MiB   8300  boot
+   2         1024000         2047999   500.0 MiB   EF00  efi
+   3         2048000       976771071   464.8 GiB   8300
+   4            2048          206847   100.0 MiB   EF02  BIOS boot partition
+
+Command (? for help): wq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Modify /etc/fstab and comment out the mount of the /boot/efi partition:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Removed on 2019 February 18th to switch to a non-EFI system to be able to install coreboot:
+# UUID=559D-9E15  /boot/efi       vfat    umask=0077      0       1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, I removed grub-efi and installed grub2:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dpkg --purge grub-efi
+sudo apt-get -f autoremove
+sudo apt-get update
+sudo apt-get grub2
+sudo grub install --target=i386-pc /dev/sda
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The target parameter must be specified, otherwise grub tries to install grub on efi mode.&lt;/li&gt;
+&lt;li&gt;Grub must be installed to the disk (/dev/sda) an not to the partition (/dev/sda2 - e.g. the boot partition) as it would be for grub-efi.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Reboot to see if it worked. To be sure, I went into the bios and tried a boot override. There were two different boot options, both for the same disk. One of them is the UEFI boot and the other is the non-UEFI one. Both worked.&lt;/p&gt;
+
+&lt;h2 id=&#34;2-backup-the-existing-firmware&#34;&gt;2. Backup the existing firmware&lt;/h2&gt;
+
+&lt;p&gt;First install flashrom:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install flashrom 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Flashrom dependencies:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install libftdi1 libftdi1-dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;Note: the dependencies are installed by the flashrom package. However I used first another flashrom binary, so I had to install the dependencies manually, that&amp;rsquo;s why I&amp;rsquo;m mentioning them here.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Use flashrom to make a backup of the exiting firmware:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install flashrom
+sudo flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r libremfw_orig.rom  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;3-install-coreboot&#34;&gt;3. Install Coreboot&lt;/h2&gt;
+
+&lt;p&gt;Purism provides on their website instructions and one script to configure, build and install coreboot on the librem with flashrom (see references). Although I found the information on the site useful, the script didn&amp;rsquo;t work for me. The problem seemed to be that the script needs some binary blobs which should be extracted from the laptop itself, unfortunately this only works if coreboot is already installed on the machine.&lt;/p&gt;
+
+&lt;p&gt;I wrote the purism support, who kindly informed me that the available script was not mantained anymore and who provided me with an image file containing both all necessary binary blobs and coreboot built with the configuration needed by my board:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;file coreboot-l13v1.rom 
+coreboot-l13v1.rom: Intel serial flash for PCH ROM
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In order to avoid getting an error during flashing and following the instructions of the flashrom FAQ, I overrided the kernel command line to include iomem=relaxed. In order to do that, press &amp;ldquo;e&amp;rdquo; when the grub menu appears during boot and modify the cmdline manually. Resume boot with F10.&lt;/p&gt;
+
+&lt;p&gt;This is the error:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Enabling flash write... Error accessing ICH RCRB, 0x4000 bytes at 0x00000000fed1c000
+/dev/mem mmap failed: Operation not permitted
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After having booted with a relaxed iomem, I was ready to flash:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo flashrom -p internal:laptop=force_I_want_a_brick MX25L6405D -w coreboot-l12v1.rom
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Done :) I rebooted and was greeted by the Purism logo and SeeBios.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: The &amp;ldquo;want a brick&amp;rdquo; option seemed pretty scary to me. Apparently flashrom says the board is not officially supported and enforces the use of this flag to proceed.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I include here the flashrom output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/coreboot-l13v1-oem$ sudo ./flashrom -p internal:laptop=force_I_want_a_brick -w coreboot-l13v1.rom
+flashrom v1.0 on Linux 4.19.0-2-amd64 (x86_64)
+flashrom is free software, get the source code at https://flashrom.org
+
+Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
+========================================================================
+WARNING! You seem to be running flashrom on an unsupported laptop.
+Laptops, notebooks and netbooks are difficult to support and we
+recommend to use the vendor flashing utility. The embedded controller
+(EC) in these machines often interacts badly with flashing.
+See the manpage and https://flashrom.org/Laptops for details.
+
+If flash is shared with the EC, erase is guaranteed to brick your laptop
+and write may brick your laptop.
+Read and probe may irritate your EC and cause fan failure, backlight
+failure and sudden poweroff.
+You have been warned.
+========================================================================
+Proceeding anyway because user forced us to.
+Found chipset &amp;quot;Intel Broadwell U Premium&amp;quot;.
+This chipset is marked as untested. If you are using an up-to-date version
+of flashrom *and* were (not) able to successfully update your firmware with it,
+then please email a report to flashrom@flashrom.org including a verbose (-V) log.
+Thank you!
+Enabling flash write... Warning: SPI Configuration Lockdown activated.
+Enabling hardware sequencing because some important opcode is locked.
+OK.
+Found Programmer flash chip &amp;quot;Opaque flash chip&amp;quot; (8192 kB, Programmer-specific) mapped at physical address 0x0000000000000000.
+Reading old flash chip contents... done.
+Erasing and writing flash chip... Erase/write done.
+Verifying flash... VERIFIED.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;References and useful or interesting links:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://puri.sm&#34; target=&#34;_blank&#34;&gt;Purism&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions&#34; target=&#34;_blank&#34;&gt;ArchLinux Grub Documentation&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://doc.coreboot.org/lessons/lesson1.html&#34; target=&#34;_blank&#34;&gt;Coreboot Rookie Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://puri.sm/coreboot&#34; target=&#34;_blank&#34;&gt;https://puri.sm/coreboot&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.debian.org/CD/live&#34; target=&#34;_blank&#34;&gt;https://www.debian.org/CD/live&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.flashrom.org/FAQ&#34; target=&#34;_blank&#34;&gt;Flashrom FAQ&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Debian on Asus Chromebook Flip C101PA</title>
       <link>https://eramons.github.io/techblog/post/asuschromebook_debian/</link>
       <pubDate>Tue, 04 Dec 2018 10:00:00 +0200</pubDate>
@@ -33,12 +275,15 @@
 &lt;li&gt;1x USB 2.0 Type-A port&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload. Further reading:
-&lt;a href=&#34;https://www.coreboot.org&#34; target=&#34;_blank&#34;&gt;Coreboot Website&lt;/a&gt;
-&lt;a href=&#34;https://github.com/coreboot/depthcharge&#34; target=&#34;_blank&#34;&gt;Depthcharge Source Code&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload. Further reading:&lt;/p&gt;
 
-&lt;p&gt;The kernel is signed and packed in a custom format and must be flashed to a dedicated partiton on the sdcard or to he internal memory. Further reading:
-&lt;a href=&#34;https://www.chromium.org/chromium-os/chromiumos-design-docs/disk-format&#34; target=&#34;_blank&#34;&gt;Chromium: Disk Format&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.coreboot.org&#34; target=&#34;_blank&#34;&gt;Coreboot Website&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/coreboot/depthcharge&#34; target=&#34;_blank&#34;&gt;Depthcharge Source Code&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The kernel is signed and packed in a custom format and must be flashed to a dedicated partition on the sdcard or to the internal ssd. Further reading:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.chromium.org/chromium-os/chromiumos-design-docs/disk-format&#34; target=&#34;_blank&#34;&gt;Chromium: Disk Format&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;After enabling Developer Mode and USB Boot, it&amp;rsquo;s possible to boot either ChromeOS from the internal disk of the chromebook (Ctrl-D) or from USB (Ctrl-U).&lt;/p&gt;
 
@@ -68,7 +313,7 @@
 &lt;p&gt;&lt;em&gt;On the chromebook&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;I started taking a look at the excelent Arch Linux wiki:
-&lt;a href=&#34;https://archlinuxarm.org/platforms/armv8/rockchip/asus-chromebook-flip-c101palinuxarch&#34; target=&#34;_blank&#34;&gt;ArchLinuxArm&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://archlinuxarm.org/platforms/armv8/rockchip/asus-chromebook-flip-c101pa&#34; target=&#34;_blank&#34;&gt;ArchLinuxArm&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;This links provides instructions for the installation of Arch Linux from a sdcard in dual boot setup. I closely followed the instructions in order to:&lt;/p&gt;
 
@@ -134,10 +379,7 @@ sync
 sudo cp -r rootfs/lib/modules/* /lib/modules/
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The module files in archlinux seem to be compressed: they have the extension .ko.gz. In order for them to work with the debian filesystem, I had to unzip them first:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;_TODO unzip_ 
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The module files in archlinux seem to be compressed: they have the extension .ko.gz. In order for them to work with the debian filesystem, I had to unzip them first.&lt;/p&gt;
 
 &lt;h2 id=&#34;3-mainline-linux-kernel&#34;&gt;3. Mainline Linux Kernel&lt;/h2&gt;
 
@@ -150,12 +392,12 @@ sudo cp -r rootfs/lib/modules/* /lib/modules/
 
 &lt;p&gt;First get the mainline kernel source code:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+&lt;pre&gt;&lt;code&gt;git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux-git
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Get into the source directory and generate a default configuration:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd linux
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd linux-git
 make defconfig
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -167,7 +409,7 @@ make defconfig
 &lt;p&gt;Download the kernel.its file used by arch linux to build their package:
 &lt;a href=&#34;https://github.com/archlinuxarm/PKGBUILDs/blob/master/core/linux-gru/kernel.its&#34; target=&#34;_blank&#34;&gt;kernel.its&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;There are too many configuration in this file, we only need the first one. We also need to modify the path and name of the dtbs file.&lt;/p&gt;
+&lt;p&gt;There are several configurations in this file, we only need the first one. We also need to modify the path and name of the dtbs file.&lt;/p&gt;
 
 &lt;p&gt;I modified the file as follows:&lt;/p&gt;
 
@@ -244,11 +486,12 @@ sudo sync
 sudo reboot
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The script with the aforementioned steps (mkimage, cmdline, vbutil) is available here:&lt;/p&gt;
+&lt;p&gt;My script automating the aforementioned steps (mkimage, cmdline, vbutil) is available here:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/eramons/chromebook/blob/master/run.sh&#34; target=&#34;_blank&#34;&gt;https://github.com/eramons/chromebook/blob/master/run.sh&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;In case the screen remains blank when trying to boot the new kernel: do serial port debugging with the help of a Suzy Cable:&lt;/p&gt;
+&lt;p&gt;In case the screen remains blank when trying to boot the new kernel it helps to do serial port debugging with the help of a SuzyQable:
+&lt;a href=&#34;https://www.chromium.org/chromium-os/ccd#TOC-SuzyQ-SuzyQable&#34; target=&#34;_blank&#34;&gt;SuzyQable&lt;/a&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Use the USB-C port close to the screen, since the other one does not offer a serial port connection.&lt;/li&gt;
@@ -328,7 +571,7 @@ CONFIG_TOUCHSCREEN_ELAN=m
 
 &lt;p&gt;&lt;strong&gt;Goal: Instead of booting from the sdcard, boot from the chromebook internal ssd&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Since we&amp;rsquo;ll need several tries in order for the custom built kernel to boot, it&amp;rsquo;s good to be able to boot both from the sdcard and from the internal drive. With Ctrl-D we&amp;rsquo;ll be able to boot with the experimental kernel we are building and with Ctrl-U we&amp;rsquo;ll always be able to boot the already working mainline kernel on the sdcard first partition.&lt;/p&gt;
+&lt;p&gt;Since we&amp;rsquo;ll need several tries in order for the custom built kernel to boot, it&amp;rsquo;s good to be able to boot both from the sdcard and from the internal drive. With Ctrl-D we&amp;rsquo;ll be able to boot the experimental kernel we are building and with Ctrl-U we&amp;rsquo;ll always be able to boot the already working mainline kernel on the sdcard first partition.&lt;/p&gt;
 
 &lt;p&gt;Tasks:&lt;/p&gt;
 
@@ -339,21 +582,30 @@ CONFIG_TOUCHSCREEN_ELAN=m
 &lt;li&gt;Install a base debian system on ROOT-D using debootstrap&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Consequence: ChromeOS won&amp;rsquo;t boot anymore (although it would be easy to restore it afterwards).&lt;/p&gt;
+&lt;p&gt;Consequence: ChromeOS won&amp;rsquo;t boot anymore. The reason is that resizing a partition changes the boot priority of the KERN partitions on the same disk as the resized partition.&lt;/p&gt;
 
 &lt;p&gt;If you plan to restore ChromeOS at some point, run:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt; cgpt show /dev/mmcblk1
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;em&gt;TODO Include output&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Save the output. In order to have ChromeOS to boot again, the values of this fields must be set as they were originally (using cgpt).
+For example, the following command will restore the settings of KERN-A:&lt;/p&gt;
 
-&lt;p&gt;Save the output. The values of the fields priority and retries are set to 0 after resizing the state partition. In order to have ChromeOS to boot again, the values of this fields must be set as they were originally (using cgpt).&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo cgpt add -i 2 -S 1 -T 0 -P 2 /dev/mmcblk1
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;em&gt;TODO Example restore priorities.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Note that after doing this, it won&amp;rsquo;t be possible to boot debian anymore with Ctrl-D. Unfortunately coreboot/depthcharge only allow to boot one kernel (with Ctrl-D).&lt;/p&gt;
 
-&lt;p&gt;I resized the so called &amp;ldquo;stateful partition&amp;rdquo; from 10.53 GB to 5.00 GB:
-&lt;em&gt;TODO Change: 1 GB&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Original settings (output of cgpt show):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;KERN-A: priority=2 tries=0 successful=1&lt;/li&gt;
+&lt;li&gt;KERN-B: priority=1 tries=0 successful=1&lt;/li&gt;
+&lt;li&gt;KERN-C: priority=0 tries=15 successful=0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So I resized the so called &amp;ldquo;stateful partition&amp;rdquo; from 10.53 GB to 5.00 GB:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;     8671232    10485760       1  Label: &amp;quot;STATE&amp;quot;
                                   Type: Linux data
@@ -364,21 +616,23 @@ CONFIG_TOUCHSCREEN_ELAN=m
 
 &lt;ul&gt;
 &lt;li&gt;For my debian kernel: KERN-D with size 100 MB&lt;/li&gt;
-&lt;li&gt;For my debian rootfs: ROOT-D with size 5.43 GB (e.g. all unallocated space after resize STATE and creating KERN-D)&lt;/li&gt;
+&lt;li&gt;For my debian rootfs: ROOT-D with size 9.45 GB (e.g. all unallocated space after resize STATE and creating KERN-D)&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;pre&gt;&lt;code&gt;    30539776      204800      13  Label: &amp;quot;KERN-D&amp;quot;
                                   Type: ChromeOS kernel
                                   UUID: 9CAA153C-8A88-0A4D-B750-FA2F52FB3A2E
                                   Attr: priority=10 tries=5 successful=1 
-    19156992    11382784      14  Label: &amp;quot;ROOT-D&amp;quot;
+    10719232    19820544      14  Label: &amp;quot;ROOT-D&amp;quot;
                                   Type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+                                  UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
                                   UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;TODO Set priority, tries, etc.&lt;/p&gt;
+&lt;p&gt;Set the priority, tries and succesful flag for the KERN-D partition:&lt;/p&gt;
 
-&lt;p&gt;_NOTE: the chromebook has only a little drive (16 GB). For a productive setup, I ended up moving my /home partition on the sdcard letting only the base system / on the ROOT&lt;em&gt;D partition.&lt;/em&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo cgpt add -i 1 -S 1 -T 0 -P 2 /dev/mmcblk0
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Use debootstrap to create a debian rootfs on the new ROOT-D:&lt;/p&gt;
 
@@ -431,12 +685,14 @@ sudo sync
 sudo reboot
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;After doing this, I was able to boot with Ctrl-D. Once logged in over serial, we can install the X system and other necessary packages:&lt;/p&gt;
+&lt;p&gt;After doing this, I was able to boot my custom mainline kernel with Ctrl-D. Once logged in over serial, we can install the X system and other necessary packages:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;apt-get install xserver-xorg gnome firmware-libertas
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;em&gt;NOTE: same as before and before getting the wi-fi to work, I had to use a network cable.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;NOTE I: same as before and before getting the wi-fi to work, I had to use a network cable.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE II: the chromebook has only a little drive (16 GB). For a productive setup, I ended up moving my /home partition to the sdcard - letting only the base system / on the ROOT-D partition.&lt;/em&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;6-debian-kernel&#34;&gt;6. Debian Kernel&lt;/h2&gt;
 
@@ -476,9 +732,9 @@ tar xaf /usr/src/linux-source-4.19.16.tar.xz
 
 &lt;pre&gt;&lt;code&gt;vi .config
 
-CONFIG_MOUSE_PS2_ELANTECH
-CONFIG_MOUSE_ELAN_I2C
-CONFIG_TOUCHSCREEN_ELAN
+CONFIG_MOUSE_PS2_ELANTECH=m
+CONFIG_MOUSE_ELAN_I2C=m
+CONFIG_TOUCHSCREEN_ELAN=m
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;em&gt;TODO: In order for the device to be supported in the future, submit a bug to the debian kernel team in order to suggest including the missing modules.&lt;/em&gt;&lt;/p&gt;
@@ -602,11 +858,12 @@ sudo reboot
 
 &lt;p&gt;Done :) Debian on the chromebook: a debian rootfs and a customized, self-built debian kernel.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;Next steps:&lt;/em&gt;
-* Coreboot/Depthcharge: build a u-boot payload for the Asus C101. Extend flash-kernel to support the board.&lt;br /&gt;
-* Alternatively, build a second depthcharge payload loaded through the legacy mechanism provided by the chromebooks (Ctrl-L) which loads the KERN-D kernel.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;And now? Next steps:&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;See next post: TODO LINK&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Coreboot/Depthcharge: build an u-boot payload for the Asus C101. Extend flash-kernel to support the board.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Alternatively, build a second depthcharge payload loaded through the legacy mechanism provided by the chromebooks (Ctrl-L) which loads the KERN-D kernel.&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
@@ -976,6 +1233,43 @@ absinthe login:
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Done :)&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Dual Boot Linux/ChromeOS on the Asus Chromebook Flip C101PA</title>
+      <link>https://eramons.github.io/techblog/post/depthcharge_asuschromebook/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/depthcharge_asuschromebook/</guid>
+      <description>
+
+&lt;p&gt;&lt;em&gt;WORK IN PROGRESS: Coming next&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Context:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Coreboot&lt;/li&gt;
+&lt;li&gt;Depthcharge payload&lt;/li&gt;
+&lt;li&gt;Debian kernel in vb (verified boot) format&lt;/li&gt;
+&lt;li&gt;Support for &amp;ldquo;Legacy boot&amp;rdquo; by pressing Ctrl-L&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Be able to dual-boot ChromeOS and Debian (or another Linux distribution) on the chromebook&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.&lt;/p&gt;
+
+&lt;h2 id=&#34;1-build-depthcharge&#34;&gt;1. Build depthcharge&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;TODO&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;References and links:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.coreboot.org&#34; target=&#34;_blank&#34;&gt;Coreboot Website&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/coreboot/depthcharge&#34; target=&#34;_blank&#34;&gt;Depthcharge Source Code&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

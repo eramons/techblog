@@ -13,6 +13,16 @@
     
     
     <item>
+      <title>Install coreboot on the Librem 13 v.1</title>
+      <link>https://eramons.github.io/techblog/post/coreboot_librem/</link>
+      <pubDate>Mon, 18 Feb 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/coreboot_librem/</guid>
+      <description>DISCLAIMER: try this at your own risk! The information below it&amp;rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.
+I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.</description>
+    </item>
+    
+    <item>
       <title>Debian on Asus Chromebook Flip C101PA</title>
       <link>https://eramons.github.io/techblog/post/asuschromebook_debian/</link>
       <pubDate>Tue, 04 Dec 2018 10:00:00 +0200</pubDate>
@@ -34,6 +44,23 @@ Available images
 The available images run with:
  A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel.  The goal is to get a pure Debian distribution up and running on the board:
  Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:</description>
+    </item>
+    
+    <item>
+      <title>Dual Boot Linux/ChromeOS on the Asus Chromebook Flip C101PA</title>
+      <link>https://eramons.github.io/techblog/post/depthcharge_asuschromebook/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/depthcharge_asuschromebook/</guid>
+      <description>WORK IN PROGRESS: Coming next
+Context:
+ Coreboot Depthcharge payload Debian kernel in vb (verified boot) format Support for &amp;ldquo;Legacy boot&amp;rdquo; by pressing Ctrl-L  Goal:
+Be able to dual-boot ChromeOS and Debian (or another Linux distribution) on the chromebook
+ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.
+1. Build depthcharge TODO
+References and links:
+Coreboot Website
+Depthcharge Source Code</description>
     </item>
     
   </channel>

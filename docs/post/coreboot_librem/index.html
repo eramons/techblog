@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.52" />
   <meta name="author" content="E. Ramon">
   <meta name="description" content="Solution Architect">
 
@@ -126,8 +126,8 @@
 <div class="article-metadata">
 
   <span class="article-date">
-    <time datetime="2018-12-04 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
-      Tue, Dec 4, 2018
+    <time datetime="2019-02-18 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Mon, Feb 18, 2019
     </time>
   </span>
 
@@ -187,15 +187,13 @@
     <div class="article-style" itemprop="articleBody">
       
 
-<p><strong>DISCLAIMER: try this at your own risk! The information below it&rsquo;s just a summary of my notes and experiences during the installation of coreboot.</strong></p>
-
-<p><em>TODO: some introduction</em></p>
+<p><strong>DISCLAIMER: try this at your own risk! The information below it&rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.</strong></p>
 
 <p>I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.</p>
 
 <p><strong>Goal:</strong></p>
 
-<p><em>Replace the bootloader shipped with the Librem 13 v.1 through coreboot</em></p>
+<p><em>Replace the propietary bootloader firmware shipped with the Librem 13 v.1 with coreboot</em></p>
 
 <p>Tasks:</p>
 
@@ -238,14 +236,14 @@
 <p>Anyway, it&rsquo;s possible to check this for example looking at the output of fdisk:</p>
 
 <pre><code>sudo fdisk /dev/sda
-...
+	...
 Disklabel type: gpt
 </code></pre>
 
 <p>Or even better gdisk:</p>
 
 <pre><code>sudo gdisk /dev/sda
-...
+	...
 Partition table scan:
 	MBR: protective
 	BSD: not present
@@ -290,7 +288,7 @@ Hex code or GUID (L to show codes, Enter = 8300): ef02
 Changed type of partition to 'BIOS boot partition'
 
 Command (? for help): p 
-...
+	...
 Number  Start (sector)    End (sector)  Size       Code  Name
    1          206848         1023999   399.0 MiB   8300  boot
    2         1024000         2047999   500.0 MiB   EF00  efi
@@ -315,11 +313,14 @@ sudo apt-get grub2
 sudo grub install --target=i386-pc /dev/sda
 </code></pre>
 
-<p>Some notes:
-- The target parameter must be specified, otherwise grub tries to install grub on efi mode.
-- Grub must be installed to the disk (/dev/sda) an not to the partition (/dev/sda2 - e.g. the boot partition) as it would be for grub-efi.</p>
+<p>Notes:</p>
 
-<p>Reboot to see if it worked. To be sure, I went into the bios and tried a boot override. There were two different boot options, both for the same disk. One of them is UEFI boot and the other is the non-UEFI one. Both worked.</p>
+<ul>
+<li>The target parameter must be specified, otherwise grub tries to install grub on efi mode.</li>
+<li>Grub must be installed to the disk (/dev/sda) an not to the partition (/dev/sda2 - e.g. the boot partition) as it would be for grub-efi.</li>
+</ul>
+
+<p>Reboot to see if it worked. To be sure, I went into the bios and tried a boot override. There were two different boot options, both for the same disk. One of them is the UEFI boot and the other is the non-UEFI one. Both worked.</p>
 
 <h2 id="2-backup-the-existing-firmware">2. Backup the existing firmware</h2>
 
@@ -343,7 +344,7 @@ sudo flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r libr
 
 <h2 id="3-install-coreboot">3. Install Coreboot</h2>
 
-<p>Purism provides on their website information, instructions and one script to configure, build and install coreboot on the librem with flashrom (see references). Although I found the information on the site still usefull, the script didn&rsquo;t work for me. The problem seemed to be that the script needs some binary blobs which should be extracted from the laptop itself, unfortunately this only works if coreboot is already installed on the machine.</p>
+<p>Purism provides on their website instructions and one script to configure, build and install coreboot on the librem with flashrom (see references). Although I found the information on the site useful, the script didn&rsquo;t work for me. The problem seemed to be that the script needs some binary blobs which should be extracted from the laptop itself, unfortunately this only works if coreboot is already installed on the machine.</p>
 
 <p>I wrote the purism support, who kindly informed me that the available script was not mantained anymore and who provided me with an image file containing both all necessary binary blobs and coreboot built with the configuration needed by my board:</p>
 
@@ -352,19 +353,7 @@ coreboot-l13v1.rom: Intel serial flash for PCH ROM
 
 </code></pre>
 
-<p>First install flashrom:</p>
-
-<pre><code>sudo apt-get install flashrom 
-</code></pre>
-
-<p>Flashrom dependencies:</p>
-
-<pre><code>sudo apt-get install libftdi1 libftdi1-dev
-</code></pre>
-
-<p><em>Note: the dependencies are installed by the flashrom package. However I used first another flashrom binary, so I had to install the dependencies manually, that&rsquo;s why I&rsquo;m including them here.</em></p>
-
-<p>In order to avoid following error when flashing coreboot with flashrom and following the instructions of the flashrom FAQ, I overrided the kernel command line to include iomem=relaxed. In order to do that, press &ldquo;e&rdquo; when the grub menu appears during boot and modify the cmdline manually. Resume boot with F10.</p>
+<p>In order to avoid getting an error during flashing and following the instructions of the flashrom FAQ, I overrided the kernel command line to include iomem=relaxed. In order to do that, press &ldquo;e&rdquo; when the grub menu appears during boot and modify the cmdline manually. Resume boot with F10.</p>
 
 <p>This is the error:</p>
 
@@ -416,8 +405,9 @@ Erasing and writing flash chip... Erase/write done.
 Verifying flash... VERIFIED.
 </code></pre>
 
-<p>References and useful or interesting links:
-<a href="https://puri.sm" target="_blank">Purism</a></p>
+<p>References and useful or interesting links:</p>
+
+<p><a href="https://puri.sm" target="_blank">Purism</a></p>
 
 <p><a href="https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions" target="_blank">ArchLinux Grub Documentation</a></p>
 
@@ -426,6 +416,8 @@ Verifying flash... VERIFIED.
 <p><a href="https://puri.sm/coreboot" target="_blank">https://puri.sm/coreboot</a></p>
 
 <p><a href="https://www.debian.org/CD/live" target="_blank">https://www.debian.org/CD/live</a></p>
+
+<p><a href="https://www.flashrom.org/FAQ" target="_blank">Flashrom FAQ</a></p>
 
     </div>
   </div>
@@ -436,13 +428,10 @@ Verifying flash... VERIFIED.
   <nav>
   <ul class="pager">
     
-    <li class="previous"><a href="https://eramons.github.io/techblog/post/rock2_debian/"><span
-      aria-hidden="true">&larr;</span> Debian on Radxa Rock Square</a></li>
+    <li class="previous"><a href="https://eramons.github.io/techblog/post/asuschromebook_debian/"><span
+      aria-hidden="true">&larr;</span> Debian on Asus Chromebook Flip C101PA</a></li>
     
 
-    
-    <li class="next"><a href="https://eramons.github.io/techblog/post/depthcharge_asuschromebook/">Dual Boot Linux/ChromeOS on the Asus Chromebook Flip C101PA <span
-      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>
