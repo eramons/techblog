@@ -1,6 +1,6 @@
 +++
 math = true
-date = "2018-12-04T10:00:00+02:00"
+date = "2019-15-02T10:00:00+02:00"
 title = "Dual Boot Linux/ChromeOS on the Asus Chromebook Flip C101PA"
 tags = []
 highlight = true
@@ -11,29 +11,27 @@ highlight = true
 
 +++
 
-*Blah*
+*WORK IN PROGRESS: Coming next*
 
-Blah:
+Context:
 
 * Coreboot 
 * Depthcharge payload
 * Debian kernel in vb (verified boot) format
 * Support for "Legacy boot" by pressing Ctrl-L
 
-Goal:
+__Goal:__
 
-* Be able to dual-boot ChromeOS and Debian (or another Linux distribution) on the chromebook
+_Be able to dual-boot ChromeOS and Debian (or another Linux distribution) on the chromebook_
 
-ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload. Further reading:
+ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload. 
+
+## 1. Build depthcharge
+
+_TODO_ 
+
+__References and links:__
+
 [Coreboot Website](https://www.coreboot.org)
+
 [Depthcharge Source Code](https://github.com/coreboot/depthcharge)
-
-[https://github.com/eramons/chromebook](https://github.com/eramons/chromebook)
-
-## 1. Bla 
-
-__Goal: try out a working linux distribution on the Chromebook__
-
-_On the chromebook_
-
-
