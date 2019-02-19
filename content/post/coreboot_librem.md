@@ -11,20 +11,27 @@ highlight = true
 
 +++
 
-*Blah*
+* TODO: some introduction *
 
-Blah:
+I am the proud owner of a Librem v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them. Mine was still shipped with propietary firmware on it. Fortunately coreboot is supported - it was possible for me to install coreboot myself. 
+
+(purism)[https://puri.sm]
 
 Goal:
 
-* Replace the bootloader shipped with the Librem 13 v.1 through coreboot
+* Replace the bootloader shipped with the Librem 13 v.1 through coreboot *
 
+Tasks:
 
+1. Switch from an UEFI install to a BIOS one
+2. Backup the firmware
+3. Flash coreboot
 
+Purism provides following information:
 
 [https://puri.sm/coreboot](https://puri.sm/coreboot)
 
-Some of the information on the site is still usefull, however the script provided with the instructions is old and unmantained. 
+Although the information on the site is still usefull, the script didn't work for me (more to that below).  
 
 
 ## 1. Migrate to a non-UEFI installation 
@@ -139,25 +146,73 @@ Reboot to see if it worked. To be sure, I went into the bios and tried a boot ov
 An useful link:
 (ArchLinux Grub Documentation)[https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions]
 
-## 2. Install Coreboot
+## 2. Backup the existing firmware
 
-As mentioned, the script provided on the purism website didn't work anymore. 
+First install flashrom:
+```
+sudo apt-get install flashrom 
+```
 
-support@puri.sm A
-
+Flashrom dependencies: 
 ```
 sudo apt-get install libftdi1 libftdi1-dev
+```
+
+_Note: the dependencies are installed by the flashrom package. However I used first another flashrom binary, so I had to install the dependencies manually, that's why I'm mentioning them here._
+
+Use flashrom to make a backup of the exiting firmware:
+```
+sudo apt-get install flashrom
+sudo flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r libremfw_orig.rom  
+```
+
+## 3. Install Coreboot
+
+Purism provides following information and instructions:
+
+[https://puri.sm/coreboot](https://puri.sm/coreboot)
+
+Although I found the information on the site still usefull, the script didn't work for me.  
+
+The problem seemed to be that the script needs some binary blobs which should be extracted from the laptop itself, unfortunately this only works if coreboot is already installed on the machine.
+
+I wrote the purism sopport, who kindly informed me that the available script was unmantained and who provided me with an image file containing both all necessary binary blobs and coreboot built with the configuration needed by my board: 
+```
+file coreboot-l13v1.rom 
+coreboot-l13v1.rom: Intel serial flash for PCH ROM
 
 ```
 
+First install flashrom:
+```
+sudo apt-get install flashrom 
+```
+
+Flashrom dependencies: 
+```
+sudo apt-get install libftdi1 libftdi1-dev
+```
+
+_Note: the dependencies are installed by the flashrom package. However I used first another flashrom binary, so I had to install the dependencies manually, that's why I'm including them here._
+
+In order to avoid following error when flashing coreboot with flashrom and following the instructions of the flashrom FAQ, I overrided the kernel command line to include iomem=relaxed. In order to do that, press "e" when the grub menu appears during boot and modify the cmdline manually. Resume boot with F10.
+
+This is the error:
 ```
 Enabling flash write... Error accessing ICH RCRB, 0x4000 bytes at 0x00000000fed1c000
 /dev/mem mmap failed: Operation not permitted
 ```
 
-According to the flashrom FAQ, it is possible to avoid this error if overriding the kernel command line to include jjkkkkkk iomem=relaxed 
-iomem=relaxed 
+After having booted with a relaxed iomem, I was ready to flash:
+```
+sudo flashrom -p internal:laptop=force_I_want_a_brick MX25L6405D -w coreboot-l12v1.rom
+```
 
+Done :) I rebooted and was greeted by the Purism logo and SeeBios.
+
+_NOTE: The "want a brick" option seemed pretty scary to me. Apparently flashrom says the board is not officially supported and enforces the use of this flag to proceed._
+
+I include here the flashrom output:
 ```
 eramon@caipirinha:~/dev/coreboot-l13v1-oem$ sudo ./flashrom -p internal:laptop=force_I_want_a_brick -w coreboot-l13v1.rom
 flashrom v1.0 on Linux 4.19.0-2-amd64 (x86_64)
@@ -191,3 +246,9 @@ Reading old flash chip contents... done.
 Erasing and writing flash chip... Erase/write done.
 Verifying flash... VERIFIED.
 ```
+
+An interesting link:
+(Coreboot Rookie Guide)[https://doc.coreboot.org/lessons/lesson1.html]
+
+I did not build coreboot myself since I was missing the binary blobs anyway. I directly used the image file.
+
