@@ -25,10 +25,13 @@ Features:
 * 1x USB 2.0 Type-A port
 
 ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload. Further reading:
+
 [Coreboot Website](https://www.coreboot.org)
+
 [Depthcharge Source Code](https://github.com/coreboot/depthcharge)
 
-The kernel is signed and packed in a custom format and must be flashed to a dedicated partiton on the sdcard or to he internal memory. Further reading:
+The kernel is signed and packed in a custom format and must be flashed to a dedicated partition on the sdcard or to the internal ssd. Further reading:
+
 [Chromium: Disk Format](https://www.chromium.org/chromium-os/chromiumos-design-docs/disk-format)
 
 After enabling Developer Mode and USB Boot, it's possible to boot either ChromeOS from the internal disk of the chromebook (Ctrl-D) or from USB (Ctrl-U).
@@ -57,7 +60,7 @@ __Goal: try out a working linux distribution on the Chromebook__
 _On the chromebook_
 
 I started taking a look at the excelent Arch Linux wiki:
-[ArchLinuxArm](https://archlinuxarm.org/platforms/armv8/rockchip/asus-chromebook-flip-c101palinuxarch)
+[ArchLinuxArm](https://archlinuxarm.org/platforms/armv8/rockchip/asus-chromebook-flip-c101pa)
 
 This links provides instructions for the installation of Arch Linux from a sdcard in dual boot setup. I closely followed the instructions in order to:
 
@@ -118,10 +121,7 @@ The firmware files and the modules will be missing on the system. Get them from 
 sudo cp -r rootfs/lib/firmware /lib/
 sudo cp -r rootfs/lib/modules/* /lib/modules/
 ```
-The module files in archlinux seem to be compressed: they have the extension .ko.gz. In order for them to work with the debian filesystem, I had to unzip them first:
-```bash
-_TODO unzip_ 
-```
+The module files in archlinux seem to be compressed: they have the extension .ko.gz. In order for them to work with the debian filesystem, I had to unzip them first.
 
 ## 3. Mainline Linux Kernel 
 __Goal: replace the ChromeOS kernel through the mainline linux kernel.__
@@ -133,12 +133,12 @@ In order to avoid cross compiling issues and to keep things simple, I aimed to d
 
 First get the mainline kernel source code:
 ```
-git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux-git
 ```
 
 Get into the source directory and generate a default configuration: 
 ```bash
-cd linux
+cd linux-git
 make defconfig
 ```
 Compile the kernel:
@@ -148,7 +148,7 @@ make Image Dtbs Modules
 Download the kernel.its file used by arch linux to build their package:
 [kernel.its](https://github.com/archlinuxarm/PKGBUILDs/blob/master/core/linux-gru/kernel.its)
 
-There are too many configuration in this file, we only need the first one. We also need to modify the path and name of the dtbs file. 
+There are several configurations in this file, we only need the first one. We also need to modify the path and name of the dtbs file. 
 
 I modified the file as follows:
 
@@ -226,11 +226,12 @@ sudo sync
 sudo reboot
 ```
 
-The script with the aforementioned steps (mkimage, cmdline, vbutil) is available here:
+My script automating the aforementioned steps (mkimage, cmdline, vbutil) is available here:
 
 [https://github.com/eramons/chromebook/blob/master/run.sh](https://github.com/eramons/chromebook/blob/master/run.sh)
 
-In case the screen remains blank when trying to boot the new kernel: do serial port debugging with the help of a Suzy Cable:
+In case the screen remains blank when trying to boot the new kernel it helps to do serial port debugging with the help of a SuzyQable:
+[SuzyQable](https://www.chromium.org/chromium-os/ccd#TOC-SuzyQ-SuzyQable)
 
 * Use the USB-C port close to the screen, since the other one does not offer a serial port connection. 
 * Make sure the cable is plugged in the right position (the letters DBG have to be upside).
@@ -298,7 +299,7 @@ There is some other issues I did not go into:
 
 __Goal: Instead of booting from the sdcard, boot from the chromebook internal ssd__
 
-Since we'll need several tries in order for the custom built kernel to boot, it's good to be able to boot both from the sdcard and from the internal drive. With Ctrl-D we'll be able to boot with the experimental kernel we are building and with Ctrl-U we'll always be able to boot the already working mainline kernel on the sdcard first partition. 
+Since we'll need several tries in order for the custom built kernel to boot, it's good to be able to boot both from the sdcard and from the internal drive. With Ctrl-D we'll be able to boot the experimental kernel we are building and with Ctrl-U we'll always be able to boot the already working mainline kernel on the sdcard first partition. 
 
 Tasks:
 
@@ -307,22 +308,30 @@ Tasks:
 * Flash the kernel to the KERN-D partition
 * Install a base debian system on ROOT-D using debootstrap
 
-Consequence: ChromeOS won't boot anymore (although it would be easy to restore it afterwards). 
+Consequence: ChromeOS won't boot anymore. The reason is that resizing a partition changes the boot priority of the KERN partitions on the same disk as the resized partition.
 
 If you plan to restore ChromeOS at some point, run:
 
 ```
  cgpt show /dev/mmcblk1
 ```
-_TODO Include output_
 
-Save the output. The values of the fields priority and retries are set to 0 after resizing the state partition. In order to have ChromeOS to boot again, the values of this fields must be set as they were originally (using cgpt).
+Save the output. In order to have ChromeOS to boot again, the values of this fields must be set as they were originally (using cgpt). 
+For example, the following command will restore the settings of KERN-A:
+```
+sudo cgpt add -i 2 -S 1 -T 0 -P 2 /dev/mmcblk1
+```
 
-_TODO Example restore priorities._
+Note that after doing this, it won't be possible to boot debian anymore with Ctrl-D. Unfortunately coreboot/depthcharge only allow to boot one kernel (with Ctrl-D). 
+
+Original settings (output of cgpt show):
+
+* KERN-A: priority=2 tries=0 successful=1
+* KERN-B: priority=1 tries=0 successful=1
+* KERN-C: priority=0 tries=15 successful=0
 
 
-I resized the so called "stateful partition" from 10.53 GB to 5.00 GB:
-_TODO Change: 1 GB_ 
+So I resized the so called "stateful partition" from 10.53 GB to 5.00 GB:
 ```
      8671232    10485760       1  Label: "STATE"
                                   Type: Linux data
@@ -332,23 +341,23 @@ _TODO Change: 1 GB_
 I created two new partitions:
 
 * For my debian kernel: KERN-D with size 100 MB
-* For my debian rootfs: ROOT-D with size 5.43 GB (e.g. all unallocated space after resize STATE and creating KERN-D)
+* For my debian rootfs: ROOT-D with size 9.45 GB (e.g. all unallocated space after resize STATE and creating KERN-D)
 
 ```
     30539776      204800      13  Label: "KERN-D"
                                   Type: ChromeOS kernel
                                   UUID: 9CAA153C-8A88-0A4D-B750-FA2F52FB3A2E
                                   Attr: priority=10 tries=5 successful=1 
-    19156992    11382784      14  Label: "ROOT-D"
+    10719232    19820544      14  Label: "ROOT-D"
                                   Type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+                                  UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
                                   UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
 ```
 
-TODO Set priority, tries, etc.
-
-
-
-_NOTE: the chromebook has only a little drive (16 GB). For a productive setup, I ended up moving my /home partition on the sdcard letting only the base system / on the ROOT_D partition._
+Set the priority, tries and succesful flag for the KERN-D partition:
+```
+sudo cgpt add -i 1 -S 1 -T 0 -P 2 /dev/mmcblk0
+```
 
 Use debootstrap to create a debian rootfs on the new ROOT-D:
 ```
@@ -402,12 +411,15 @@ sudo sync
 sudo reboot
 ```
 
-After doing this, I was able to boot with Ctrl-D. Once logged in over serial, we can install the X system and other necessary packages:
+After doing this, I was able to boot my custom mainline kernel with Ctrl-D. Once logged in over serial, we can install the X system and other necessary packages:
 ```
 apt-get install xserver-xorg gnome firmware-libertas
 ``` 
 
-_NOTE: same as before and before getting the wi-fi to work, I had to use a network cable._ 
+_NOTE I: same as before and before getting the wi-fi to work, I had to use a network cable._ 
+
+_NOTE II: the chromebook has only a little drive (16 GB). For a productive setup, I ended up moving my /home partition to the sdcard - letting only the base system / on the ROOT-D partition._  
+
 
 ## 6. Debian Kernel  
 
@@ -446,9 +458,9 @@ Edit .config in order to include the necessary kernel modules we found out in th
 ```
 vi .config
 
-CONFIG_MOUSE_PS2_ELANTECH
-CONFIG_MOUSE_ELAN_I2C
-CONFIG_TOUCHSCREEN_ELAN
+CONFIG_MOUSE_PS2_ELANTECH=m
+CONFIG_MOUSE_ELAN_I2C=m
+CONFIG_TOUCHSCREEN_ELAN=m
 ```
 
 _TODO: In order for the device to be supported in the future, submit a bug to the debian kernel team in order to suggest including the missing modules._
@@ -571,9 +583,8 @@ sudo reboot
 
 Done :) Debian on the chromebook: a debian rootfs and a customized, self-built debian kernel. 
 
-_Next steps:_
-* Coreboot/Depthcharge: build a u-boot payload for the Asus C101. Extend flash-kernel to support the board.  
-* Alternatively, build a second depthcharge payload loaded through the legacy mechanism provided by the chromebooks (Ctrl-L) which loads the KERN-D kernel. 
+_And now? Next steps:_
 
-See next post: TODO LINK
+* Coreboot/Depthcharge: build an u-boot payload for the Asus C101. Extend flash-kernel to support the board.  
+* Alternatively, build a second depthcharge payload loaded through the legacy mechanism provided by the chromebooks (Ctrl-L) which loads the KERN-D kernel. 
 
