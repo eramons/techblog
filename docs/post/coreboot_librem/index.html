@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="author" content="E. Ramon">
+  <meta name="description" content="Solution Architect">
+
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/techblog/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.0/css/academicons.min.css" integrity="sha512-GGGNUPDhnG8LEAEDsjqYIQns+Gu8RBs4j5XGlxl7UfRaZBhCCm5jenJkeJL8uPuOXGqgl8/H1gjlWQDRjd3cUQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather%7CRoboto+Mono">
+  <link rel="stylesheet" href="/techblog/css/hugo-academic.css">
+  
+
+  
+
+  <link rel="alternate" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+  <link rel="feed" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+
+  <link rel="icon" type="image/png" href="/techblog/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/techblog/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://eramons.github.io/techblog/post/coreboot_librem/">
+
+  
+
+  <title>Install coreboot on the Librem 13 v.1 | Small Technical Blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/techblog/">Small Technical Blog</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">Install coreboot on the Librem 13 v.1</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2018-12-04 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Tue, Dec 4, 2018
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Install%20coreboot%20on%20the%20Librem%2013%20v.1&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f&amp;title=Install%20coreboot%20on%20the%20Librem%2013%20v.1"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f&amp;title=Install%20coreboot%20on%20the%20Librem%2013%20v.1"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Install%20coreboot%20on%20the%20Librem%2013%20v.1&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<p><strong>DISCLAIMER: try this at your own risk! The information below it&rsquo;s just a summary of my notes and experiences during the installation of coreboot.</strong></p>
+
+<p><em>TODO: some introduction</em></p>
+
+<p>I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.</p>
+
+<p><strong>Goal:</strong></p>
+
+<p><em>Replace the bootloader shipped with the Librem 13 v.1 through coreboot</em></p>
+
+<p>Tasks:</p>
+
+<ol>
+<li>Switch from an UEFI install to a BIOS one</li>
+<li>Backup the firmware</li>
+<li>Flash coreboot</li>
+</ol>
+
+<h2 id="1-migrate-to-a-non-uefi-installation">1. Migrate to a non-UEFI installation</h2>
+
+<p>The librem supports Coreboot with SeaBios as payload. Tianocore is not supported, so an UEFI installation won&rsquo;t boot after replacing the bootloader.</p>
+
+<p>Tasks:</p>
+
+<ul>
+<li>Check if the debian system installed on the laptop is a UEFI or a BIOS install</li>
+<li>Check if the partition layout is MBR or GPT</li>
+<li>Resize the existing partitions in order to free 100 MB at the beginning of the disk</li>
+<li>Create a new 100 MB partition</li>
+<li>Re-install grub</li>
+</ul>
+
+<p>When I got my librem 13 on September 2016, I replaced the shipped OS (PureOS) through an UEFI-booted debian system. In order to make sure the OS is indeed installed on UEFI mode, I quickly checked:</p>
+
+<ul>
+<li>There is a /sys/firmware/efi on the rootfs</li>
+<li>There is a fat32 partition (called &ldquo;efi&rdquo;) mounted on /boot/efi</li>
+</ul>
+
+<p>Two possible partition schemes exist:</p>
+
+<ul>
+<li>MBR (Master Boot Record): older</li>
+<li>GPT (GUID Partition Table): newer - required to boot operating systems in UEFI mode</li>
+</ul>
+
+<p>It&rsquo;s important to know which one is being used. Since the OS installation was an UEFI-mode debian, it was for sure that the disk scheme had to be GPT.</p>
+
+<p>Anyway, it&rsquo;s possible to check this for example looking at the output of fdisk:</p>
+
+<pre><code>sudo fdisk /dev/sda
+...
+Disklabel type: gpt
+</code></pre>
+
+<p>Or even better gdisk:</p>
+
+<pre><code>sudo gdisk /dev/sda
+...
+Partition table scan:
+	MBR: protective
+	BSD: not present
+	APM: not present
+	GPT: present
+</code></pre>
+
+<p>I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 1 MB partition at the start of the disk.</p>
+
+<p>I looked at the partitions on my librem (you can use either gparted or gdisk):</p>
+
+<ol>
+<li>/dev/sda1 - boot:  ext4 partition mounted on /boot with size=500 MB (113 MB used)<br /></li>
+<li>/dev/sda2 - efi: fat32 partition mounted on /boot/efi with size=500 MB and flags &ldquo;boot&rdquo; and &ldquo;esp&rdquo; set</li>
+<li>/dev/sda3 - system: crypt-luks (encrypted) partition</li>
+</ol>
+
+<p>The boot partition must be resized and moved in order to have a new 100 MB partition at the beginning of the disk. Since the partitions must be unmounted to do that, I created a live debian stretch usb drive:</p>
+
+<pre><code>sudo dd if=/home/eramon/Downloads/debian-live-9.8.0-amd64-gnome.iso of=/dev/sdb bs=1M
+</code></pre>
+
+<p><em>Reboot to the live system on the usb.</em></p>
+
+<p>Boot from the USB drive (pressing F2 to enter setup and selecting boot override).</p>
+
+<p>On the live CD, I used gparted to resize the boot partition, freing 100 MB at the beginning of the disk.</p>
+
+<pre><code>sudo gparted
+</code></pre>
+
+<p><em>Reboot to the debian system.</em></p>
+
+<p>I used gdisk to create the new 100 MB partition for grub:</p>
+
+<pre><code>Command (? for help): n
+Partition number (4-128, default 4):
+First sector (34-976773134, default = 2048) or {+-}size{KMGTP}:
+Last sector (2048-206847, default = 206847) or {+-}size{KMGTP}: +100M
+Current type is 'Linux filesystem'
+Hex code or GUID (L to show codes, Enter = 8300): ef02
+Changed type of partition to 'BIOS boot partition'
+
+Command (? for help): p 
+...
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1          206848         1023999   399.0 MiB   8300  boot
+   2         1024000         2047999   500.0 MiB   EF00  efi
+   3         2048000       976771071   464.8 GiB   8300
+   4            2048          206847   100.0 MiB   EF02  BIOS boot partition
+
+Command (? for help): wq
+</code></pre>
+
+<p>Modify /etc/fstab and comment out the mount of the /boot/efi partition:</p>
+
+<pre><code># Removed on 2019 February 18th to switch to a non-EFI system to be able to install coreboot:
+# UUID=559D-9E15  /boot/efi       vfat    umask=0077      0       1
+</code></pre>
+
+<p>Finally, I removed grub-efi and installed grub2:</p>
+
+<pre><code>sudo dpkg --purge grub-efi
+sudo apt-get -f autoremove
+sudo apt-get update
+sudo apt-get grub2
+sudo grub install --target=i386-pc /dev/sda
+</code></pre>
+
+<p>Some notes:
+- The target parameter must be specified, otherwise grub tries to install grub on efi mode.
+- Grub must be installed to the disk (/dev/sda) an not to the partition (/dev/sda2 - e.g. the boot partition) as it would be for grub-efi.</p>
+
+<p>Reboot to see if it worked. To be sure, I went into the bios and tried a boot override. There were two different boot options, both for the same disk. One of them is UEFI boot and the other is the non-UEFI one. Both worked.</p>
+
+<h2 id="2-backup-the-existing-firmware">2. Backup the existing firmware</h2>
+
+<p>First install flashrom:</p>
+
+<pre><code>sudo apt-get install flashrom 
+</code></pre>
+
+<p>Flashrom dependencies:</p>
+
+<pre><code>sudo apt-get install libftdi1 libftdi1-dev
+</code></pre>
+
+<p><em>Note: the dependencies are installed by the flashrom package. However I used first another flashrom binary, so I had to install the dependencies manually, that&rsquo;s why I&rsquo;m mentioning them here.</em></p>
+
+<p>Use flashrom to make a backup of the exiting firmware:</p>
+
+<pre><code>sudo apt-get install flashrom
+sudo flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r libremfw_orig.rom  
+</code></pre>
+
+<h2 id="3-install-coreboot">3. Install Coreboot</h2>
+
+<p>Purism provides on their website information, instructions and one script to configure, build and install coreboot on the librem with flashrom (see references). Although I found the information on the site still usefull, the script didn&rsquo;t work for me. The problem seemed to be that the script needs some binary blobs which should be extracted from the laptop itself, unfortunately this only works if coreboot is already installed on the machine.</p>
+
+<p>I wrote the purism support, who kindly informed me that the available script was not mantained anymore and who provided me with an image file containing both all necessary binary blobs and coreboot built with the configuration needed by my board:</p>
+
+<pre><code>file coreboot-l13v1.rom 
+coreboot-l13v1.rom: Intel serial flash for PCH ROM
+
+</code></pre>
+
+<p>First install flashrom:</p>
+
+<pre><code>sudo apt-get install flashrom 
+</code></pre>
+
+<p>Flashrom dependencies:</p>
+
+<pre><code>sudo apt-get install libftdi1 libftdi1-dev
+</code></pre>
+
+<p><em>Note: the dependencies are installed by the flashrom package. However I used first another flashrom binary, so I had to install the dependencies manually, that&rsquo;s why I&rsquo;m including them here.</em></p>
+
+<p>In order to avoid following error when flashing coreboot with flashrom and following the instructions of the flashrom FAQ, I overrided the kernel command line to include iomem=relaxed. In order to do that, press &ldquo;e&rdquo; when the grub menu appears during boot and modify the cmdline manually. Resume boot with F10.</p>
+
+<p>This is the error:</p>
+
+<pre><code>Enabling flash write... Error accessing ICH RCRB, 0x4000 bytes at 0x00000000fed1c000
+/dev/mem mmap failed: Operation not permitted
+</code></pre>
+
+<p>After having booted with a relaxed iomem, I was ready to flash:</p>
+
+<pre><code>sudo flashrom -p internal:laptop=force_I_want_a_brick MX25L6405D -w coreboot-l12v1.rom
+</code></pre>
+
+<p>Done :) I rebooted and was greeted by the Purism logo and SeeBios.</p>
+
+<p><em>NOTE: The &ldquo;want a brick&rdquo; option seemed pretty scary to me. Apparently flashrom says the board is not officially supported and enforces the use of this flag to proceed.</em></p>
+
+<p>I include here the flashrom output:</p>
+
+<pre><code>eramon@caipirinha:~/dev/coreboot-l13v1-oem$ sudo ./flashrom -p internal:laptop=force_I_want_a_brick -w coreboot-l13v1.rom
+flashrom v1.0 on Linux 4.19.0-2-amd64 (x86_64)
+flashrom is free software, get the source code at https://flashrom.org
+
+Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
+========================================================================
+WARNING! You seem to be running flashrom on an unsupported laptop.
+Laptops, notebooks and netbooks are difficult to support and we
+recommend to use the vendor flashing utility. The embedded controller
+(EC) in these machines often interacts badly with flashing.
+See the manpage and https://flashrom.org/Laptops for details.
+
+If flash is shared with the EC, erase is guaranteed to brick your laptop
+and write may brick your laptop.
+Read and probe may irritate your EC and cause fan failure, backlight
+failure and sudden poweroff.
+You have been warned.
+========================================================================
+Proceeding anyway because user forced us to.
+Found chipset &quot;Intel Broadwell U Premium&quot;.
+This chipset is marked as untested. If you are using an up-to-date version
+of flashrom *and* were (not) able to successfully update your firmware with it,
+then please email a report to flashrom@flashrom.org including a verbose (-V) log.
+Thank you!
+Enabling flash write... Warning: SPI Configuration Lockdown activated.
+Enabling hardware sequencing because some important opcode is locked.
+OK.
+Found Programmer flash chip &quot;Opaque flash chip&quot; (8192 kB, Programmer-specific) mapped at physical address 0x0000000000000000.
+Reading old flash chip contents... done.
+Erasing and writing flash chip... Erase/write done.
+Verifying flash... VERIFIED.
+</code></pre>
+
+<p>References and useful or interesting links:
+<a href="https://puri.sm" target="_blank">Purism</a></p>
+
+<p><a href="https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions" target="_blank">ArchLinux Grub Documentation</a></p>
+
+<p><a href="https://doc.coreboot.org/lessons/lesson1.html" target="_blank">Coreboot Rookie Guide</a></p>
+
+<p><a href="https://puri.sm/coreboot" target="_blank">https://puri.sm/coreboot</a></p>
+
+<p><a href="https://www.debian.org/CD/live" target="_blank">https://www.debian.org/CD/live</a></p>
+
+    </div>
+  </div>
+
+</article>
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+    <li class="previous"><a href="https://eramons.github.io/techblog/post/rock2_debian/"><span
+      aria-hidden="true">&larr;</span> Debian on Radxa Rock Square</a></li>
+    
+
+    
+    <li class="next"><a href="https://eramons.github.io/techblog/post/depthcharge_asuschromebook/">Dual Boot Linux/ChromeOS on the Asus Chromebook Flip C101PA <span
+      aria-hidden="true">&rarr;</span></a></li>
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 E. Ramon &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.2/imagesloaded.pkgd.min.js" integrity="sha512-iHzEu7GbSc705hE2skyH6/AlTpOfBmkx7nUqTLGzPYR+C1tRaItbRlJ7hT/D3YQ9SV0fqLKzp4XY9wKulTBGTw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js" integrity="sha512-Z5heTz36xTemt1TbtbfXtTq5lMfYnOkXM2/eWcTTiLU01+Sw4ku1i7vScDc8fWhrP2abz9GQzgKH5NGBLoYlAw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/plugins/ScrollToPlugin.min.js" integrity="sha512-CDeU7pRtkPX6XJtF/gcFWlEwyaX7mcAp5sO3VIu/ylsdR74wEw4wmBpD5yYTrmMAiAboi9thyBUr1vXRPA7t0Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/techblog/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
+    
+    
+
+  </body>
+</html>
+
