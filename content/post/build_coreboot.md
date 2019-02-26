@@ -126,8 +126,6 @@ if [ "$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin | aw
 fi
 ```
 
-_NOTE: Since I relied on their script, files and sources,  I do not check the hashes on the script although it should be done._
-
 ## 2. Configure and build coreboot 
 
 Copy the .config file from purism's coreboot-files. Run make menuconfig and save in order to update the configuration including all settings not included in the config. 
