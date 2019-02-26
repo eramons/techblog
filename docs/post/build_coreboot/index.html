@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.52" />
+  <meta name="author" content="E. Ramon">
+  <meta name="description" content="Solution Architect">
+
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/techblog/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.0/css/academicons.min.css" integrity="sha512-GGGNUPDhnG8LEAEDsjqYIQns+Gu8RBs4j5XGlxl7UfRaZBhCCm5jenJkeJL8uPuOXGqgl8/H1gjlWQDRjd3cUQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather%7CRoboto+Mono">
+  <link rel="stylesheet" href="/techblog/css/hugo-academic.css">
+  
+
+  
+
+  <link rel="alternate" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+  <link rel="feed" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+
+  <link rel="icon" type="image/png" href="/techblog/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/techblog/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://eramons.github.io/techblog/post/build_coreboot/">
+
+  
+
+  <title>Build Coreboot | Small Technical Blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/techblog/">Small Technical Blog</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">Build Coreboot</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2019-02-25 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Mon, Feb 25, 2019
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fbuild_coreboot%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Build%20Coreboot&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fbuild_coreboot%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fbuild_coreboot%2f&amp;title=Build%20Coreboot"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fbuild_coreboot%2f&amp;title=Build%20Coreboot"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Build%20Coreboot&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fbuild_coreboot%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<p><strong>DISCLAIMER: try anything described here at your own risk! These are just my notes. That it did work for me then does not mean this would work for you now.</strong></p>
+
+<p>After successfully installing coreboot on my librem 13 v1, I noticed that unfortunately the wifi wasn&rsquo;t working anymore. Since the coreboot version I flashed previously wasn&rsquo;t quite new, I decided to build a new rom image myself using the newest coreboot source code.</p>
+
+<p><strong>Goal:</strong></p>
+
+<p><em>Replace coreboot with an up-to-date, self-built coreboot version</em></p>
+
+<p>Tasks:</p>
+
+<ol>
+<li>Get needed files: source code, purism configuration and binary blobs</li>
+<li>Configure and build coreboot</li>
+<li>Install coreboot</li>
+</ol>
+
+<h2 id="1-get-the-files">1. Get the files</h2>
+
+<p>Get coreboot source code:</p>
+
+<pre><code>git clone https://review.coreboot.org/coreboot
+</code></pre>
+
+<p>Install build dependencies:</p>
+
+<pre><code>sudo apt-get install -y bison build-essential curl flex git gnat libncurses5-dev m4 zlib1g-dev
+</code></pre>
+
+<p>Install flashrom:</p>
+
+<pre><code>sudo apt-get install flashrom
+</code></pre>
+
+<p>Build coreboot toolchain:</p>
+
+<pre><code>cd coreboot
+make crossgcc-i386 CPUS=4
+</code></pre>
+
+<p>Build cbfstool and ifdtool:</p>
+
+<pre><code>cd util/cbfstool
+make
+cd ../util/ifdtool
+make
+cd ..
+</code></pre>
+
+<p>Since coreboot was already on my laptop, I was able to extract the binary blobs from the machine itself.</p>
+
+<p>I analyzed purism&rsquo;s coreboot installation script (see references below) in order to find out how to get the binary blobs. I wrote a small script myself basing on theirs with a minimal set of commands to get the six necessary blobs. See comments on the scripts for details.</p>
+
+<pre><code>#!/bin/bash -e
+# extract.sh - Extract binary blobs from librem 13 v1 already running coreboot
+set -x
+
+# CPU Microcode Blob URL (same link as Purism uses)
+BDL_UCODE_URL=&quot;https://github.com/platomav/CPUMicrocodes/raw/18a85ffed180447aa16c2796146ff2698691eddf/Intel/cpu306D4_platC0_ver0000002A_2018-01-18_PRD_CC79BBDA.bin&quot;
+
+# Clone the coreboot files from purism's github:
+git clone https://source.puri.sm/coreboot/coreboot-files.git
+
+# Create blob directory, following coreboot file structure
+mkdir 3rdparty/blobs/mainboard/purism/librem_bdw
+
+# 0. Get the currently installed coreboot image with flashrom
+flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
+
+# 1. Use ifdtool to extract the flash regions from the rom image 
+# Copy me.bin which corresponds to the second flash region
+util/ifdtool/ifdtool -x coreboot-orig.rom
+cp flashregion_2_intel_me.bin 3rdparty/blobs/mainboard/purism/librem_bdw/me.bin
+
+# 2. Download cpu_microcode_blob.bin
+wget -O 3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin $BDL_UCODE_URL
+
+# 3. Extract mrc.bin from the rom image
+util/cbfstool/cbfstool coreboot-orig.rom extract -n mrc.bin -f 3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin
+
+# 4. Extract refcode.elf from the rom image
+util/cbfstool/cbfstool coreboot-orig.rom extract -n fallback/refcode -f 3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf -m x86
+
+# 5. Extract vgabios.bin from the rom image
+util/cbfstool/cbfstool coreboot-orig.rom extract -n pci8086,1616.rom -f 3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin
+
+# 6. Get descriptor.bin from purism's repository (coreboot-files)
+cp coreboot-files/descriptor-bdl.bin 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin
+</code></pre>
+
+<p><em>NOTE: Since I relied on their script, files and sources,  I do not check the hashes on the script although it should be done.</em></p>
+
+<h2 id="2-configure-and-build-coreboot">2. Configure and build coreboot</h2>
+
+<p>Copy the .config file from purism&rsquo;s coreboot-files. Run make menuconfig and save in order to update the configuration including all settings not included in the config.</p>
+
+<pre><code>cp coreboot-files/configs/config.librem13v1 .config
+make menuconfig
+</code></pre>
+
+<p>Following file paths must be corrected:</p>
+
+<pre><code>-CONFIG_BOOTSPLASH_FILE=&quot;bootsplash.jpg&quot;
++CONFIG_BOOTSPLASH_FILE=&quot;coreboot-files/bootsplash.jpg&quot;
+
+-CONFIG_SEABIOS_BOOTORDER_FILE=&quot;bootorder.txt&quot;
++CONFIG_SEABIOS_BOOTORDER_FILE=&quot;coreboot-files/bootorder-l13v1.txt&quot;
+</code></pre>
+
+<p>Now .config is ready and we can build coreboot:</p>
+
+<pre><code>make -j4
+</code></pre>
+
+<h2 id="3-install-coreboot">3. Install coreboot</h2>
+
+<p>Before flashing, reboot including the kernel parameter iomem=relaxed, otherwise flashrom will fail. For this, press &ldquo;e&rdquo; when the grub menu is shown and edit the kernel command line manually.</p>
+
+<p>After reboot, I flashed the new image I had just built:</p>
+
+<pre><code>sudo flashrom -p internal:laptop=force_I_want_a_brick -c MX25L6405D -w build/coreboot.rom 
+</code></pre>
+
+<p>And then a cool reboot - luckily the computer still booted :D</p>
+
+<p>I saw first the SeeBios message, then the Purism Logo and then the Grub boot menu.</p>
+
+<p>The wifi wasn&rsquo;t working yet. However, that is another story and shall be told another time ;)</p>
+
+<p>References and sources:</p>
+
+<p><a href="https://doc.coreboot.org/lessons/lesson1.html" target="_blank">Coreboot Rookie Guide</a></p>
+
+<p><a href="https://puri.sm/coreboot" target="_blank">https://puri.sm/coreboot</a></p>
+
+<p><a href="https://www.flashrom.org/FAQ" target="_blank">Flashrom FAQ</a></p>
+
+<p><a href="http://localhost:1313/techblog/post/coreboot_librem" target="_blank">Coreboot on Librem</a></p>
+
+    </div>
+  </div>
+
+</article>
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+    <li class="previous"><a href="https://eramons.github.io/techblog/post/coreboot_librem/"><span
+      aria-hidden="true">&larr;</span> Install Coreboot on the Librem 13 v.1</a></li>
+    
+
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 E. Ramon &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.2/imagesloaded.pkgd.min.js" integrity="sha512-iHzEu7GbSc705hE2skyH6/AlTpOfBmkx7nUqTLGzPYR+C1tRaItbRlJ7hT/D3YQ9SV0fqLKzp4XY9wKulTBGTw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js" integrity="sha512-Z5heTz36xTemt1TbtbfXtTq5lMfYnOkXM2/eWcTTiLU01+Sw4ku1i7vScDc8fWhrP2abz9GQzgKH5NGBLoYlAw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/plugins/ScrollToPlugin.min.js" integrity="sha512-CDeU7pRtkPX6XJtF/gcFWlEwyaX7mcAp5sO3VIu/ylsdR74wEw4wmBpD5yYTrmMAiAboi9thyBUr1vXRPA7t0Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/techblog/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
+    
+    
+
+  </body>
+</html>
+

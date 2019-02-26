@@ -13,7 +13,17 @@
     
     
     <item>
-      <title>Install coreboot on the Librem 13 v.1</title>
+      <title>Build Coreboot</title>
+      <link>https://eramons.github.io/techblog/post/build_coreboot/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/build_coreboot/</guid>
+      <description>DISCLAIMER: try anything described here at your own risk! These are just my notes. That it did work for me then does not mean this would work for you now.
+After successfully installing coreboot on my librem 13 v1, I noticed that unfortunately the wifi wasn&amp;rsquo;t working anymore. Since the coreboot version I flashed previously wasn&amp;rsquo;t quite new, I decided to build a new rom image myself using the newest coreboot source code.</description>
+    </item>
+    
+    <item>
+      <title>Install Coreboot on the Librem 13 v.1</title>
       <link>https://eramons.github.io/techblog/post/coreboot_librem/</link>
       <pubDate>Mon, 18 Feb 2019 10:00:00 +0200</pubDate>
       

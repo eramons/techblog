@@ -11,7 +11,155 @@
     <atom:link href="/techblog/" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Install coreboot on the Librem 13 v.1</title>
+      <title>Build Coreboot</title>
+      <link>https://eramons.github.io/techblog/post/build_coreboot/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/build_coreboot/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;DISCLAIMER: try anything described here at your own risk! These are just my notes. That it did work for me then does not mean this would work for you now.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;After successfully installing coreboot on my librem 13 v1, I noticed that unfortunately the wifi wasn&amp;rsquo;t working anymore. Since the coreboot version I flashed previously wasn&amp;rsquo;t quite new, I decided to build a new rom image myself using the newest coreboot source code.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Replace coreboot with an up-to-date, self-built coreboot version&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Tasks:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Get needed files: source code, purism configuration and binary blobs&lt;/li&gt;
+&lt;li&gt;Configure and build coreboot&lt;/li&gt;
+&lt;li&gt;Install coreboot&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;1-get-the-files&#34;&gt;1. Get the files&lt;/h2&gt;
+
+&lt;p&gt;Get coreboot source code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://review.coreboot.org/coreboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Install build dependencies:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install -y bison build-essential curl flex git gnat libncurses5-dev m4 zlib1g-dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Install flashrom:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install flashrom
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build coreboot toolchain:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd coreboot
+make crossgcc-i386 CPUS=4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build cbfstool and ifdtool:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd util/cbfstool
+make
+cd ../util/ifdtool
+make
+cd ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since coreboot was already on my laptop, I was able to extract the binary blobs from the machine itself.&lt;/p&gt;
+
+&lt;p&gt;I analyzed purism&amp;rsquo;s coreboot installation script (see references below) in order to find out how to get the binary blobs. I wrote a small script myself basing on theirs with a minimal set of commands to get the six necessary blobs. See comments on the scripts for details.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash -e
+# extract.sh - Extract binary blobs from librem 13 v1 already running coreboot
+set -x
+
+# CPU Microcode Blob URL (same link as Purism uses)
+BDL_UCODE_URL=&amp;quot;https://github.com/platomav/CPUMicrocodes/raw/18a85ffed180447aa16c2796146ff2698691eddf/Intel/cpu306D4_platC0_ver0000002A_2018-01-18_PRD_CC79BBDA.bin&amp;quot;
+
+# Clone the coreboot files from purism&#39;s github:
+git clone https://source.puri.sm/coreboot/coreboot-files.git
+
+# Create blob directory, following coreboot file structure
+mkdir 3rdparty/blobs/mainboard/purism/librem_bdw
+
+# 0. Get the currently installed coreboot image with flashrom
+flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
+
+# 1. Use ifdtool to extract the flash regions from the rom image 
+# Copy me.bin which corresponds to the second flash region
+util/ifdtool/ifdtool -x coreboot-orig.rom
+cp flashregion_2_intel_me.bin 3rdparty/blobs/mainboard/purism/librem_bdw/me.bin
+
+# 2. Download cpu_microcode_blob.bin
+wget -O 3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin $BDL_UCODE_URL
+
+# 3. Extract mrc.bin from the rom image
+util/cbfstool/cbfstool coreboot-orig.rom extract -n mrc.bin -f 3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin
+
+# 4. Extract refcode.elf from the rom image
+util/cbfstool/cbfstool coreboot-orig.rom extract -n fallback/refcode -f 3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf -m x86
+
+# 5. Extract vgabios.bin from the rom image
+util/cbfstool/cbfstool coreboot-orig.rom extract -n pci8086,1616.rom -f 3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin
+
+# 6. Get descriptor.bin from purism&#39;s repository (coreboot-files)
+cp coreboot-files/descriptor-bdl.bin 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: Since I relied on their script, files and sources,  I do not check the hashes on the script although it should be done.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;2-configure-and-build-coreboot&#34;&gt;2. Configure and build coreboot&lt;/h2&gt;
+
+&lt;p&gt;Copy the .config file from purism&amp;rsquo;s coreboot-files. Run make menuconfig and save in order to update the configuration including all settings not included in the config.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cp coreboot-files/configs/config.librem13v1 .config
+make menuconfig
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Following file paths must be corrected:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-CONFIG_BOOTSPLASH_FILE=&amp;quot;bootsplash.jpg&amp;quot;
++CONFIG_BOOTSPLASH_FILE=&amp;quot;coreboot-files/bootsplash.jpg&amp;quot;
+
+-CONFIG_SEABIOS_BOOTORDER_FILE=&amp;quot;bootorder.txt&amp;quot;
++CONFIG_SEABIOS_BOOTORDER_FILE=&amp;quot;coreboot-files/bootorder-l13v1.txt&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now .config is ready and we can build coreboot:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;make -j4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;3-install-coreboot&#34;&gt;3. Install coreboot&lt;/h2&gt;
+
+&lt;p&gt;Before flashing, reboot including the kernel parameter iomem=relaxed, otherwise flashrom will fail. For this, press &amp;ldquo;e&amp;rdquo; when the grub menu is shown and edit the kernel command line manually.&lt;/p&gt;
+
+&lt;p&gt;After reboot, I flashed the new image I had just built:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo flashrom -p internal:laptop=force_I_want_a_brick -c MX25L6405D -w build/coreboot.rom 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then a cool reboot - luckily the computer still booted :D&lt;/p&gt;
+
+&lt;p&gt;I saw first the SeeBios message, then the Purism Logo and then the Grub boot menu.&lt;/p&gt;
+
+&lt;p&gt;The wifi wasn&amp;rsquo;t working yet. However, that is another story and shall be told another time ;)&lt;/p&gt;
+
+&lt;p&gt;References and sources:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://doc.coreboot.org/lessons/lesson1.html&#34; target=&#34;_blank&#34;&gt;Coreboot Rookie Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://puri.sm/coreboot&#34; target=&#34;_blank&#34;&gt;https://puri.sm/coreboot&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.flashrom.org/FAQ&#34; target=&#34;_blank&#34;&gt;Flashrom FAQ&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/techblog/post/coreboot_librem&#34; target=&#34;_blank&#34;&gt;Coreboot on Librem&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Install Coreboot on the Librem 13 v.1</title>
       <link>https://eramons.github.io/techblog/post/coreboot_librem/</link>
       <pubDate>Mon, 18 Feb 2019 10:00:00 +0200</pubDate>
       
@@ -82,7 +230,7 @@ Partition table scan:
 	GPT: present
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 1 MB partition at the start of the disk.&lt;/p&gt;
+&lt;p&gt;I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 100 MB partition at the start of the disk.&lt;/p&gt;
 
 &lt;p&gt;I looked at the partitions on my librem (you can use either gparted or gdisk):&lt;/p&gt;
 
@@ -194,7 +342,7 @@ coreboot-l13v1.rom: Intel serial flash for PCH ROM
 
 &lt;p&gt;After having booted with a relaxed iomem, I was ready to flash:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;sudo flashrom -p internal:laptop=force_I_want_a_brick MX25L6405D -w coreboot-l12v1.rom
+&lt;pre&gt;&lt;code&gt;sudo flashrom -p internal:laptop=force_I_want_a_brick -w coreboot-l12v1.rom
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Done :) I rebooted and was greeted by the Purism logo and SeeBios.&lt;/p&gt;
@@ -241,8 +389,6 @@ Verifying flash... VERIFIED.
 &lt;p&gt;&lt;a href=&#34;https://puri.sm&#34; target=&#34;_blank&#34;&gt;Purism&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions&#34; target=&#34;_blank&#34;&gt;ArchLinux Grub Documentation&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://doc.coreboot.org/lessons/lesson1.html&#34; target=&#34;_blank&#34;&gt;Coreboot Rookie Guide&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://puri.sm/coreboot&#34; target=&#34;_blank&#34;&gt;https://puri.sm/coreboot&lt;/a&gt;&lt;/p&gt;
 

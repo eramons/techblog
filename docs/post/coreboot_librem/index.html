@@ -43,7 +43,7 @@
 
   
 
-  <title>Install coreboot on the Librem 13 v.1 | Small Technical Blog</title>
+  <title>Install Coreboot on the Librem 13 v.1 | Small Technical Blog</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -120,7 +120,7 @@
 
 
   <div class="article-container">
-    <h1 itemprop="name">Install coreboot on the Librem 13 v.1</h1>
+    <h1 itemprop="name">Install Coreboot on the Librem 13 v.1</h1>
     
 
 <div class="article-metadata">
@@ -151,28 +151,28 @@
     </li>
     <li>
       <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=Install%20coreboot%20on%20the%20Librem%2013%20v.1&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f"
+         href="https://twitter.com/intent/tweet?text=Install%20Coreboot%20on%20the%20Librem%2013%20v.1&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f"
          target="_blank">
         <i class="fa fa-twitter"></i>
       </a>
     </li>
     <li>
       <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f&amp;title=Install%20coreboot%20on%20the%20Librem%2013%20v.1"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f&amp;title=Install%20Coreboot%20on%20the%20Librem%2013%20v.1"
          target="_blank">
         <i class="fa fa-linkedin"></i>
       </a>
     </li>
     <li>
       <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f&amp;title=Install%20coreboot%20on%20the%20Librem%2013%20v.1"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f&amp;title=Install%20Coreboot%20on%20the%20Librem%2013%20v.1"
          target="_blank">
         <i class="fa fa-weibo"></i>
       </a>
     </li>
     <li>
       <a class="email"
-         href="mailto:?subject=Install%20coreboot%20on%20the%20Librem%2013%20v.1&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f">
+         href="mailto:?subject=Install%20Coreboot%20on%20the%20Librem%2013%20v.1&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcoreboot_librem%2f">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -251,7 +251,7 @@ Partition table scan:
 	GPT: present
 </code></pre>
 
-<p>I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 1 MB partition at the start of the disk.</p>
+<p>I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 100 MB partition at the start of the disk.</p>
 
 <p>I looked at the partitions on my librem (you can use either gparted or gdisk):</p>
 
@@ -363,7 +363,7 @@ coreboot-l13v1.rom: Intel serial flash for PCH ROM
 
 <p>After having booted with a relaxed iomem, I was ready to flash:</p>
 
-<pre><code>sudo flashrom -p internal:laptop=force_I_want_a_brick MX25L6405D -w coreboot-l12v1.rom
+<pre><code>sudo flashrom -p internal:laptop=force_I_want_a_brick -w coreboot-l12v1.rom
 </code></pre>
 
 <p>Done :) I rebooted and was greeted by the Purism logo and SeeBios.</p>
@@ -411,8 +411,6 @@ Verifying flash... VERIFIED.
 
 <p><a href="https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions" target="_blank">ArchLinux Grub Documentation</a></p>
 
-<p><a href="https://doc.coreboot.org/lessons/lesson1.html" target="_blank">Coreboot Rookie Guide</a></p>
-
 <p><a href="https://puri.sm/coreboot" target="_blank">https://puri.sm/coreboot</a></p>
 
 <p><a href="https://www.debian.org/CD/live" target="_blank">https://www.debian.org/CD/live</a></p>
@@ -432,6 +430,9 @@ Verifying flash... VERIFIED.
       aria-hidden="true">&larr;</span> Debian on Asus Chromebook Flip C101PA</a></li>
     
 
+    
+    <li class="next"><a href="https://eramons.github.io/techblog/post/build_coreboot/">Build Coreboot <span
+      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>
