@@ -29,7 +29,7 @@
 &lt;p&gt;Tasks:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Get needed files: source code, purism configuration and binary blobs&lt;/li&gt;
+&lt;li&gt;Get required files: coreboot source code, purism config and librem binary blobs&lt;/li&gt;
 &lt;li&gt;Configure and build coreboot&lt;/li&gt;
 &lt;li&gt;Install coreboot&lt;/li&gt;
 &lt;/ol&gt;
@@ -68,75 +68,77 @@ cd ..
 
 &lt;p&gt;Since coreboot was already on my laptop, I was able to extract the binary blobs from the machine itself.&lt;/p&gt;
 
-&lt;p&gt;I analyzed purism&amp;rsquo;s coreboot installation script (see references below) in order to find out how to get the binary blobs. I wrote a small script myself basing on theirs with a minimal set of commands to get the six necessary blobs. See comments on the scripts for details.&lt;/p&gt;
+&lt;p&gt;I analyzed purism&amp;rsquo;s coreboot installation script (see references below) in order to find out how to get the binary blobs.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!/bin/bash -e
-# extract.sh - Extract binary blobs from librem 13 v1 already running coreboot
-set -x
+&lt;p&gt;Create blob directory, following coreboot file structure:&lt;/p&gt;
 
-# Librem 13 v1 and Librem 15 v2 binary blob hashes
-BDL_UCODE_SHA=&amp;quot;69537c27d152ada7dce9e35bfa16e3cede81a18428d1011bd3c33ecae7afb467&amp;quot;
-BDL_DESCRIPTOR_SHA=&amp;quot;be34b19b4de387a07d4fc859d2e4ee44723756f5f54552f236136679b4e52c46&amp;quot;
-BDL_MRC_SHA=&amp;quot;dd05ab481e1fe0ce20ade164cf3dbef3c479592801470e6e79faa17624751343&amp;quot;
-BDL_REFCODE_SHA=&amp;quot;8a919ffece61ba21664b1028b0ebbfabcd727d90c1ae2f72b48152b8774323a4&amp;quot;
-BDL_VBIOS_SHA=&amp;quot;e1cd1b4f2bd21e036145856e2d092eb47c27cdb4b717c3b182a18d8c0b1d0f01&amp;quot;
+&lt;pre&gt;&lt;code&gt;mkdir 3rdparty/blobs/mainboard/purism/librem_bdw
+&lt;/code&gt;&lt;/pre&gt;
 
-# CPU Microcode Blob URL (same link as Purism uses)
-BDL_UCODE_URL=&amp;quot;https://github.com/platomav/CPUMicrocodes/raw/18a85ffed180447aa16c2796146ff2698691eddf/Intel/cpu306D4_platC0_ver0000002A_2018-01-18_PRD_CC79BBDA.bin&amp;quot;
+&lt;p&gt;Get the currently installed coreboot image with &lt;em&gt;flashrom&lt;/em&gt;:&lt;/p&gt;
 
-# Clone the coreboot files from purism&#39;s github:
-git clone https://source.puri.sm/coreboot/coreboot-files.git
+&lt;pre&gt;&lt;code&gt;flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
+&lt;/code&gt;&lt;/pre&gt;
 
-# Create blob directory, following coreboot file structure
-mkdir 3rdparty/blobs/mainboard/purism/librem_bdw
+&lt;p&gt;Use &lt;em&gt;ifdtool&lt;/em&gt; to extract the flash regions from the rom image:&lt;/p&gt;
 
-# 0. Get the currently installed coreboot image with flashrom
-flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
+&lt;pre&gt;&lt;code&gt;sudo ./util/ifdtool/ifdtool -x coreboot-orig.rom 
+&lt;/code&gt;&lt;/pre&gt;
 
-# 1. Use ifdtool to extract the flash regions from the rom image
-# Copy me.bin which corresponds to the second flash region
-util/ifdtool/ifdtool -x coreboot-orig.rom
-cp flashregion_2_intel_me.bin 3rdparty/blobs/mainboard/purism/librem_bdw/me.bin
+&lt;p&gt;Output of &lt;em&gt;idftool&lt;/em&gt;:&lt;/p&gt;
 
-# 2. Download cpu_microcode_blob.bin and check hash
-wget -O 3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin $BDL_UCODE_URL
-if [ &amp;quot;$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin | awk &#39;{print $1}&#39;)&amp;quot; != &amp;quot;$BDL_UCODE_SHA&amp;quot; ]; then
-        echo &amp;quot;Fatal: wrong hash mrc.bin&amp;quot;
-        exit 1
-fi
+&lt;pre&gt;&lt;code&gt;File coreboot-orig.rom is 8388608 bytes
+  Flash Region 0 (Flash Descriptor): 00000000 - 00000fff 
+  Flash Region 1 (BIOS): 00200000 - 007fffff 
+  Flash Region 2 (Intel ME): 00001000 - 001fffff 
+  Flash Region 3 (GbE): 00fff000 - 00000fff (unused)
+  Flash Region 4 (Platform Data): 00fff000 - 00000fff (unused)
+&lt;/code&gt;&lt;/pre&gt;
 
-# 3. Extract mrc.bin from the rom image and check hash
-util/cbfstool/cbfstool coreboot-orig.rom extract -n mrc.bin -f 3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin
-if [ &amp;quot;$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin | awk &#39;{print $1}&#39;)&amp;quot; != &amp;quot;$BDL_MRC_SHA&amp;quot; ]; then
-        echo &amp;quot;Fatal: wrong hash mrc.bin&amp;quot;
-        exit 1
-fi
+&lt;p&gt;Copy the file containing the second flash region to &lt;em&gt;me.bin&lt;/em&gt;:&lt;/p&gt;
 
-# 4. Extract refcode.elf from the rom image and check hash
-util/cbfstool/cbfstool coreboot-orig.rom extract -n fallback/refcode -f 3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf -m x86
-if [ &amp;quot;$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf | awk &#39;{print $1}&#39;)&amp;quot; != &amp;quot;$BDL_REFCODE_SHA&amp;quot; ]; then
-        echo &amp;quot;Fatal: wrong hash refcode.elf&amp;quot;
-        exit 1
-fi
+&lt;pre&gt;&lt;code&gt;cp flashregion_2_intel_me.bin 3rdparty/blobs/mainboard/purism/librem_bdw/me.bin
+&lt;/code&gt;&lt;/pre&gt;
 
-# 5. Extract vgabios.bin from the rom image and check hash
-util/cbfstool/cbfstool coreboot-orig.rom extract -n pci8086,1616.rom -f 3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin
-if [ &amp;quot;$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin | awk &#39;{print $1}&#39;)&amp;quot; != &amp;quot;$BDL_VBIOS_SHA&amp;quot; ]; then
-        echo &amp;quot;Fatal: wrong hash vgabios.bin&amp;quot;
-        exit 1
-fi
+&lt;p&gt;Download &lt;em&gt;cpu_microcode_blob.bin&lt;/em&gt;:&lt;/p&gt;
 
-# 6. Get descriptor.bin from purism&#39;s repository (coreboot-files) and check hash
- cp coreboot-files/descriptor-bdl.bin 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin
-if [ &amp;quot;$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin | awk &#39;{print $1}&#39;)&amp;quot; != &amp;quot;$BDL_DESCRIPTOR_SHA&amp;quot; ]; then
-        echo &amp;quot;Fatal: wrong hash descriptor.bin&amp;quot;
-        exit 1
-fi
+&lt;pre&gt;&lt;code&gt;wget -O 3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin &amp;quot;https://github.com/platomav/CPUMicrocodes/raw/18a85ffed180447aa16c2796146ff2698691eddf/Intel/cpu306D4_platC0_ver0000002A_2018-01-18_PRD_CC79BBDA.bin&amp;quot; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Extract &lt;em&gt;mrc.bin&lt;/em&gt; from the rom image:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;util/cbfstool/cbfstool coreboot-orig.rom extract -n mrc.bin -f 3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Extract &lt;em&gt;refcode.elf&lt;/em&gt; from the rom image:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;util/cbfstool/cbfstool coreboot-orig.rom extract -n fallback/refcode -f 3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf -m x86
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Extract &lt;em&gt;vgabios.bin&lt;/em&gt; from the rom image:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;util/cbfstool/cbfstool coreboot-orig.rom extract -n pci8086,1616.rom -f 3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Clone the &lt;em&gt;coreboot-files&lt;/em&gt; from purism&amp;rsquo;s github repository to get &lt;em&gt;descriptor.bin&lt;/em&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://source.puri.sm/coreboot/coreboot-files.git
+cp coreboot-files/descriptor-bdl.bin 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I&amp;rsquo;m including the output of &lt;em&gt;sha256sum&lt;/em&gt; on all six binaries - which I compared with the ones provided by purism on their script as a security check:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;69537c27d152ada7dce9e35bfa16e3cede81a18428d1011bd3c33ecae7afb467  3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin
+be34b19b4de387a07d4fc859d2e4ee44723756f5f54552f236136679b4e52c46  3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin
+1e8f08c3eb31a0fdb91ec0222d4398b9192141502941a5262e9155915ffb6991  3rdparty/blobs/mainboard/purism/librem_bdw/me.bin
+dd05ab481e1fe0ce20ade164cf3dbef3c479592801470e6e79faa17624751343  3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin
+8a919ffece61ba21664b1028b0ebbfabcd727d90c1ae2f72b48152b8774323a4  3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf
+e1cd1b4f2bd21e036145856e2d092eb47c27cdb4b717c3b182a18d8c0b1d0f01  3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;2-configure-and-build-coreboot&#34;&gt;2. Configure and build coreboot&lt;/h2&gt;
 
-&lt;p&gt;Copy the .config file from purism&amp;rsquo;s coreboot-files. Run make menuconfig and save in order to update the configuration including all settings not included in the config.&lt;/p&gt;
+&lt;p&gt;Copy the &lt;em&gt;.config&lt;/em&gt; file from purism&amp;rsquo;s &lt;em&gt;coreboot-files&lt;/em&gt; downloaded before. Then run &lt;em&gt;make menuconfig&lt;/em&gt; and select &lt;em&gt;save&lt;/em&gt; in order to update the configuration including all settings not yet included:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;cp coreboot-files/configs/config.librem13v1 .config
 make menuconfig
@@ -158,7 +160,7 @@ make menuconfig
 
 &lt;h2 id=&#34;3-install-coreboot&#34;&gt;3. Install coreboot&lt;/h2&gt;
 
-&lt;p&gt;Before flashing, reboot including the kernel parameter iomem=relaxed, otherwise flashrom will fail. For this, press &amp;ldquo;e&amp;rdquo; when the grub menu is shown and edit the kernel command line manually.&lt;/p&gt;
+&lt;p&gt;Before flashing, reboot including the kernel parameter &lt;em&gt;iomem=relaxed&lt;/em&gt;, otherwise flashrom will fail. For this, press &amp;ldquo;e&amp;rdquo; when the grub menu is shown and edit the kernel command line manually.&lt;/p&gt;
 
 &lt;p&gt;After reboot, I flashed the new image I had just built:&lt;/p&gt;
 
@@ -178,6 +180,38 @@ make menuconfig
 &lt;p&gt;&lt;a href=&#34;https://puri.sm/coreboot&#34; target=&#34;_blank&#34;&gt;https://puri.sm/coreboot&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://www.flashrom.org/FAQ&#34; target=&#34;_blank&#34;&gt;Flashrom FAQ&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://localhost:1313/techblog/post/coreboot_librem&#34; target=&#34;_blank&#34;&gt;Coreboot on Librem&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Package Coreboot Tools for Debian</title>
+      <link>https://eramons.github.io/techblog/post/package_coreboot_tools/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/package_coreboot_tools/</guid>
+      <description>
+
+&lt;p&gt;Bla&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Bla&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Tasks:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Uno&lt;/li&gt;
+&lt;li&gt;Dos&lt;/li&gt;
+&lt;li&gt;Tres&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;1&#34;&gt;1.&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;References and sources:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://localhost:1313/techblog/post/coreboot_librem&#34; target=&#34;_blank&#34;&gt;Coreboot on Librem&lt;/a&gt;&lt;/p&gt;
 </description>

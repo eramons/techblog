@@ -23,6 +23,20 @@ After successfully installing coreboot on my librem 13 v1, I noticed that unfort
     </item>
     
     <item>
+      <title>Package Coreboot Tools for Debian</title>
+      <link>https://eramons.github.io/techblog/post/package_coreboot_tools/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/package_coreboot_tools/</guid>
+      <description>Bla
+Goal:
+Bla
+Tasks:
+ Uno Dos Tres  1.  References and sources:
+Coreboot on Librem</description>
+    </item>
+    
+    <item>
       <title>Install Coreboot on the Librem 13 v.1</title>
       <link>https://eramons.github.io/techblog/post/coreboot_librem/</link>
       <pubDate>Mon, 18 Feb 2019 10:00:00 +0200</pubDate>
