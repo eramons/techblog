@@ -134,8 +134,6 @@ if [ &amp;quot;$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor
 fi
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;em&gt;NOTE: Since I relied on their script, files and sources,  I do not check the hashes on the script although it should be done.&lt;/em&gt;&lt;/p&gt;
-
 &lt;h2 id=&#34;2-configure-and-build-coreboot&#34;&gt;2. Configure and build coreboot&lt;/h2&gt;
 
 &lt;p&gt;Copy the .config file from purism&amp;rsquo;s coreboot-files. Run make menuconfig and save in order to update the configuration including all settings not included in the config.&lt;/p&gt;
