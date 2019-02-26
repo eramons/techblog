@@ -1,7 +1,7 @@
 +++
 math = true
 date = "2019-02-18T10:00:00+02:00"
-title = "Install coreboot on the Librem 13 v.1"
+title = "Install Coreboot on the Librem 13 v.1"
 tags = []
 highlight = true
 
@@ -69,7 +69,7 @@ Partition table scan:
 	GPT: present
 ```
 
-I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 1 MB partition at the start of the disk. 
+I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 100 MB partition at the start of the disk. 
 
 I looked at the partitions on my librem (you can use either gparted or gdisk):
 	
@@ -180,7 +180,7 @@ Enabling flash write... Error accessing ICH RCRB, 0x4000 bytes at 0x00000000fed1
 
 After having booted with a relaxed iomem, I was ready to flash:
 ```
-sudo flashrom -p internal:laptop=force_I_want_a_brick MX25L6405D -w coreboot-l12v1.rom
+sudo flashrom -p internal:laptop=force_I_want_a_brick -w coreboot-l12v1.rom
 ```
 
 Done :) I rebooted and was greeted by the Purism logo and SeeBios.
@@ -227,8 +227,6 @@ References and useful or interesting links:
 [Purism](https://puri.sm)
 
 [ArchLinux Grub Documentation](https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions)
-
-[Coreboot Rookie Guide](https://doc.coreboot.org/lessons/lesson1.html)
 
 [https://puri.sm/coreboot](https://puri.sm/coreboot)
 
