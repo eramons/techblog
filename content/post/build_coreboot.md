@@ -66,6 +66,13 @@ I analyzed purism's coreboot installation script (see references below) in order
 # extract.sh - Extract binary blobs from librem 13 v1 already running coreboot
 set -x
 
+# Librem 13 v1 and Librem 15 v2 binary blob hashes
+BDL_UCODE_SHA="69537c27d152ada7dce9e35bfa16e3cede81a18428d1011bd3c33ecae7afb467"
+BDL_DESCRIPTOR_SHA="be34b19b4de387a07d4fc859d2e4ee44723756f5f54552f236136679b4e52c46"
+BDL_MRC_SHA="dd05ab481e1fe0ce20ade164cf3dbef3c479592801470e6e79faa17624751343"
+BDL_REFCODE_SHA="8a919ffece61ba21664b1028b0ebbfabcd727d90c1ae2f72b48152b8774323a4"
+BDL_VBIOS_SHA="e1cd1b4f2bd21e036145856e2d092eb47c27cdb4b717c3b182a18d8c0b1d0f01"
+
 # CPU Microcode Blob URL (same link as Purism uses)
 BDL_UCODE_URL="https://github.com/platomav/CPUMicrocodes/raw/18a85ffed180447aa16c2796146ff2698691eddf/Intel/cpu306D4_platC0_ver0000002A_2018-01-18_PRD_CC79BBDA.bin"
 
@@ -78,25 +85,45 @@ mkdir 3rdparty/blobs/mainboard/purism/librem_bdw
 # 0. Get the currently installed coreboot image with flashrom
 flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
 
-# 1. Use ifdtool to extract the flash regions from the rom image 
+# 1. Use ifdtool to extract the flash regions from the rom image
 # Copy me.bin which corresponds to the second flash region
 util/ifdtool/ifdtool -x coreboot-orig.rom
 cp flashregion_2_intel_me.bin 3rdparty/blobs/mainboard/purism/librem_bdw/me.bin
 
-# 2. Download cpu_microcode_blob.bin
+# 2. Download cpu_microcode_blob.bin and check hash
 wget -O 3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin $BDL_UCODE_URL
+if [ "$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin | awk '{print $1}')" != "$BDL_UCODE_SHA" ]; then
+        echo "Fatal: wrong hash mrc.bin"
+        exit 1
+fi
 
-# 3. Extract mrc.bin from the rom image
+# 3. Extract mrc.bin from the rom image and check hash
 util/cbfstool/cbfstool coreboot-orig.rom extract -n mrc.bin -f 3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin
+if [ "$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin | awk '{print $1}')" != "$BDL_MRC_SHA" ]; then
+        echo "Fatal: wrong hash mrc.bin"
+        exit 1
+fi
 
-# 4. Extract refcode.elf from the rom image
+# 4. Extract refcode.elf from the rom image and check hash
 util/cbfstool/cbfstool coreboot-orig.rom extract -n fallback/refcode -f 3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf -m x86
+if [ "$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf | awk '{print $1}')" != "$BDL_REFCODE_SHA" ]; then
+        echo "Fatal: wrong hash refcode.elf"
+        exit 1
+fi
 
-# 5. Extract vgabios.bin from the rom image
+# 5. Extract vgabios.bin from the rom image and check hash
 util/cbfstool/cbfstool coreboot-orig.rom extract -n pci8086,1616.rom -f 3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin
+if [ "$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin | awk '{print $1}')" != "$BDL_VBIOS_SHA" ]; then
+        echo "Fatal: wrong hash vgabios.bin"
+        exit 1
+fi
 
-# 6. Get descriptor.bin from purism's repository (coreboot-files)
-cp coreboot-files/descriptor-bdl.bin 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin
+# 6. Get descriptor.bin from purism's repository (coreboot-files) and check hash
+ cp coreboot-files/descriptor-bdl.bin 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin
+if [ "$(sha256sum 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin | awk '{print $1}')" != "$BDL_DESCRIPTOR_SHA" ]; then
+        echo "Fatal: wrong hash descriptor.bin"
+        exit 1
+fi
 ```
 
 _NOTE: Since I relied on their script, files and sources,  I do not check the hashes on the script although it should be done._
