@@ -13,6 +13,17 @@
     
     
     <item>
+      <title>EHCI Debug</title>
+      <link>https://eramons.github.io/techblog/post/debug_coreboot/</link>
+      <pubDate>Wed, 13 Mar 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/debug_coreboot/</guid>
+      <description>The EHCI Debug Port is an optional capability of EHCI controllers which can be used for early debugging for hardware which does not have a serial port. All USB2 host controllers are EHCI controllers.
+TODO: Explain USB Device / USB Gadget
+Since I installed Coreboot on my Librem, I experienced some issues. In order to investigate - and since the Librem has no serial port - I aimed to do some Coreboot and kernel debugging with a Raspberry Pi Zero.</description>
+    </item>
+    
+    <item>
       <title>Build Coreboot</title>
       <link>https://eramons.github.io/techblog/post/build_coreboot/</link>
       <pubDate>Mon, 25 Feb 2019 10:00:00 +0200</pubDate>

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.52" />
+  <meta name="generator" content="Hugo 0.54.0" />
   <meta name="author" content="E. Ramon">
   
 
@@ -543,18 +543,19 @@ For example, the following command will restore the settings of KERN-A:</p>
 
 <ul>
 <li>For my debian kernel: KERN-D with size 100 MB</li>
-<li>For my debian rootfs: ROOT-D with size 9.45 GB (e.g. all unallocated space after resize STATE and creating KERN-D)</li>
-</ul>
 
-<pre><code>    30539776      204800      13  Label: &quot;KERN-D&quot;
-                                  Type: ChromeOS kernel
-                                  UUID: 9CAA153C-8A88-0A4D-B750-FA2F52FB3A2E
-                                  Attr: priority=10 tries=5 successful=1 
-    10719232    19820544      14  Label: &quot;ROOT-D&quot;
-                                  Type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
-                                  UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
-                                  UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
-</code></pre>
+<li><p>For my debian rootfs: ROOT-D with size 9.45 GB (e.g. all unallocated space after resize STATE and creating KERN-D)</p>
+
+<pre><code>30539776      204800      13  Label: &quot;KERN-D&quot;
+                              Type: ChromeOS kernel
+                              UUID: 9CAA153C-8A88-0A4D-B750-FA2F52FB3A2E
+                              Attr: priority=10 tries=5 successful=1 
+10719232    19820544      14  Label: &quot;ROOT-D&quot;
+                              Type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+                              UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
+                              UUID: C5E4E377-6D8F-4747-AA1F-6A8EEDDF031A
+</code></pre></li>
+</ul>
 
 <p>Set the priority, tries and succesful flag for the KERN-D partition:</p>
 
