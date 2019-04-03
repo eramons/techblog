@@ -226,6 +226,11 @@
 make crossgcc-i386 CPUS=4
 </code></pre>
 
+<p>Pull coreboot submodules, since some are needed in order to build cbfstool:</p>
+
+<pre><code>git submodule update --init
+</code></pre>
+
 <p>Build cbfstool and ifdtool:</p>
 
 <pre><code>cd util/cbfstool
@@ -241,12 +246,12 @@ cd ..
 
 <p>Create blob directory, following coreboot file structure:</p>
 
-<pre><code>mkdir 3rdparty/blobs/mainboard/purism/librem_bdw
+<pre><code>mkdir -p 3rdparty/blobs/mainboard/purism/librem_bdw
 </code></pre>
 
 <p>Get the currently installed coreboot image with <em>flashrom</em>:</p>
 
-<pre><code>flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
+<pre><code>sudo flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
 </code></pre>
 
 <p>Use <em>ifdtool</em> to extract the flash regions from the rom image:</p>

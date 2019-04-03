@@ -49,6 +49,11 @@ cd coreboot
 make crossgcc-i386 CPUS=4
 ```
 
+Pull coreboot submodules, since some are needed in order to build cbfstool:
+```
+git submodule update --init
+```
+
 Build cbfstool and ifdtool:
 ```
 cd util/cbfstool
@@ -64,12 +69,12 @@ I analyzed purism's coreboot installation script (see references below) in order
 
 Create blob directory, following coreboot file structure:
 ```
-mkdir 3rdparty/blobs/mainboard/purism/librem_bdw
+mkdir -p 3rdparty/blobs/mainboard/purism/librem_bdw
 ```
 
 Get the currently installed coreboot image with _flashrom_:
 ```
-flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
+sudo flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
 ```
 
 Use _ifdtool_ to extract the flash regions from the rom image:
