@@ -12,8 +12,10 @@ weight = 1
 # List your academic interests.
 [interests]
   interests = [
-    "Debian",
+    "Kubernetes",
+    "Blockchain",
     "Coreboot",
+    "Debian",
     "Android"
   ]
 

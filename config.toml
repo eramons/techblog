@@ -23,15 +23,10 @@ defaultContentLanguageInSubdir = false
   name = "E. Ramon"
 #  role = "Solution Architect"
 #  organization = "Swisscom"
-  organization_url = ""
+#  organization_url = ""
   gravatar = false  # Get your avatar from Gravatar.com? (true/false)
-#  avatar = "empanadilla.jpg"  # Specify an avatar image (in `static/img/` folder) or delete value to disable avatar.
+#  avatar = "static/img/eve.png" 
   email = "debian@empanadilla.net"
-#  address = "Building 1 Room 1, Stanford University, California, 90210, USA"
-#  office_hours = "Monday 10:00 to 13:00 or email for appointment"
-#  phone = "888 888 88 88"
-#  skype = "echo123"
-#  telegram = ""
 
   # Enable Keybase in Contact section by entering your keybase.io username.
   keybase = ""

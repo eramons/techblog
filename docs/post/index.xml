@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Small Technical Blog</title>
@@ -11,6 +11,19 @@
     
 	<atom:link href="https://eramons.github.io/techblog/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Setup a Home Kubernetes Cluster</title>
+      <link>https://eramons.github.io/techblog/post/kubernetes_cluster/</link>
+      <pubDate>Fri, 20 Mar 2020 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/kubernetes_cluster/</guid>
+      <description>Home Kubernetes Cluster with old hardware: 1 Master and 1 Worker
+Goal:
+Set up a Home Kubernetes cluster
+Tasks:
+ Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.</description>
+    </item>
     
     <item>
       <title>EHCI Debug</title>

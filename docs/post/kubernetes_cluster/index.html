@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.53" />
+  <meta name="author" content="E. Ramon">
+  
+
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/techblog/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.0/css/academicons.min.css" integrity="sha512-GGGNUPDhnG8LEAEDsjqYIQns+Gu8RBs4j5XGlxl7UfRaZBhCCm5jenJkeJL8uPuOXGqgl8/H1gjlWQDRjd3cUQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather%7CRoboto+Mono">
+  <link rel="stylesheet" href="/techblog/css/hugo-academic.css">
+  
+
+  
+
+  <link rel="alternate" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+  <link rel="feed" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+
+  <link rel="icon" type="image/png" href="/techblog/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/techblog/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://eramons.github.io/techblog/post/kubernetes_cluster/">
+
+  
+
+  <title>Setup a Home Kubernetes Cluster | Small Technical Blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/techblog/">Small Technical Blog</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">Setup a Home Kubernetes Cluster</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2020-03-20 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Fri, Mar 20, 2020
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Setup%20a%20Home%20Kubernetes%20Cluster&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Setup%20a%20Home%20Kubernetes%20Cluster"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Setup%20a%20Home%20Kubernetes%20Cluster"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Setup%20a%20Home%20Kubernetes%20Cluster&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<p>Home Kubernetes Cluster with old hardware: 1 Master and 1 Worker</p>
+
+<p><strong>Goal:</strong></p>
+
+<p><em>Set up a Home Kubernetes cluster</em></p>
+
+<p>Tasks:</p>
+
+<ol>
+<li>Find old hardware</li>
+<li>Install Ubuntu Server 18.04 LTS</li>
+<li>Set up Master Node</li>
+<li>Set up Worker Node</li>
+</ol>
+
+<h2 id="1-find-old-hardware">1. Find old hardware</h2>
+
+<p>Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this. That&rsquo;s what I found:</p>
+
+<ul>
+<li>A MAC Mini Server from year 2009. Two 500GB disks. A still working grub bootloader told me I had a MacOS, an Ubuntu and two Debian distributions installed on the machine. This computer had 4GB RAM. I removed one of the disks, which was broken. One 500GB disk is more than enough for the Master anyway.</li>
+<li>A PC tower whose components were bought separately and which I proudly assembled myself in 2007. Refurbished through the years, this PC had 6GB RAM and three hard disks: 250GB, 500GB and 2TB. Over the two first disks I had a LVM system installed, with a Debian installation and two separated home partitions. The PC didn&rsquo;t boot anymore, since the first disk - hosting the Master Boot Record - was broken. I removed the broken disk and the second LVM disk, keeping only the 2TB disk on the machine.</li>
+</ul>
+
+<p>So I thought the MAC Mini should be my Master and the PC Tower should be my Worker :)</p>
+
+<h2 id="2-install-ubuntu-server-lts">2. Install Ubuntu Server LTS</h2>
+
+<p>I decided to install the newest Ubuntu Server version with Long Term Support (LTS) on both machines. An alternative could have been to install the latest Debian stable.</p>
+
+<p>Download Ubuntu Server 18.04.4 LTS from <a href="https://ubuntu.com/download/server" target="_blank">https://ubuntu.com/download/server</a></p>
+
+<p>For the MacMini, I just created a bootable USB.</p>
+
+<p>Insert an USB drive and find out which device is it mapped to:</p>
+
+<pre><code>sudo dmesg |grep sd
+...
+[24400.755280] sd 4:0:0:0: [sdb] Attached SCSI disk
+[24406.001628] EXT4-fs (sdb1): mounted filesystem with ordered data mode. Opts: (null)
+[39200.249434] sd 4:0:0:0: [sdb] 31266816 512-byte logical blocks: (16.0 GB/14.9 GiB)
+...
+</code></pre>
+
+<p>It was /dev/sdb. So I copied the downloaded image to the USB drive:</p>
+
+<pre><code>sudo dd if=ubuntu-18.04.4-live-server-amd64.iso of=/dev/sdb
+</code></pre>
+
+<p>For the old PC, I had to burn a DVD, since it was so old it did not even boot from USB. For that I borrowed a quite old Windows laptop which still had a DVD-drive. I burned the ISO image using the Windows Disc Image Burner.</p>
+
+<p>After having the media prepared, I installed Ubuntu Server on both machines. In both cases, I chose &ldquo;Manual&rdquo; for setting up the disks and the partitions, using the whole disk.</p>
+
+<p>NOTE: swap is not supported. Either it must be omitted during installation, or it must be switched off afterwards:</p>
+
+<pre><code>sudo swapoff -a 
+</code></pre>
+
+<h2 id="3-master-node">3. Master node</h2>
+
+<h3 id="3-1-install-runtime">3.1. Install runtime</h3>
+
+<p>I searched for a suitable container runtime to install, gettin two results which made sense for me:</p>
+
+<pre><code>eramon@caipirinha:~/dev/techblog$ apt-cache search docker.io
+containerd - open and reliable container runtime
+docker.io - Linux container runtime
+...
+</code></pre>
+
+<p>Although containerd would be enough, I installed docker.io since having the extra docker tools for debugging or whatever might be useful later:</p>
+
+<pre><code>sudo apt-get install docker.io
+</code></pre>
+
+<h3 id="3-2-install-kubernetes-software">3.2. Install kubernetes software</h3>
+
+<p>Install kubeadm, kubectl and kubelet</p>
+
+<pre><code>sudo apt-get update
+sudo apt-get install -y apt-transport-https curl
+
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo vi /etc/apt/sources.list.d/kubernetes.list
+Add:
+deb https://apt.kubernetes.io/ kubernetes-xenial main (probably not good, I have bionic) There is no kubernetes-bionic under packages.cloud.google.com/apt/dists
+sudo apt-get update
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+</code></pre>
+
+<p>kubelet, kubeadm and kubectl are set on hold (to avoid automatic updates, I think)</p>
+
+<p>After installation:</p>
+
+<pre><code>systemctl daemon-reload
+systemctl restart kubelet
+</code></pre>
+
+<h3 id="3-3-initialise-master-node">3.3 Initialise master node</h3>
+
+<p>The goal was to set up a single control-plane cluster with kubeadm.</p>
+
+<pre><code>kubeadmin init --pod-network-cidr=10.244.0.0/16
+...
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 \
+    --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9 
+</code></pre>
+
+<p>To make kubectl work for your non-root user, run these commands, which are also part of the kubeadm init output:</p>
+
+<pre><code>mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+eramon@pacharan:~$ sudo chown eramon:eramon .kube/config
+</code></pre>
+
+<p>After these steps, we see that kubectl cluster-info is showing something so kubectl is interacting with our new cluster:</p>
+
+<pre><code>eramon@pacharan:~$ kubectl cluster-info
+Kubernetes master is running at https://192.168.1.129:6443
+KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+</code></pre>
+
+<h3 id="3-4-install-a-pod-network-add-on">3.4 Install a Pod network add-on</h3>
+
+<p>As the output of kubeadm said, we must deploy a pod network to the cluster, so the pods can communicate with each other.</p>
+
+<pre><code>eramon@pacharan:~$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+podsecuritypolicy.policy/psp.flannel.unprivileged created
+clusterrole.rbac.authorization.k8s.io/flannel created
+clusterrolebinding.rbac.authorization.k8s.io/flannel created
+serviceaccount/flannel created
+configmap/kube-flannel-cfg created
+daemonset.apps/kube-flannel-ds-amd64 created
+daemonset.apps/kube-flannel-ds-arm64 created
+daemonset.apps/kube-flannel-ds-arm created
+daemonset.apps/kube-flannel-ds-ppc64le created
+daemonset.apps/kube-flannel-ds-s390x created
+</code></pre>
+
+<p>Show all pods from all namespaces:</p>
+
+<pre><code>eramon@pacharan:~$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE
+kube-system   coredns-6955765f44-597bj           1/1     Running   0          160m
+kube-system   coredns-6955765f44-ctwvs           1/1     Running   0          160m
+kube-system   etcd-pacharan                      1/1     Running   0          160m
+kube-system   kube-apiserver-pacharan            1/1     Running   0          160m
+kube-system   kube-controller-manager-pacharan   1/1     Running   0          160m
+kube-system   kube-flannel-ds-amd64-dhc7f        1/1     Running   0          62s
+kube-system   kube-proxy-qcv98                   1/1     Running   0          160m
+kube-system   kube-scheduler-pacharan            1/1     Running   0          160m
+</code></pre>
+
+<p>Flannel was there.</p>
+
+<h2 id="4-worker-node">4. Worker node</h2>
+
+<h3 id="4-1-installation">4.1 Installation</h3>
+
+<p>I followed exactly the same process described in 3.1 and 3.2 to install the container runtime and the kubernetes software on the worker node.</p>
+
+<h3 id="4-2-join-the-cluster">4.2 Join the cluster</h3>
+
+<p>First enable docker.service (otherwise kubeadm join shows a warning):</p>
+
+<pre><code>eramon@whisky:~$ sudo systemctl enable docker.service
+Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /lib/systemd/system/docker.service.
+</code></pre>
+
+<p>To join the cluster, we execute the command extracted from the output of kubeadm before:</p>
+
+<pre><code>eramon@whisky:~$ sudo kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9 
+W0321 12:59:20.688335   11019 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
+[preflight] Running pre-flight checks
+	[WARNING IsDockerSystemdCheck]: detected &quot;cgroupfs&quot; as the Docker cgroup driver. The recommended driver is &quot;systemd&quot;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+</code></pre>
+
+<p>That&rsquo;s all. With this, the cluster should be ready for the first deployment.</p>
+
+<h2 id="5-open-points">5. Open points:</h2>
+
+<h3 id="5-1-warning">5.1. Warning</h3>
+
+<p>In both master and worker, I get this warning:</p>
+
+<pre><code>[WARNING IsDockerSystemdCheck]: detected &quot;cgroupfs&quot; as the Docker cgroup driver. The recommended driver is &quot;systemd&quot;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+</code></pre>
+
+<p>Not sure what this does exactly mean or how to fix it yet.</p>
+
+<h2 id="5-2-infrastructure-as-code">5.2 Infrastructure as code</h2>
+
+<p>I would like to have the whole process scripted and/or described in yaml files and these pushed to github, so the environment can be set up at any time.</p>
+
+<h2 id="references-and-useful-or-interesting-links">References and useful or interesting links:</h2>
+
+<p><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm" target="_blank">Install kubeadm</a></p>
+
+<p><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm" target="_blank">Create single-control node cluster with kubeadm</a></p>
+
+<p><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#pod-network" target="_blank">Install pod network</a></p>
+
+<p><a href="https://github.com/coreos/flannel" target="_blank">Flannel</a></p>
+
+    </div>
+  </div>
+
+</article>
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+    <li class="previous"><a href="https://eramons.github.io/techblog/post/debug_coreboot/"><span
+      aria-hidden="true">&larr;</span> EHCI Debug</a></li>
+    
+
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 E. Ramon &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.2/imagesloaded.pkgd.min.js" integrity="sha512-iHzEu7GbSc705hE2skyH6/AlTpOfBmkx7nUqTLGzPYR+C1tRaItbRlJ7hT/D3YQ9SV0fqLKzp4XY9wKulTBGTw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js" integrity="sha512-Z5heTz36xTemt1TbtbfXtTq5lMfYnOkXM2/eWcTTiLU01+Sw4ku1i7vScDc8fWhrP2abz9GQzgKH5NGBLoYlAw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/plugins/ScrollToPlugin.min.js" integrity="sha512-CDeU7pRtkPX6XJtF/gcFWlEwyaX7mcAp5sO3VIu/ylsdR74wEw4wmBpD5yYTrmMAiAboi9thyBUr1vXRPA7t0Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/techblog/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
+    
+    
+
+  </body>
+</html>
+
