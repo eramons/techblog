@@ -189,8 +189,6 @@
 
 <p>The EHCI Debug Port is an optional capability of EHCI controllers which can be used for early debugging for hardware which does not have a serial port. All USB2 host controllers are EHCI controllers.</p>
 
-<p><em>TODO: Explain USB Device / USB Gadget</em></p>
-
 <p>Since I installed Coreboot on my Librem, I experienced some issues. In order to investigate - and since the Librem has no serial port - I aimed to do some Coreboot and kernel debugging with a Raspberry Pi Zero.</p>
 
 <p>Tasks:</p>
@@ -298,8 +296,6 @@ eramon@caipirinha:~/debian$ ls -la linux-image*deb
 -rw-r--r--  1 root root  5187456 Mar 25 21:06 vmlinuz-4.19.16
 </code></pre>
 
-<p><em>TODO: Still not working. Install or load module?</em></p>
-
 <p>Now the kernel should print both ehci and xhci output, which we can see using a USB gadget - for example the Raspberry Pi Zero. Keep reading to find out more.</p>
 
 <h2 id="2-coreboot-configuration">2. Coreboot Configuration</h2>
@@ -361,8 +357,6 @@ Symbol: USBDEBUG [=y]                                                           
 
  [*] USB 2.0 EHCI debug dongle support
 </code></pre>
-
-<p><em>TODO</em></p>
 
 <h2 id="3-set-up-raspberry-pi-zero">3. Set up Raspberry Pi Zero</h2>
 

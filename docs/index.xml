@@ -134,18 +134,25 @@ pi@raspberrypi:~ $ chmod +x k3s-armhf
 &lt;pre&gt;&lt;code&gt;pi@raspberrypi:~ $ sudo ./k3s server &amp;amp;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Find out the node token:&lt;/p&gt;
+&lt;p&gt;Show cluster info:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pi@raspberrypi:~ $ sudo ./k3s kubectl cluster-info
+Kubernetes master is running at https://127.0.0.1:6443
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;LATER:&lt;/em&gt;
+To add new nodes to the cluster, first find out the node token:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;pi@raspberrypi:~ $ sudo cat /var/lib/rancher/k3s/server/node-token
 K10508ae11bab8e277893f008cc9cd4107b2acff73682d8e71d7eb8d7221e2c97a6::server:cd7d5d5dd18b4bc4fa7390194078c9d0
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The same node should now join the cluster (since we have only one device for now):&lt;/p&gt;
+&lt;p&gt;The new node should use the following command to join the cluster (not tested yet):&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;pi@raspberrypi:~ $ sudo ./k3s agent --server https://localhost:6443 --token K10508ae11bab8e277893f008cc9cd4107b2acff73682d8e71d7eb8d7221e2c97a6::server:cd7d5d5dd18b4bc4fa7390194078c9d0
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;TODO: there were some errors. Probably there are things to consider when running both master and worker on the same node.&lt;/em&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;
 
@@ -655,8 +662,6 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
 
 &lt;p&gt;The EHCI Debug Port is an optional capability of EHCI controllers which can be used for early debugging for hardware which does not have a serial port. All USB2 host controllers are EHCI controllers.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;TODO: Explain USB Device / USB Gadget&lt;/em&gt;&lt;/p&gt;
-
 &lt;p&gt;Since I installed Coreboot on my Librem, I experienced some issues. In order to investigate - and since the Librem has no serial port - I aimed to do some Coreboot and kernel debugging with a Raspberry Pi Zero.&lt;/p&gt;
 
 &lt;p&gt;Tasks:&lt;/p&gt;
@@ -764,8 +769,6 @@ eramon@caipirinha:~/debian$ ls -la linux-image*deb
 -rw-r--r--  1 root root  5187456 Mar 25 21:06 vmlinuz-4.19.16
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;em&gt;TODO: Still not working. Install or load module?&lt;/em&gt;&lt;/p&gt;
-
 &lt;p&gt;Now the kernel should print both ehci and xhci output, which we can see using a USB gadget - for example the Raspberry Pi Zero. Keep reading to find out more.&lt;/p&gt;
 
 &lt;h2 id=&#34;2-coreboot-configuration&#34;&gt;2. Coreboot Configuration&lt;/h2&gt;
@@ -827,8 +830,6 @@ Symbol: USBDEBUG [=y]                                                           
 
  [*] USB 2.0 EHCI debug dongle support
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;TODO&lt;/em&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;3-set-up-raspberry-pi-zero&#34;&gt;3. Set up Raspberry Pi Zero&lt;/h2&gt;
 

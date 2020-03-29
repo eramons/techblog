@@ -121,17 +121,28 @@ Run the server:
 pi@raspberrypi:~ $ sudo ./k3s server &
 ```
 
-Find out the node token:
+Show cluster info:
+```
+pi@raspberrypi:~ $ sudo ./k3s kubectl cluster-info
+Kubernetes master is running at https://127.0.0.1:6443
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+```
+
+_LATER:_
+To add new nodes to the cluster, first find out the node token:
 ```
 pi@raspberrypi:~ $ sudo cat /var/lib/rancher/k3s/server/node-token
 K10508ae11bab8e277893f008cc9cd4107b2acff73682d8e71d7eb8d7221e2c97a6::server:cd7d5d5dd18b4bc4fa7390194078c9d0
 ```
 
-The same node should now join the cluster (since we have only one device for now):
+The new node should use the following command to join the cluster (not tested yet):
 ```
 pi@raspberrypi:~ $ sudo ./k3s agent --server https://localhost:6443 --token K10508ae11bab8e277893f008cc9cd4107b2acff73682d8e71d7eb8d7221e2c97a6::server:cd7d5d5dd18b4bc4fa7390194078c9d0
 ```
-_TODO: there were some errors. Probably there are things to consider when running both master and worker on the same node._
+
+
+
 
 ## Links
 [Lightweit Kubernetes](https://k3s.io/)

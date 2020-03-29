@@ -13,13 +13,12 @@ highlight = true
 
 The EHCI Debug Port is an optional capability of EHCI controllers which can be used for early debugging for hardware which does not have a serial port. All USB2 host controllers are EHCI controllers.
 
-_TODO: Explain USB Device / USB Gadget_
-
 Since I installed Coreboot on my Librem, I experienced some issues. In order to investigate - and since the Librem has no serial port - I aimed to do some Coreboot and kernel debugging with a Raspberry Pi Zero.
 
 Tasks:
 
  * Edit the kernel configuration to include the print ehci and xhci output options.
+ * Activate USB Debug output on Coreboot
  * Set up a Raspberry Pi Zero to use it as EHCI client (USB Gadget).
 
 ## 1. Custom Debian Kernel on Librem 13v1
@@ -76,6 +75,8 @@ CONFIG_MODULE_SIG_KEY
 
 In this way the custom kernel will be able to get modules signed by a one-time key.
 
+_NOTE: is there eventually a better way to get the .config so we can avoid the certificate issue?_
+
 Invoking make afterwards prompted me to configure some kernel options related to the ones I edited before. I chose the defaults in all cases:
 ```
 eramon@caipirinha:~/debian/linux-source-4.19$ make deb-pkg -j8
@@ -115,15 +116,75 @@ eramon@caipirinha:~/debian$ ls -la /boot |grep 4.19.16
 -rw-r--r--  1 root root  5187456 Mar 25 21:06 vmlinuz-4.19.16
 ```
 
-_TODO: Still not working. Install or load module?_
-
 Now the kernel should print both ehci and xhci output, which we can see using a USB gadget - for example the Raspberry Pi Zero. Keep reading to find out more.
 
-## 2. Set up Raspberry Pi Zero
+## 2. Coreboot Configuration
+
+__Goal: activate USB Debug Output in the Coreboot configuration__
+
+
+Find the USB debug port:
+```
+sudo lshw
+...
+        *-usb:1
+             description: USB controller
+             product: Wildcat Point-LP USB EHCI Controller
+             vendor: Intel Corporation
+             physical id: 1d
+             bus info: pci@0000:00:1d.0
+             version: 03
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pm debug ehci bus_master cap_list
+             configuration: driver=ehci-pci latency=0
+             resources: irq:23 memory:b221a000-b221a3ff
+           *-usbhost
+                product: EHCI Host Controller
+                vendor: Linux 4.19.16 ehci_hcd
+                physical id: 1
+                bus info: usb@1
+                logical name: usb1
+                version: 4.19
+                capabilities: usb-2.00
+                configuration: driver=hub slots=2 speed=480Mbit/s
+              *-usb
+                   description: USB hub
+                   vendor: Intel Corp.
+                   physical id: 1
+                   bus info: usb@1:1
+                   version: 0.03
+                   capabilities: usb-2.00
+                   configuration: driver=hub slots=8 speed=480Mbit/s
+
+```
+
+To get a USB debug console, enable both CONFIG_USBDEBUG and CONFIG_CONSOLE_USB (menu option USB 2.0 EHCI debug dongle support) in coreboot's kconfig. 
+
+```
+ /home/eramon/dev/coreboot-working/.config - coreboot configuration
+ > Debugging > Search (CONFIG_USBDEBUG)
+
+Symbol: USBDEBUG [=y]                                                                                                                                                                                      │  
+  │ Type  : boolean                                                                                                                                                                                            │  
+  │ Prompt: USB 2.0 EHCI debug dongle support                                                                                                                                                                  │  
+  │   Location:                                                                                                                                                                                                │  
+  │ (1) -> Generic Drivers                                                                                                                                                                                     │  
+  │   Defined at src/mainboard/msi/ms9652_fam10/Kconfig:63                                                                                                                                                     │  
+  │   Depends on: VENDOR_MSI [=n] && BOARD_MSI_MS9652_FAM10 [=n] 
+
+
+/home/eramon/dev/coreboot-working/.config - coreboot configuration
+ > Debugging > Search (CONFIG_USBDEBUG) > Generic Drivers
+
+ [*] USB 2.0 EHCI debug dongle support
+```
+
+## 3. Set up Raspberry Pi Zero
 
 __Goal: set up a Raspberry Pi Zero as USB Device (a.k.a USB Gadget)__
 
-### 2.1. Customize Raspbian
+### 3.1. Customize Raspbian
 
 _On any computer running Linux_
 
@@ -215,7 +276,7 @@ Now you can connect to the board directly via SSH.
 
 _NOTE: alternatively, instead of connecting via serial (and afterwards via SSH), you can use a mini-HDMI to HDMI adapter for connecting a display to the board._ 
 
-### 2.2. USB Gadget Kernel modules
+### 3.2. USB Gadget Kernel modules
 
 In order for the Raspberry Pi to behave as an USB Device, we need to modify the raspbian kernel to include the corresponding modules and to apply some patches. 
 
@@ -286,13 +347,14 @@ Hunk #1 succeeded at 1373 (offset -145 lines).
 Build and install the kernel, modules and device tree:
 ```
 make -j4 zImage modules dtbs
-make -j4 zImage modules dtbs
 sudo make modules_install
 sudo cp arch/arm/boot/dts/*.dtb /boot/
 sudo cp arch/arm/boot/dts/overlays/*.dtb* /boot/overlays/
 sudo cp arch/arm/boot/dts/overlays/README /boot/overlays/
 sudo cp arch/arm/boot/zImage /boot/kernel.img
 ```
+
+_Note: this commands are extracted from the official Raspberry Pi documentation (kernel build) - see references. What I do not understand: why copy and not just make install?__
 
 Reboot.
 

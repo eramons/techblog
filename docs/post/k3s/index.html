@@ -303,18 +303,25 @@ pi@raspberrypi:~ $ chmod +x k3s-armhf
 <pre><code>pi@raspberrypi:~ $ sudo ./k3s server &amp;
 </code></pre>
 
-<p>Find out the node token:</p>
+<p>Show cluster info:</p>
+
+<pre><code>pi@raspberrypi:~ $ sudo ./k3s kubectl cluster-info
+Kubernetes master is running at https://127.0.0.1:6443
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+</code></pre>
+
+<p><em>LATER:</em>
+To add new nodes to the cluster, first find out the node token:</p>
 
 <pre><code>pi@raspberrypi:~ $ sudo cat /var/lib/rancher/k3s/server/node-token
 K10508ae11bab8e277893f008cc9cd4107b2acff73682d8e71d7eb8d7221e2c97a6::server:cd7d5d5dd18b4bc4fa7390194078c9d0
 </code></pre>
 
-<p>The same node should now join the cluster (since we have only one device for now):</p>
+<p>The new node should use the following command to join the cluster (not tested yet):</p>
 
 <pre><code>pi@raspberrypi:~ $ sudo ./k3s agent --server https://localhost:6443 --token K10508ae11bab8e277893f008cc9cd4107b2acff73682d8e71d7eb8d7221e2c97a6::server:cd7d5d5dd18b4bc4fa7390194078c9d0
 </code></pre>
-
-<p><em>TODO: there were some errors. Probably there are things to consider when running both master and worker on the same node.</em></p>
 
 <h2 id="links">Links</h2>
 
