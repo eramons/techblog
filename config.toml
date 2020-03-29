@@ -22,8 +22,6 @@ defaultContentLanguageInSubdir = false
 [params]
   name = "E. Ramon"
   role = "Solution Architect and Open Source Enthusiast"
-#  organization = "Swisscom"
-#  organization_url = "Bla"
   gravatar = false  # Get your avatar from Gravatar.com? (true/false)
   avatar = "static/img/eve.png" 
   email = "debian@empanadilla.net"
