@@ -11,18 +11,155 @@
     <atom:link href="/techblog/" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Setup a Home Kubernetes Cluster</title>
+      <title>First Kubernetes Deployment</title>
+      <link>https://eramons.github.io/techblog/post/deploy_gogs/</link>
+      <pubDate>Sun, 22 Mar 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/deploy_gogs/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Deploy Gogs - a painless self-hosted Git service - on homemade Kubernetes Cluster.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;After I had my own Kubernetes cluster ready, I wanted to try it out. Setting up the cluster was almost too easy, so I was expecting some fine-tuning to be necessary. As first application I chose gogs - a self-hosted github clone.&lt;/p&gt;
+
+&lt;p&gt;{{/*
+I struggle with too many things to do in very little time - like many others, I guess - so I&amp;rsquo;m always trying to optimise life processes. The idea at this point was to use the gogs Kanban board to adopt an agile approach for private TODOs and tasks.
+*/}}&lt;/p&gt;
+
+&lt;p&gt;Tasks:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Create Storage Class&lt;/li&gt;
+&lt;li&gt;Install helm&lt;/li&gt;
+&lt;li&gt;Deploy Gogs&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;0-set-up-storage-class&#34;&gt;0. Set up Storage Class&lt;/h2&gt;
+
+&lt;p&gt;In order for our future pods to be able to claim persistent volumes for their applications, we need to set up a storage class for the cluster.&lt;/p&gt;
+
+&lt;p&gt;Since this is a test setup, I just wanted a StorageClass using the local disk for storage of the persistent volumes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ vi storageClass.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is the content of the file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Apply:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubectl apply -f storageClass.yaml
+storageclass.storage.k8s.io/local-storage created
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;1-install-helm&#34;&gt;1. Install helm&lt;/h2&gt;
+
+&lt;p&gt;There are several options for deploying gogs, but I thought to use helm looked like the most standard and uncomplicated way. I was expecting to use helm for deploying other applications later.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;On the Master Node&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Not sure: for interacting with the cluster, we don&amp;rsquo;t need to run the commands on the master node directly&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Downloaded latest helm:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+--2020-03-22 13:12:45--  https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+Resolving get.helm.sh (get.helm.sh)... 2606:2800:233:1cb7:261b:1f9c:2074:3c, 152.199.21.175
+Connecting to get.helm.sh (get.helm.sh)|2606:2800:233:1cb7:261b:1f9c:2074:3c|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 12269190 (12M) [application/x-tar]
+Saving to: ‘helm-v3.1.2-linux-amd64.tar.gz’
+
+helm-v3.1.2-linux-amd64. 100%[==================================&amp;gt;]  11.70M  2.53MB/s    in 4.6s    
+
+2020-03-22 13:12:51 (2.53 MB/s) - ‘helm-v3.1.2-linux-amd64.tar.gz’ saved [12269190/12269190]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Unzip it and instal binary:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+linux-amd64/
+linux-amd64/helm
+linux-amd64/README.md
+linux-amd64/LICENSE
+
+eramon@pacharan:~/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With that helm was available on the master node:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm version
+version.BuildInfo{Version:&amp;quot;v3.1.2&amp;quot;, GitCommit:&amp;quot;d878d4d45863e42fd5cff6743294a11d28a9abce&amp;quot;, GitTreeState:&amp;quot;clean&amp;quot;, GoVersion:&amp;quot;go1.13.8&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once Helm is ready, add the official &amp;ldquo;Helm stable charts&amp;rdquo; chart repository:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+&amp;quot;stable&amp;quot; has been added to your repositories
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run helm search to see the available repositories:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm search repo stable
+NAME                                    CHART VERSION   APP VERSION                     DESCRIPTION
+stable/acs-engine-autoscaler            2.2.2           2.1.1                           DEPRECATED Scales worker nodes within agent pools
+stable/aerospike                        0.2.8           v4.5.0.5                        A Helm chart for Aerospike in Kubernetes
+stable/airflow                          4.1.0           1.10.4                          Airflow is a platform to programmatically autho...
+stable/ambassador                       4.1.0           0.81.0                          A Helm chart for Datawire Ambassador
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;2-deploy-gogs&#34;&gt;2. Deploy gogs&lt;/h2&gt;
+
+&lt;p&gt;The prerequisites for installing Gogs said:
+&lt;em&gt;PV support on underlying infrastructure (if persistence is required)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;We did this at the beginning of this post, so a StorageClass for Local Storage was available.&lt;/p&gt;
+
+&lt;p&gt;Update the helm repository:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the &amp;quot;stable&amp;quot; chart repository
+Update Complete. ⎈ Happy Helming!⎈ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;TODO Not available on the repo, or not the right way to do this:&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm install incubator/gogs --generate-name
+Error: failed to download &amp;quot;incubator/gogs&amp;quot; (hint: running `helm repo update` may help)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://helm.sh/docs/intro/install/&#34; target=&#34;_blank&#34;&gt;Installing Helm&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/helm/helm/releases&#34; target=&#34;_blank&#34;&gt;Helm Releases @Github&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://helm.sh/docs/intro/quickstart&#34; target=&#34;_blank&#34;&gt;Helm Quickstart Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/helm/charts/tree/master/incubator/gogs&#34; target=&#34;_blank&#34;&gt;Gogs Helm Chart @Github&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Set up a Home Kubernetes Cluster</title>
       <link>https://eramons.github.io/techblog/post/kubernetes_cluster/</link>
-      <pubDate>Fri, 20 Mar 2020 10:00:00 +0200</pubDate>
+      <pubDate>Sat, 21 Mar 2020 15:00:00 +0200</pubDate>
       
       <guid>https://eramons.github.io/techblog/post/kubernetes_cluster/</guid>
       <description>
 
-&lt;p&gt;Home Kubernetes Cluster with old hardware: 1 Master and 1 Worker&lt;/p&gt;
-
 &lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;Set up a Home Kubernetes cluster&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;Tasks:&lt;/p&gt;
 
@@ -31,6 +168,8 @@
 &lt;li&gt;Install Ubuntu Server 18.04 LTS&lt;/li&gt;
 &lt;li&gt;Set up Master Node&lt;/li&gt;
 &lt;li&gt;Set up Worker Node&lt;/li&gt;
+&lt;li&gt;Storage Class&lt;/li&gt;
+&lt;li&gt;Service Account&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&#34;1-find-old-hardware&#34;&gt;1. Find old hardware&lt;/h2&gt;
@@ -111,7 +250,7 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 &lt;p&gt;kubelet, kubeadm and kubectl are set on hold (to avoid automatic updates, I think)&lt;/p&gt;
 
-&lt;p&gt;After installation:&lt;/p&gt;
+&lt;p&gt;After installation, restarting kubelet is required;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;systemctl daemon-reload
 systemctl restart kubelet
@@ -139,7 +278,8 @@ Run &amp;quot;kubectl apply -f [podnetwork].yaml&amp;quot; with one of the optio
 Then you can join any number of worker nodes by running the following on each as root:
 
 kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 \
-    --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9 
+    --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9
+
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;To make kubectl work for your non-root user, run these commands, which are also part of the kubeadm init output:&lt;/p&gt;
@@ -149,7 +289,7 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 eramon@pacharan:~$ sudo chown eramon:eramon .kube/config
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;After these steps, we see that kubectl cluster-info is showing something so kubectl is interacting with our new cluster:&lt;/p&gt;
+&lt;p&gt;After these steps, looking at the output of kubectl cluster-info we see kubectl is interacting with our new cluster:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubectl cluster-info
 Kubernetes master is running at https://192.168.1.129:6443
@@ -203,19 +343,166 @@ kube-system   kube-scheduler-pacharan            1/1     Running   0          16
 Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /lib/systemd/system/docker.service.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;To join the cluster, we execute the command extracted from the output of kubeadm before:&lt;/p&gt;
+&lt;p&gt;Since more than 24 hours elapsed between the kubeadm init and the join command, I created a new token:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;eramon@whisky:~$ sudo kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9 
-W0321 12:59:20.688335   11019 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
-[preflight] Running pre-flight checks
-	[WARNING IsDockerSystemdCheck]: detected &amp;quot;cgroupfs&amp;quot; as the Docker cgroup driver. The recommended driver is &amp;quot;systemd&amp;quot;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubeadm token create
+W0321 15:00:44.641034   18998 validation.go:28] Cannot validate kube-proxy config - no validator is available
+W0321 15:00:44.641111   18998 validation.go:28] Cannot validate kubelet config - no validator is available
+qon04q.9lwkz7i4pixr46q6
+eramon@pacharan:~$ kubeadm token list
+TOKEN                     TTL         EXPIRES                USAGES                   DESCRIPTION                                                EXTRA GROUPS
+qon04q.9lwkz7i4pixr46q6   23h         2020-03-22T15:00:44Z   authentication,signing   &amp;lt;none&amp;gt;                                                     system:bootstrappers:kubeadm:default-node-token
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;That&amp;rsquo;s all. With this, the cluster should be ready for the first deployment.&lt;/p&gt;
+&lt;p&gt;Join worker node by running the following as root:&lt;/p&gt;
 
-&lt;h2 id=&#34;5-open-points&#34;&gt;5. Open points:&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;root@whisky:/home/eramon# kubeadm join 192.168.1.129:6443 --token qon04q.9lwkz7i4pixr46q6 --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9
+W0321 15:03:52.406236   29903 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
+[preflight] Running pre-flight checks
+        [WARNING IsDockerSystemdCheck]: detected &amp;quot;cgroupfs&amp;quot; as the Docker cgroup driver. The recommended driver is &amp;quot;systemd&amp;quot;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+[preflight] Reading configuration from the cluster...
+[preflight] FYI: You can look at this config file with &#39;kubectl -n kube-system get cm kubeadm-config -oyaml&#39;
+[kubelet-start] Downloading configuration for the kubelet from the &amp;quot;kubelet-config-1.17&amp;quot; ConfigMap in the kube-system namespace
+[kubelet-start] Writing kubelet configuration to file &amp;quot;/var/lib/kubelet/config.yaml&amp;quot;
+[kubelet-start] Writing kubelet environment file with flags to file &amp;quot;/var/lib/kubelet/kubeadm-flags.env&amp;quot;
+[kubelet-start] Starting the kubelet
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
 
-&lt;h3 id=&#34;5-1-warning&#34;&gt;5.1. Warning&lt;/h3&gt;
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run &#39;kubectl get nodes&#39; on the control-plane to see this node join the cluster.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As instructed by the output of the last command, we take a look at the nodes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubectl get nodes
+NAME       STATUS   ROLES    AGE     VERSION
+pacharan   Ready    master   3d3h    v1.17.4
+whisky     Ready    &amp;lt;none&amp;gt;   6m15s   v1.17.4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;5-service-account&#34;&gt;5. Service Account&lt;/h2&gt;
+
+&lt;p&gt;To interact with the Kubernetes cluster from a client machine, for now we&amp;rsquo;ll use the default service account token.&lt;/p&gt;
+
+&lt;p&gt;Service accounts are users managed by the Kubernetes cluster and tied to a set of credentials stored as Secrets, which are mounted into pods allowing in-cluster processes to talk to the Kubernetes API.&lt;/p&gt;
+
+&lt;h3 id=&#34;5-1-install-kubectl&#34;&gt;5.1. Install kubectl&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;On the client machine&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Download binary and install kubectl on the client machine:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/kubernetes$ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 41.4M  100 41.4M    0     0  5681k      0  0:00:07  0:00:07 --:--:-- 5877k
+
+eramon@caipirinha:~/dev/kubernetes$ chmod +x kubectl 
+
+eramon@caipirinha:~/dev/kubernetes$ sudo mv kubectl /usr/local/bin/kubectl
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;5-2-grant-access-to-the-cluster-api-for-the-client-machine&#34;&gt;5.2. Grant access to the cluster API for the client machine&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;On the master node&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Output information about the default service account:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubectl get serviceaccounts default -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: &amp;quot;2020-03-18T12:06:13Z&amp;quot;
+  name: default
+  namespace: default
+  resourceVersion: &amp;quot;358&amp;quot;
+  selfLink: /api/v1/namespaces/default/serviceaccounts/default
+  uid: e0a693d0-cb23-4ab4-8205-34962d0f9f33
+secrets:
+- name: default-token-52cj5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Examining the secrets we see the token for the default service account:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubectl get secret
+NAME                  TYPE                                  DATA   AGE
+default-token-52cj5   kubernetes.io/service-account-token   3      4d1h
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Examine the secret:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubectl describe secret default-token-52cj5
+Name:         default-token-52cj5
+Namespace:    default
+Labels:       &amp;lt;none&amp;gt;
+Annotations:  kubernetes.io/service-account.name: default
+              kubernetes.io/service-account.uid: e0a693d0-cb23-4ab4-8205-34962d0f9f33
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1025 bytes
+namespace:  7 bytes
+token:	    eyJhbGciO...p0q
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So we just found out the bearer token for the default service account.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;On the client machine&lt;/em&gt;
+I just copied the kube configuration from the Master node to the client machine. Not sure if this is exactly best practice, but I did not find any documentation about how to manage this. The file is located here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ ls -la /home/eramon/.kube/config 
+-rw------- 1 eramon eramon 5449 Mar 18 14:42 /home/eramon/.kube/config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After copying the file to the same location on the client machine, I saw my laptop had access to the Kubernetes API on the server via kubectl:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~$ kubectl cluster-info
+Kubernetes master is running at https://192.168.1.129:6443
+KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That would be all. With this, the cluster should be ready for the first deployment. See next post.&lt;/p&gt;
+
+&lt;h3 id=&#34;move&#34;&gt;MOVE&lt;/h3&gt;
+
+&lt;h2 id=&#34;5-set-up-storage-class&#34;&gt;5. Set up Storage Class&lt;/h2&gt;
+
+&lt;p&gt;In order for our future pods to be able to claim persistent volumes for their applications, we need to set up a storage class for the cluster.&lt;/p&gt;
+
+&lt;p&gt;Since this is a test setup, I just wanted a StorageClass using the local disk for storage of the persistent volumes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ vi storageClass.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is the content of the file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Apply:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubectl apply -f storageClass.yaml 
+storageclass.storage.k8s.io/local-storage created
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;appendix-open-points&#34;&gt;Appendix. Open points:&lt;/h2&gt;
+
+&lt;h3 id=&#34;interaction-with-the-cluster&#34;&gt;Interaction with the cluster&lt;/h3&gt;
+
+&lt;p&gt;I need to configure my laptop to access the cluster over kubectl. I don&amp;rsquo;t need to ssh to the master node for installing or deploying applications.&lt;/p&gt;
+
+&lt;h3 id=&#34;warning&#34;&gt;Warning&lt;/h3&gt;
 
 &lt;p&gt;In both master and worker, I get this warning:&lt;/p&gt;
 
@@ -224,7 +511,17 @@ W0321 12:59:20.688335   11019 join.go:346] [preflight] WARNING: JoinControlPane.
 
 &lt;p&gt;Not sure what this does exactly mean or how to fix it yet.&lt;/p&gt;
 
-&lt;h2 id=&#34;5-2-infrastructure-as-code&#34;&gt;5.2 Infrastructure as code&lt;/h2&gt;
+&lt;h3 id=&#34;warning-1&#34;&gt;Warning&lt;/h3&gt;
+
+&lt;p&gt;When running kubeadm init and when creating a new token, I got warnings on the output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubeadm token create
+W0321 15:16:13.144929   25354 validation.go:28] Cannot validate kube-proxy config - no validator is available
+W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config - no validator is available
+4w2xrh.i1phnkxkzz7ja5fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;infrastructure-as-code&#34;&gt;Infrastructure as code&lt;/h3&gt;
 
 &lt;p&gt;I would like to have the whole process scripted and/or described in yaml files and these pushed to github, so the environment can be set up at any time.&lt;/p&gt;
 
@@ -237,6 +534,12 @@ W0321 12:59:20.688335   11019 join.go:346] [preflight] WARNING: JoinControlPane.
 &lt;p&gt;&lt;a href=&#34;https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#pod-network&#34; target=&#34;_blank&#34;&gt;Install pod network&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/coreos/flannel&#34; target=&#34;_blank&#34;&gt;Flannel&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/storage-classes/#storageos&#34; target=&#34;_blank&#34;&gt;StorageClass&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://kubernetes.io/docs/reference/access-authn-authz/authentication/#users-in-kubernetes&#34; target=&#34;_blank&#34;&gt;Kubernenetes - Authenticating&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34;&gt;Install and Set Up kubectl&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

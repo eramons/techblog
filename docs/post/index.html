@@ -8,7 +8,7 @@
   <meta name="theme" content="hugo-academic">
   <meta name="generator" content="Hugo 0.53" />
   <meta name="author" content="E. Ramon">
-  
+  <meta name="description" content="Solution Architect">
 
   
   
@@ -122,14 +122,14 @@
   
   <div>
     
-    <h2><a href="https://eramons.github.io/techblog/post/kubernetes_cluster/">Setup a Home Kubernetes Cluster</a></h2>
+    <h2><a href="https://eramons.github.io/techblog/post/deploy_gogs/">First Kubernetes Deployment</a></h2>
     
 
 <div class="article-metadata">
 
   <span class="article-date">
-    <time datetime="2020-03-20 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
-      Fri, Mar 20, 2020
+    <time datetime="2020-03-22 15:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Sun, Mar 22, 2020
     </time>
   </span>
 
@@ -146,11 +146,44 @@
 
     <div class="article-style"><p>
       
-      Home Kubernetes Cluster with old hardware: 1 Master and 1 Worker
-Goal:
-Set up a Home Kubernetes cluster
+      Goal:
+Deploy Gogs - a painless self-hosted Git service - on homemade Kubernetes Cluster.
+After I had my own Kubernetes cluster ready, I wanted to try it out. Setting up the cluster was almost too easy, so I was expecting some fine-tuning to be necessary. As first application I chose gogs - a self-hosted github clone.
+{{/* I struggle with too many things to do in very little time - like many others, I guess - so I&rsquo;m always trying to optimise life processes.
+      
+    </p></div>
+  </div>
+  
+  <div>
+    
+    <h2><a href="https://eramons.github.io/techblog/post/kubernetes_cluster/">Set up a Home Kubernetes Cluster</a></h2>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2020-03-21 15:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Sat, Mar 21, 2020
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+
+</div>
+
+    <div class="article-style"><p>
+      
+      Goal:
+Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
+ Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Storage Class Service Account  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
       
     </p></div>
   </div>

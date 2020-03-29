@@ -8,7 +8,7 @@
   <meta name="theme" content="hugo-academic">
   <meta name="generator" content="Hugo 0.53" />
   <meta name="author" content="E. Ramon">
-  
+  <meta name="description" content="Solution Architect">
 
   
   
@@ -132,10 +132,19 @@
     <div id="profile">
 
       
+      <div class="portrait" style="background-image: url('https://eramons.github.io/techblog/img/static/img/eve.png');"></div>
+      <meta itemprop="image" content="https://eramons.github.io/techblog/img/static/img/eve.png">
+      
 
       <div class="portrait-title">
         <h2 itemprop="name">E. Ramon</h2>
-        <h3 itemprop="jobTitle"></h3>
+        <h3 itemprop="jobTitle">Solution Architect</h3>
+        
+        <h3 itemprop="worksFor" itemscope itemtype="http://schema.org/Organization">
+          <a href="Bla" target="_blank" itemprop="url">
+            <span itemprop="name">Swisscom</span>
+          </a>
+        </h3>
         
       </div>
 
@@ -233,15 +242,15 @@
   
   
   <h3 class="article-title" itemprop="name">
-    <a href="https://eramons.github.io/techblog/post/kubernetes_cluster/" itemprop="url">Setup a Home Kubernetes Cluster</a>
+    <a href="https://eramons.github.io/techblog/post/deploy_gogs/" itemprop="url">First Kubernetes Deployment</a>
   </h3>
   
 
 <div class="article-metadata">
 
   <span class="article-date">
-    <time datetime="2020-03-20 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
-      Fri, Mar 20, 2020
+    <time datetime="2020-03-22 15:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Sun, Mar 22, 2020
     </time>
   </span>
 
@@ -258,11 +267,57 @@
 
   <div class="article-style" itemprop="articleBody">
     
-    Home Kubernetes Cluster with old hardware: 1 Master and 1 Worker
-Goal:
-Set up a Home Kubernetes cluster
+    Goal:
+Deploy Gogs - a painless self-hosted Git service - on homemade Kubernetes Cluster.
+After I had my own Kubernetes cluster ready, I wanted to try it out. Setting up the cluster was almost too easy, so I was expecting some fine-tuning to be necessary. As first application I chose gogs - a self-hosted github clone.
+{{/* I struggle with too many things to do in very little time - like many others, I guess - so I&rsquo;m always trying to optimise life processes.
+    
+  </div>
+  <p class="read-more">
+    <a href="https://eramons.github.io/techblog/post/deploy_gogs/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
+        
+        
+
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="https://eramons.github.io/techblog/post/kubernetes_cluster/" itemprop="url">Set up a Home Kubernetes Cluster</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2020-03-21 15:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Sat, Mar 21, 2020
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    Goal:
+Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
+ Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Storage Class Service Account  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
     
   </div>
   <p class="read-more">
@@ -403,52 +458,6 @@ I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all
   </div>
   <p class="read-more">
     <a href="https://eramons.github.io/techblog/post/coreboot_librem/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-      
-        
-        
-
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="https://eramons.github.io/techblog/post/asuschromebook_debian/" itemprop="url">Debian on Asus Chromebook Flip C101PA</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2018-12-04 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
-      Tue, Dec 4, 2018
-    </time>
-  </span>
-
-  
-
-  
-  
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&rdquo; x 7.2&rdquo; x 0.6&rdquo; and weighing 1 kg.
-Features:
- Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor 4GB LPDDR3 RAM 10.1&rdquo; 1280x800 LED display Mali T860MP4 GPU 16GB eMMC 38 Whrs battery 2x USB 3.1 Type-C ports 1x USB 2.0 Type-A port  ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.
-    
-  </div>
-  <p class="read-more">
-    <a href="https://eramons.github.io/techblog/post/asuschromebook_debian/" class="btn btn-primary btn-outline">
       CONTINUE READING
     </a>
   </p>

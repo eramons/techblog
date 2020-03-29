@@ -1,7 +1,7 @@
 +++
 math = true
-date = "2020-03-20T10:00:00+02:00"
-title = "Setup a Home Kubernetes Cluster"
+date = "2020-03-21T15:00:00+02:00"
+title = "Set up a Home Kubernetes Cluster"
 tags = []
 highlight = true
 
@@ -11,11 +11,9 @@ highlight = true
 
 +++
 
-Home Kubernetes Cluster with old hardware: 1 Master and 1 Worker 
-
 __Goal:__
 
-_Set up a Home Kubernetes cluster_
+_Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker_
 
 Tasks:
 
@@ -23,6 +21,8 @@ Tasks:
 2. Install Ubuntu Server 18.04 LTS 
 3. Set up Master Node
 4. Set up Worker Node 
+5. Service Account
+6. Install Helm
 
 ## 1. Find old hardware 
 
@@ -95,16 +95,16 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 kubelet, kubeadm and kubectl are set on hold (to avoid automatic updates, I think)
 
-After installation:
+After installation, restarting kubelet is required;
 ```
-systemctl daemon-reload
-systemctl restart kubelet
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
 ```
 
 ### 3.3 Initialise master node
 The goal was to set up a single control-plane cluster with kubeadm.
 ```
-kubeadmin init --pod-network-cidr=10.244.0.0/16
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ...
 
 Your Kubernetes control-plane has initialized successfully!
@@ -122,17 +122,18 @@ Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
 Then you can join any number of worker nodes by running the following on each as root:
 
 kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 \
-    --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9 
+    --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9
+
 ```
 
 To make kubectl work for your non-root user, run these commands, which are also part of the kubeadm init output:
 ```
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+eramon@pacharan:~$ sudo mkdir -p $HOME/.kube
+eramon@pacharan:~$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 eramon@pacharan:~$ sudo chown eramon:eramon .kube/config
 ```
 
-After these steps, we see that kubectl cluster-info is showing something so kubectl is interacting with our new cluster:
+After these steps, looking at the output of kubectl cluster-info we see kubectl is interacting with our new cluster:
 ```
 eramon@pacharan:~$ kubectl cluster-info
 Kubernetes master is running at https://192.168.1.129:6443
@@ -183,26 +184,196 @@ eramon@whisky:~$ sudo systemctl enable docker.service
 Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /lib/systemd/system/docker.service.
 ```
 
-To join the cluster, we execute the command extracted from the output of kubeadm before:
+Since more than 24 hours elapsed between the kubeadm init and the join command, I created a new token:
 ```
-eramon@whisky:~$ sudo kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9 
-W0321 12:59:20.688335   11019 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
+eramon@pacharan:~$ kubeadm token create
+W0321 15:00:44.641034   18998 validation.go:28] Cannot validate kube-proxy config - no validator is available
+W0321 15:00:44.641111   18998 validation.go:28] Cannot validate kubelet config - no validator is available
+qon04q.9lwkz7i4pixr46q6
+eramon@pacharan:~$ kubeadm token list
+TOKEN                     TTL         EXPIRES                USAGES                   DESCRIPTION                                                EXTRA GROUPS
+qon04q.9lwkz7i4pixr46q6   23h         2020-03-22T15:00:44Z   authentication,signing   <none>                                                     system:bootstrappers:kubeadm:default-node-token
+```
+
+Join worker node by running the following as root:
+```
+root@whisky:/home/eramon# kubeadm join 192.168.1.129:6443 --token qon04q.9lwkz7i4pixr46q6 --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9
+W0321 15:03:52.406236   29903 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
 [preflight] Running pre-flight checks
-	[WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
+        [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
+[preflight] Reading configuration from the cluster...
+[preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
+[kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.17" ConfigMap in the kube-system namespace
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Starting the kubelet
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
+
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 ```
 
-That's all. With this, the cluster should be ready for the first deployment.
+As instructed by the output of the last command, we take a look at the nodes:
+```
+eramon@pacharan:~$ kubectl get nodes
+NAME       STATUS   ROLES    AGE     VERSION
+pacharan   Ready    master   3d3h    v1.17.4
+whisky     Ready    <none>   6m15s   v1.17.4
+```
 
-## 5. Open points:
+## 5. Service Account
+To interact with the Kubernetes cluster from a client machine, for now we'll use the default service account token. 
 
-### 5.1. Warning
+Service accounts are users managed by the Kubernetes cluster and tied to a set of credentials stored as Secrets, which are mounted into pods allowing in-cluster processes to talk to the Kubernetes API. 
+
+### 5.1. Install kubectl
+_On the client machine_
+
+Download binary and install kubectl on the client machine:
+```
+eramon@caipirinha:~/dev/kubernetes$ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 41.4M  100 41.4M    0     0  5681k      0  0:00:07  0:00:07 --:--:-- 5877k
+
+eramon@caipirinha:~/dev/kubernetes$ chmod +x kubectl 
+
+eramon@caipirinha:~/dev/kubernetes$ sudo mv kubectl /usr/local/bin/kubectl
+
+```
+
+### 5.2. Grant access to the cluster API for the client machine
+_On the master node_
+
+Output information about the default service account:
+```
+eramon@pacharan:~$ kubectl get serviceaccounts default -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2020-03-18T12:06:13Z"
+  name: default
+  namespace: default
+  resourceVersion: "358"
+  selfLink: /api/v1/namespaces/default/serviceaccounts/default
+  uid: e0a693d0-cb23-4ab4-8205-34962d0f9f33
+secrets:
+- name: default-token-52cj5
+```
+
+Examining the secrets we see the token for the default service account:
+```
+eramon@pacharan:~$ kubectl get secret
+NAME                  TYPE                                  DATA   AGE
+default-token-52cj5   kubernetes.io/service-account-token   3      4d1h
+```
+
+Examine the secret:
+```
+eramon@pacharan:~$ kubectl describe secret default-token-52cj5
+Name:         default-token-52cj5
+Namespace:    default
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: default
+              kubernetes.io/service-account.uid: e0a693d0-cb23-4ab4-8205-34962d0f9f33
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1025 bytes
+namespace:  7 bytes
+token:	    eyJhbGciO...p0q
+```
+
+So we just found out the bearer token for the default service account.
+
+_On the client machine_
+I just copied the kube configuration from the Master node to the client machine. Not sure if this is exactly best practice, but I did not find any documentation about how to manage this. The file is located here:
+```
+eramon@pacharan:~$ ls -la /home/eramon/.kube/config 
+-rw------- 1 eramon eramon 5449 Mar 18 14:42 /home/eramon/.kube/config
+```
+
+After copying the file to the same location on the client machine, I saw my laptop had access to the Kubernetes API on the server via kubectl:
+```
+eramon@caipirinha:~$ kubectl cluster-info
+Kubernetes master is running at https://192.168.1.129:6443
+KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+```
+
+That would be all. With this, the cluster should be ready for the first deployment. See next post.
+
+## 6. Install helm
+
+Helm is a tool for managing Kubernetes packages called _charts_. The chart is a bundle of information necessary to create an instance of a Kubernetes application.
+
+Downloaded latest helm:
+```
+eramon@caipirinha:~/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+--2020-03-22 13:12:45--  https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+Resolving get.helm.sh (get.helm.sh)... 2606:2800:233:1cb7:261b:1f9c:2074:3c, 152.199.21.175
+Connecting to get.helm.sh (get.helm.sh)|2606:2800:233:1cb7:261b:1f9c:2074:3c|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 12269190 (12M) [application/x-tar]
+Saving to: ‘helm-v3.1.2-linux-amd64.tar.gz’
+
+helm-v3.1.2-linux-amd64. 100%[==================================>]  11.70M  2.53MB/s    in 4.6s
+
+2020-03-22 13:12:51 (2.53 MB/s) - ‘helm-v3.1.2-linux-amd64.tar.gz’ saved [12269190/12269190]
+```
+
+Unzip it and instal binary:
+```
+eramon@caipirinha:~/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+linux-amd64/
+linux-amd64/helm
+linux-amd64/README.md
+linux-amd64/LICENSE
+
+eramon@caipirinha:~/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
+```
+
+Invoke helm to make sure it's working:
+```
+eramon@caipirinha:~$ helm version
+version.BuildInfo{Version:"v3.1.2", GitCommit:"d878d4d45863e42fd5cff6743294a11d28a9abce", GitTreeState:"clean", GoVersion:"go1.13.8"}
+```
+
+Once Helm is ready, add the official "Helm stable charts" chart repository:
+```
+eramon@caipirinha:~$ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+"stable" has been added to your repositories
+```
+
+Add the "Incubator" repository:
+```
+eramon@caipirinha:~/dev/kubernetes$ helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+"incubator" has been added to your repositories
+```
+
+## Appendix. Open points:
+
+### Warning
 In both master and worker, I get this warning:
 ```
 [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
 ```
 Not sure what this does exactly mean or how to fix it yet.
 
-## 5.2 Infrastructure as code
+### Warning
+When running kubeadm init and when creating a new token, I got warnings on the output:
+```
+eramon@pacharan:~$ kubeadm token create
+W0321 15:16:13.144929   25354 validation.go:28] Cannot validate kube-proxy config - no validator is available
+W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config - no validator is available
+4w2xrh.i1phnkxkzz7ja5fi
+```
+
+###  Infrastructure as code
 I would like to have the whole process scripted and/or described in yaml files and these pushed to github, so the environment can be set up at any time.
 
 ## References and useful or interesting links:
@@ -214,3 +385,17 @@ I would like to have the whole process scripted and/or described in yaml files a
 [Install pod network](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#pod-network)
 
 [Flannel](https://github.com/coreos/flannel)
+
+[StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/#storageos)
+
+[Kubernenetes - Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#users-in-kubernetes)
+
+[Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
+[Installing Helm](https://helm.sh/docs/intro/install/)
+
+[Helm Releases @Github](https://github.com/helm/helm/releases)
+
+[Helm Quickstart Guide](https://helm.sh/docs/intro/quickstart)
+
+[Gogs Helm Chart @Github](https://github.com/helm/charts/tree/master/incubator/gogs)

@@ -8,7 +8,7 @@
   <meta name="theme" content="hugo-academic">
   <meta name="generator" content="Hugo 0.53" />
   <meta name="author" content="E. Ramon">
-  
+  <meta name="description" content="Solution Architect">
 
   
   
@@ -43,7 +43,7 @@
 
   
 
-  <title>Setup a Home Kubernetes Cluster | Small Technical Blog</title>
+  <title>Set up a Home Kubernetes Cluster | Small Technical Blog</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -120,14 +120,14 @@
 
 
   <div class="article-container">
-    <h1 itemprop="name">Setup a Home Kubernetes Cluster</h1>
+    <h1 itemprop="name">Set up a Home Kubernetes Cluster</h1>
     
 
 <div class="article-metadata">
 
   <span class="article-date">
-    <time datetime="2020-03-20 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
-      Fri, Mar 20, 2020
+    <time datetime="2020-03-21 15:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Sat, Mar 21, 2020
     </time>
   </span>
 
@@ -151,28 +151,28 @@
     </li>
     <li>
       <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=Setup%20a%20Home%20Kubernetes%20Cluster&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f"
+         href="https://twitter.com/intent/tweet?text=Set%20up%20a%20Home%20Kubernetes%20Cluster&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f"
          target="_blank">
         <i class="fa fa-twitter"></i>
       </a>
     </li>
     <li>
       <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Setup%20a%20Home%20Kubernetes%20Cluster"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Set%20up%20a%20Home%20Kubernetes%20Cluster"
          target="_blank">
         <i class="fa fa-linkedin"></i>
       </a>
     </li>
     <li>
       <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Setup%20a%20Home%20Kubernetes%20Cluster"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Set%20up%20a%20Home%20Kubernetes%20Cluster"
          target="_blank">
         <i class="fa fa-weibo"></i>
       </a>
     </li>
     <li>
       <a class="email"
-         href="mailto:?subject=Setup%20a%20Home%20Kubernetes%20Cluster&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f">
+         href="mailto:?subject=Set%20up%20a%20Home%20Kubernetes%20Cluster&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -187,11 +187,9 @@
     <div class="article-style" itemprop="articleBody">
       
 
-<p>Home Kubernetes Cluster with old hardware: 1 Master and 1 Worker</p>
-
 <p><strong>Goal:</strong></p>
 
-<p><em>Set up a Home Kubernetes cluster</em></p>
+<p><em>Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker</em></p>
 
 <p>Tasks:</p>
 
@@ -200,6 +198,8 @@
 <li>Install Ubuntu Server 18.04 LTS</li>
 <li>Set up Master Node</li>
 <li>Set up Worker Node</li>
+<li>Storage Class</li>
+<li>Service Account</li>
 </ol>
 
 <h2 id="1-find-old-hardware">1. Find old hardware</h2>
@@ -280,7 +280,7 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 <p>kubelet, kubeadm and kubectl are set on hold (to avoid automatic updates, I think)</p>
 
-<p>After installation:</p>
+<p>After installation, restarting kubelet is required;</p>
 
 <pre><code>systemctl daemon-reload
 systemctl restart kubelet
@@ -308,7 +308,8 @@ Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options liste
 Then you can join any number of worker nodes by running the following on each as root:
 
 kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 \
-    --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9 
+    --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9
+
 </code></pre>
 
 <p>To make kubectl work for your non-root user, run these commands, which are also part of the kubeadm init output:</p>
@@ -318,7 +319,7 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 eramon@pacharan:~$ sudo chown eramon:eramon .kube/config
 </code></pre>
 
-<p>After these steps, we see that kubectl cluster-info is showing something so kubectl is interacting with our new cluster:</p>
+<p>After these steps, looking at the output of kubectl cluster-info we see kubectl is interacting with our new cluster:</p>
 
 <pre><code>eramon@pacharan:~$ kubectl cluster-info
 Kubernetes master is running at https://192.168.1.129:6443
@@ -372,19 +373,166 @@ kube-system   kube-scheduler-pacharan            1/1     Running   0          16
 Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /lib/systemd/system/docker.service.
 </code></pre>
 
-<p>To join the cluster, we execute the command extracted from the output of kubeadm before:</p>
+<p>Since more than 24 hours elapsed between the kubeadm init and the join command, I created a new token:</p>
 
-<pre><code>eramon@whisky:~$ sudo kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9 
-W0321 12:59:20.688335   11019 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
-[preflight] Running pre-flight checks
-	[WARNING IsDockerSystemdCheck]: detected &quot;cgroupfs&quot; as the Docker cgroup driver. The recommended driver is &quot;systemd&quot;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+<pre><code>eramon@pacharan:~$ kubeadm token create
+W0321 15:00:44.641034   18998 validation.go:28] Cannot validate kube-proxy config - no validator is available
+W0321 15:00:44.641111   18998 validation.go:28] Cannot validate kubelet config - no validator is available
+qon04q.9lwkz7i4pixr46q6
+eramon@pacharan:~$ kubeadm token list
+TOKEN                     TTL         EXPIRES                USAGES                   DESCRIPTION                                                EXTRA GROUPS
+qon04q.9lwkz7i4pixr46q6   23h         2020-03-22T15:00:44Z   authentication,signing   &lt;none&gt;                                                     system:bootstrappers:kubeadm:default-node-token
 </code></pre>
 
-<p>That&rsquo;s all. With this, the cluster should be ready for the first deployment.</p>
+<p>Join worker node by running the following as root:</p>
 
-<h2 id="5-open-points">5. Open points:</h2>
+<pre><code>root@whisky:/home/eramon# kubeadm join 192.168.1.129:6443 --token qon04q.9lwkz7i4pixr46q6 --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9
+W0321 15:03:52.406236   29903 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
+[preflight] Running pre-flight checks
+        [WARNING IsDockerSystemdCheck]: detected &quot;cgroupfs&quot; as the Docker cgroup driver. The recommended driver is &quot;systemd&quot;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+[preflight] Reading configuration from the cluster...
+[preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
+[kubelet-start] Downloading configuration for the kubelet from the &quot;kubelet-config-1.17&quot; ConfigMap in the kube-system namespace
+[kubelet-start] Writing kubelet configuration to file &quot;/var/lib/kubelet/config.yaml&quot;
+[kubelet-start] Writing kubelet environment file with flags to file &quot;/var/lib/kubelet/kubeadm-flags.env&quot;
+[kubelet-start] Starting the kubelet
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
 
-<h3 id="5-1-warning">5.1. Warning</h3>
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+</code></pre>
+
+<p>As instructed by the output of the last command, we take a look at the nodes:</p>
+
+<pre><code>eramon@pacharan:~$ kubectl get nodes
+NAME       STATUS   ROLES    AGE     VERSION
+pacharan   Ready    master   3d3h    v1.17.4
+whisky     Ready    &lt;none&gt;   6m15s   v1.17.4
+</code></pre>
+
+<h2 id="5-service-account">5. Service Account</h2>
+
+<p>To interact with the Kubernetes cluster from a client machine, for now we&rsquo;ll use the default service account token.</p>
+
+<p>Service accounts are users managed by the Kubernetes cluster and tied to a set of credentials stored as Secrets, which are mounted into pods allowing in-cluster processes to talk to the Kubernetes API.</p>
+
+<h3 id="5-1-install-kubectl">5.1. Install kubectl</h3>
+
+<p><em>On the client machine</em></p>
+
+<p>Download binary and install kubectl on the client machine:</p>
+
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 41.4M  100 41.4M    0     0  5681k      0  0:00:07  0:00:07 --:--:-- 5877k
+
+eramon@caipirinha:~/dev/kubernetes$ chmod +x kubectl 
+
+eramon@caipirinha:~/dev/kubernetes$ sudo mv kubectl /usr/local/bin/kubectl
+
+</code></pre>
+
+<h3 id="5-2-grant-access-to-the-cluster-api-for-the-client-machine">5.2. Grant access to the cluster API for the client machine</h3>
+
+<p><em>On the master node</em></p>
+
+<p>Output information about the default service account:</p>
+
+<pre><code>eramon@pacharan:~$ kubectl get serviceaccounts default -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: &quot;2020-03-18T12:06:13Z&quot;
+  name: default
+  namespace: default
+  resourceVersion: &quot;358&quot;
+  selfLink: /api/v1/namespaces/default/serviceaccounts/default
+  uid: e0a693d0-cb23-4ab4-8205-34962d0f9f33
+secrets:
+- name: default-token-52cj5
+</code></pre>
+
+<p>Examining the secrets we see the token for the default service account:</p>
+
+<pre><code>eramon@pacharan:~$ kubectl get secret
+NAME                  TYPE                                  DATA   AGE
+default-token-52cj5   kubernetes.io/service-account-token   3      4d1h
+</code></pre>
+
+<p>Examine the secret:</p>
+
+<pre><code>eramon@pacharan:~$ kubectl describe secret default-token-52cj5
+Name:         default-token-52cj5
+Namespace:    default
+Labels:       &lt;none&gt;
+Annotations:  kubernetes.io/service-account.name: default
+              kubernetes.io/service-account.uid: e0a693d0-cb23-4ab4-8205-34962d0f9f33
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1025 bytes
+namespace:  7 bytes
+token:	    eyJhbGciO...p0q
+</code></pre>
+
+<p>So we just found out the bearer token for the default service account.</p>
+
+<p><em>On the client machine</em>
+I just copied the kube configuration from the Master node to the client machine. Not sure if this is exactly best practice, but I did not find any documentation about how to manage this. The file is located here:</p>
+
+<pre><code>eramon@pacharan:~$ ls -la /home/eramon/.kube/config 
+-rw------- 1 eramon eramon 5449 Mar 18 14:42 /home/eramon/.kube/config
+</code></pre>
+
+<p>After copying the file to the same location on the client machine, I saw my laptop had access to the Kubernetes API on the server via kubectl:</p>
+
+<pre><code>eramon@caipirinha:~$ kubectl cluster-info
+Kubernetes master is running at https://192.168.1.129:6443
+KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+</code></pre>
+
+<p>That would be all. With this, the cluster should be ready for the first deployment. See next post.</p>
+
+<h3 id="move">MOVE</h3>
+
+<h2 id="5-set-up-storage-class">5. Set up Storage Class</h2>
+
+<p>In order for our future pods to be able to claim persistent volumes for their applications, we need to set up a storage class for the cluster.</p>
+
+<p>Since this is a test setup, I just wanted a StorageClass using the local disk for storage of the persistent volumes:</p>
+
+<pre><code>eramon@pacharan:~$ vi storageClass.yaml
+</code></pre>
+
+<p>This is the content of the file:</p>
+
+<pre><code>apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+</code></pre>
+
+<p>Apply:</p>
+
+<pre><code>eramon@pacharan:~$ kubectl apply -f storageClass.yaml 
+storageclass.storage.k8s.io/local-storage created
+</code></pre>
+
+<h2 id="appendix-open-points">Appendix. Open points:</h2>
+
+<h3 id="interaction-with-the-cluster">Interaction with the cluster</h3>
+
+<p>I need to configure my laptop to access the cluster over kubectl. I don&rsquo;t need to ssh to the master node for installing or deploying applications.</p>
+
+<h3 id="warning">Warning</h3>
 
 <p>In both master and worker, I get this warning:</p>
 
@@ -393,7 +541,17 @@ W0321 12:59:20.688335   11019 join.go:346] [preflight] WARNING: JoinControlPane.
 
 <p>Not sure what this does exactly mean or how to fix it yet.</p>
 
-<h2 id="5-2-infrastructure-as-code">5.2 Infrastructure as code</h2>
+<h3 id="warning-1">Warning</h3>
+
+<p>When running kubeadm init and when creating a new token, I got warnings on the output:</p>
+
+<pre><code>eramon@pacharan:~$ kubeadm token create
+W0321 15:16:13.144929   25354 validation.go:28] Cannot validate kube-proxy config - no validator is available
+W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config - no validator is available
+4w2xrh.i1phnkxkzz7ja5fi
+</code></pre>
+
+<h3 id="infrastructure-as-code">Infrastructure as code</h3>
 
 <p>I would like to have the whole process scripted and/or described in yaml files and these pushed to github, so the environment can be set up at any time.</p>
 
@@ -406,6 +564,12 @@ W0321 12:59:20.688335   11019 join.go:346] [preflight] WARNING: JoinControlPane.
 <p><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#pod-network" target="_blank">Install pod network</a></p>
 
 <p><a href="https://github.com/coreos/flannel" target="_blank">Flannel</a></p>
+
+<p><a href="https://kubernetes.io/docs/concepts/storage/storage-classes/#storageos" target="_blank">StorageClass</a></p>
+
+<p><a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#users-in-kubernetes" target="_blank">Kubernenetes - Authenticating</a></p>
+
+<p><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/" target="_blank">Install and Set Up kubectl</a></p>
 
     </div>
   </div>
@@ -420,6 +584,9 @@ W0321 12:59:20.688335   11019 join.go:346] [preflight] WARNING: JoinControlPane.
       aria-hidden="true">&larr;</span> EHCI Debug</a></li>
     
 
+    
+    <li class="next"><a href="https://eramons.github.io/techblog/post/deploy_gogs/">First Kubernetes Deployment <span
+      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>
