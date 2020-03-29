@@ -11,6 +11,151 @@
     <atom:link href="/techblog/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>K3S Cluster on Raspberry Pi 4</title>
+      <link>https://eramons.github.io/techblog/post/k3s/</link>
+      <pubDate>Sun, 29 Mar 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/k3s/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Set up a minimal Kubernetes cluster on Rapberry Pi 4.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it&amp;rsquo;s pretty cool, but I actually wasn&amp;rsquo;t sure what I wanted it for. After giving it a thought, I decided to try to set up a K3S cluster on it.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Possibility 1: the Raspberry Pi 4 will be both master and worker&lt;/em&gt;
+&lt;em&gt;Possibility 2: the Raspberry Pi 4 will be the master. An older Raspberry Pi 3 will be the worker&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start with the first possibility and see if later it&amp;rsquo;s possible to expand.&lt;/p&gt;
+
+&lt;p&gt;In addition to the Raspberry 4, I will use:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Power adapter&lt;/li&gt;
+&lt;li&gt;Ethernet cable&lt;/li&gt;
+&lt;li&gt;SD card&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Tasks:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Install latest Raspbian on the Raspberry Pi 4&lt;/li&gt;
+&lt;li&gt;Install K3S&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;1-install-raspbian&#34;&gt;1. Install Raspbian&lt;/h2&gt;
+
+&lt;p&gt;Download latest Raspbian image.&lt;/p&gt;
+
+&lt;p&gt;Unzip:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/raspberrypi$ unzip 2020-02-13-raspbian-buster-lite.zip 
+Archive:  2020-02-13-raspbian-buster-lite.zip
+  inflating: 2020-02-13-raspbian-buster-lite.img  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Copy to the sdcard:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/raspberrypi$ sudo dd if=2020-02-13-raspbian-buster-lite.img of=/dev/sdb bs=4MB
+462+1 records in
+462+1 records out
+1849688064 bytes (1.8 GB, 1.7 GiB) copied, 133.426 s, 13.9 MB/s
+
+eramon@caipirinha:~/dev/raspberrypi$ sudo sync
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: find out the device name first, using dmesg. For me, it was /dev/sdb.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;To make sure we can connect to the Raspberry Pi 4 via ssh, we need to manually add a &lt;em&gt;SSH&lt;/em&gt; file to the SDCard.&lt;/p&gt;
+
+&lt;p&gt;Mount the sdcard first partition and add the file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/raspberrypi$ sudo mount /dev/sdb1 mnt/
+eramon@caipirinha:~/dev/raspberrypi$ cd mnt/
+eramon@caipirinha:~/dev/raspberrypi/mnt$ sudo touch SSH
+eramon@caipirinha:~/dev/raspberrypi/mnt$ cd ..
+eramon@caipirinha:~/dev/raspberrypi$ sudo umount mnt
+eramon@caipirinha:~/dev/raspberrypi$ sudo sync
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Insert the SD Card in the Raspberry Pi 4. Connect the power adapter and the ethernet cable.&lt;/p&gt;
+
+&lt;p&gt;Next, I have to find out the IP of the Raspberry Pi 4. The easiest way was to connect to my home router and check the DHCP leases list.&lt;/p&gt;
+
+&lt;p&gt;Once found out, connect to the Raspberry Pi 4 over ssh:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/raspberrypi$ ssh pi@192.168.1.134
+The authenticity of host &#39;192.168.1.134 (192.168.1.134)&#39; can&#39;t be established.
+ECDSA key fingerprint is SHA256:VyBXTNZqpeU9LfG0bCiOjfplOON7nkLs4+k0z9toz7s.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added &#39;192.168.1.134&#39; (ECDSA) to the list of known hosts.
+pi@192.168.1.134&#39;s password: 
+Linux raspberrypi 4.19.97-v7l+ #1294 SMP Thu Jan 30 13:21:14 GMT 2020 armv7l
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+
+SSH is enabled and the default password for the &#39;pi&#39; user has not been changed.
+This is a security risk - please login as the &#39;pi&#39; user and type &#39;passwd&#39; to set a new password.
+
+
+Wi-Fi is currently blocked by rfkill.
+Use raspi-config to set the country before use.
+
+pi@raspberrypi:~ $ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: default username/password is pi/raspberry&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;2-install-k3s&#34;&gt;2. Install K3S&lt;/h2&gt;
+
+&lt;p&gt;Get K3S latest binary (make sure to get the armhf version):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pi@raspberrypi:~ $ wget https://github.com/rancher/k3s/releases/download/v1.17.4%2Bk3s1/k3s-armhf
+...
+k3s-armhf                 100%[====================================&amp;gt;]  45.88M  4.48MB/s    in 16s     
+
+2020-03-29 13:50:16 (2.93 MB/s) - ‘k3s-armhf’ saved [48103424/48103424]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Rename binary and change file mode to make it executable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pi@raspberrypi:~ $ mv k3s-armhf k3s
+pi@raspberrypi:~ $ chmod +x k3s-armhf 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run the server:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pi@raspberrypi:~ $ sudo ./k3s server &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Find out the node token:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pi@raspberrypi:~ $ sudo cat /var/lib/rancher/k3s/server/node-token
+K10508ae11bab8e277893f008cc9cd4107b2acff73682d8e71d7eb8d7221e2c97a6::server:cd7d5d5dd18b4bc4fa7390194078c9d0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The same node should now join the cluster (since we have only one device for now):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pi@raspberrypi:~ $ sudo ./k3s agent --server https://localhost:6443 --token K10508ae11bab8e277893f008cc9cd4107b2acff73682d8e71d7eb8d7221e2c97a6::server:cd7d5d5dd18b4bc4fa7390194078c9d0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;TODO: there were some errors. Probably there are things to consider when running both master and worker on the same node.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://k3s.io/&#34; target=&#34;_blank&#34;&gt;Lightweit Kubernetes&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/rancher/k3s/releases/tag/v1.17.4+k3s1&#34; target=&#34;_blank&#34;&gt;K3S Releases&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>First Kubernetes Deployment</title>
       <link>https://eramons.github.io/techblog/post/deploy_gogs/</link>
       <pubDate>Sun, 22 Mar 2020 15:00:00 +0200</pubDate>
@@ -24,25 +169,32 @@
 
 &lt;p&gt;After I had my own Kubernetes cluster ready, I wanted to try it out. Setting up the cluster was almost too easy, so I was expecting some fine-tuning to be necessary. As first application I chose gogs - a self-hosted github clone.&lt;/p&gt;
 
-&lt;p&gt;{{/*
-I struggle with too many things to do in very little time - like many others, I guess - so I&amp;rsquo;m always trying to optimise life processes. The idea at this point was to use the gogs Kanban board to adopt an agile approach for private TODOs and tasks.
-*/}}&lt;/p&gt;
+&lt;p&gt;I struggle with too many things to do in very little time - like many others, I guess - so I&amp;rsquo;m always trying to optimise life processes. The idea at this point was to use the gogs Kanban board to adopt an agile approach for private TODOs and tasks.&lt;/p&gt;
 
 &lt;p&gt;Tasks:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Create Storage Class&lt;/li&gt;
-&lt;li&gt;Install helm&lt;/li&gt;
 &lt;li&gt;Deploy Gogs&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;0-set-up-storage-class&#34;&gt;0. Set up Storage Class&lt;/h2&gt;
+&lt;h2 id=&#34;1-set-up-storage-class&#34;&gt;1. Set up Storage Class&lt;/h2&gt;
 
-&lt;p&gt;In order for our future pods to be able to claim persistent volumes for their applications, we need to set up a storage class for the cluster.&lt;/p&gt;
+&lt;p&gt;First of all, make sure the client machine can reach the cluster via kubectl:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/kubernetes$ kubectl cluster-info
+Kubernetes master is running at https://192.168.1.126:6443
+KubeDNS is running at https://192.168.1.126:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The prerequisites for installing Gogs said:
+&lt;em&gt;PV support on underlying infrastructure (if persistence is required)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;In general, in order for our future pods to be able to claim persistent volumes for their applications, we need to set up a storage class for the cluster.&lt;/p&gt;
 
 &lt;p&gt;Since this is a test setup, I just wanted a StorageClass using the local disk for storage of the persistent volumes:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ vi storageClass.yaml
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~$ vi storageClass.yaml
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This is the content of the file:&lt;/p&gt;
@@ -61,91 +213,16 @@ volumeBindingMode: WaitForFirstConsumer
 storageclass.storage.k8s.io/local-storage created
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;1-install-helm&#34;&gt;1. Install helm&lt;/h2&gt;
-
-&lt;p&gt;There are several options for deploying gogs, but I thought to use helm looked like the most standard and uncomplicated way. I was expecting to use helm for deploying other applications later.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;On the Master Node&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Not sure: for interacting with the cluster, we don&amp;rsquo;t need to run the commands on the master node directly&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Downloaded latest helm:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
---2020-03-22 13:12:45--  https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
-Resolving get.helm.sh (get.helm.sh)... 2606:2800:233:1cb7:261b:1f9c:2074:3c, 152.199.21.175
-Connecting to get.helm.sh (get.helm.sh)|2606:2800:233:1cb7:261b:1f9c:2074:3c|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 12269190 (12M) [application/x-tar]
-Saving to: ‘helm-v3.1.2-linux-amd64.tar.gz’
-
-helm-v3.1.2-linux-amd64. 100%[==================================&amp;gt;]  11.70M  2.53MB/s    in 4.6s    
-
-2020-03-22 13:12:51 (2.53 MB/s) - ‘helm-v3.1.2-linux-amd64.tar.gz’ saved [12269190/12269190]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Unzip it and instal binary:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
-linux-amd64/
-linux-amd64/helm
-linux-amd64/README.md
-linux-amd64/LICENSE
-
-eramon@pacharan:~/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;With that helm was available on the master node:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm version
-version.BuildInfo{Version:&amp;quot;v3.1.2&amp;quot;, GitCommit:&amp;quot;d878d4d45863e42fd5cff6743294a11d28a9abce&amp;quot;, GitTreeState:&amp;quot;clean&amp;quot;, GoVersion:&amp;quot;go1.13.8&amp;quot;}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Once Helm is ready, add the official &amp;ldquo;Helm stable charts&amp;rdquo; chart repository:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-&amp;quot;stable&amp;quot; has been added to your repositories
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Run helm search to see the available repositories:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm search repo stable
-NAME                                    CHART VERSION   APP VERSION                     DESCRIPTION
-stable/acs-engine-autoscaler            2.2.2           2.1.1                           DEPRECATED Scales worker nodes within agent pools
-stable/aerospike                        0.2.8           v4.5.0.5                        A Helm chart for Aerospike in Kubernetes
-stable/airflow                          4.1.0           1.10.4                          Airflow is a platform to programmatically autho...
-stable/ambassador                       4.1.0           0.81.0                          A Helm chart for Datawire Ambassador
-...
-&lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2 id=&#34;2-deploy-gogs&#34;&gt;2. Deploy gogs&lt;/h2&gt;
 
-&lt;p&gt;The prerequisites for installing Gogs said:
-&lt;em&gt;PV support on underlying infrastructure (if persistence is required)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;TODO It didn&amp;rsquo;t work using Helm charts. Try to deploy directly using yaml files.&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;We did this at the beginning of this post, so a StorageClass for Local Storage was available.&lt;/p&gt;
+&lt;h2 id=&#34;links&#34;&gt;Links:&lt;/h2&gt;
 
-&lt;p&gt;Update the helm repository:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm repo update
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the &amp;quot;stable&amp;quot; chart repository
-Update Complete. ⎈ Happy Helming!⎈ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;TODO Not available on the repo, or not the right way to do this:&lt;/em&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ helm install incubator/gogs --generate-name
-Error: failed to download &amp;quot;incubator/gogs&amp;quot; (hint: running `helm repo update` may help)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://helm.sh/docs/intro/install/&#34; target=&#34;_blank&#34;&gt;Installing Helm&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/helm/helm/releases&#34; target=&#34;_blank&#34;&gt;Helm Releases @Github&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://helm.sh/docs/intro/quickstart&#34; target=&#34;_blank&#34;&gt;Helm Quickstart Guide&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/helm/charts/tree/master/incubator/gogs&#34; target=&#34;_blank&#34;&gt;Gogs Helm Chart @Github&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://helm.sh/docs/intro/install/&#34; target=&#34;_blank&#34;&gt;Installing Helm&lt;/a&gt;
+&lt;a href=&#34;https://github.com/helm/helm/releases&#34; target=&#34;_blank&#34;&gt;Helm Releases @Github&lt;/a&gt;
+&lt;a href=&#34;https://helm.sh/docs/intro/quickstart&#34; target=&#34;_blank&#34;&gt;Helm Quickstart Guide&lt;/a&gt;
+&lt;a href=&#34;https://github.com/helm/charts/tree/master/incubator/gogs&#34; target=&#34;_blank&#34;&gt;Gogs Helm Chart @Github&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -168,8 +245,8 @@ Error: failed to download &amp;quot;incubator/gogs&amp;quot; (hint: running `hel
 &lt;li&gt;Install Ubuntu Server 18.04 LTS&lt;/li&gt;
 &lt;li&gt;Set up Master Node&lt;/li&gt;
 &lt;li&gt;Set up Worker Node&lt;/li&gt;
-&lt;li&gt;Storage Class&lt;/li&gt;
 &lt;li&gt;Service Account&lt;/li&gt;
+&lt;li&gt;Install Helm&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2 id=&#34;1-find-old-hardware&#34;&gt;1. Find old hardware&lt;/h2&gt;
@@ -252,15 +329,15 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 &lt;p&gt;After installation, restarting kubelet is required;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;systemctl daemon-reload
-systemctl restart kubelet
+&lt;pre&gt;&lt;code&gt;sudo systemctl daemon-reload
+sudo systemctl restart kubelet
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;3-3-initialise-master-node&#34;&gt;3.3 Initialise master node&lt;/h3&gt;
 
 &lt;p&gt;The goal was to set up a single control-plane cluster with kubeadm.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;kubeadmin init --pod-network-cidr=10.244.0.0/16
+&lt;pre&gt;&lt;code&gt;sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ...
 
 Your Kubernetes control-plane has initialized successfully!
@@ -284,8 +361,8 @@ kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 \
 
 &lt;p&gt;To make kubectl work for your non-root user, run these commands, which are also part of the kubeadm init output:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ sudo mkdir -p $HOME/.kube
+eramon@pacharan:~$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 eramon@pacharan:~$ sudo chown eramon:eramon .kube/config
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -469,38 +546,55 @@ KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/s
 
 &lt;p&gt;That would be all. With this, the cluster should be ready for the first deployment. See next post.&lt;/p&gt;
 
-&lt;h3 id=&#34;move&#34;&gt;MOVE&lt;/h3&gt;
+&lt;h2 id=&#34;6-install-helm&#34;&gt;6. Install helm&lt;/h2&gt;
 
-&lt;h2 id=&#34;5-set-up-storage-class&#34;&gt;5. Set up Storage Class&lt;/h2&gt;
+&lt;p&gt;Helm is a tool for managing Kubernetes packages called &lt;em&gt;charts&lt;/em&gt;. The chart is a bundle of information necessary to create an instance of a Kubernetes application.&lt;/p&gt;
 
-&lt;p&gt;In order for our future pods to be able to claim persistent volumes for their applications, we need to set up a storage class for the cluster.&lt;/p&gt;
+&lt;p&gt;Downloaded latest helm:&lt;/p&gt;
 
-&lt;p&gt;Since this is a test setup, I just wanted a StorageClass using the local disk for storage of the persistent volumes:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+--2020-03-22 13:12:45--  https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+Resolving get.helm.sh (get.helm.sh)... 2606:2800:233:1cb7:261b:1f9c:2074:3c, 152.199.21.175
+Connecting to get.helm.sh (get.helm.sh)|2606:2800:233:1cb7:261b:1f9c:2074:3c|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 12269190 (12M) [application/x-tar]
+Saving to: ‘helm-v3.1.2-linux-amd64.tar.gz’
 
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ vi storageClass.yaml
+helm-v3.1.2-linux-amd64. 100%[==================================&amp;gt;]  11.70M  2.53MB/s    in 4.6s
+
+2020-03-22 13:12:51 (2.53 MB/s) - ‘helm-v3.1.2-linux-amd64.tar.gz’ saved [12269190/12269190]
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This is the content of the file:&lt;/p&gt;
+&lt;p&gt;Unzip it and instal binary:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: local-storage
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+linux-amd64/
+linux-amd64/helm
+linux-amd64/README.md
+linux-amd64/LICENSE
+
+eramon@caipirinha:~/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Apply:&lt;/p&gt;
+&lt;p&gt;Invoke helm to make sure it&amp;rsquo;s working:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;eramon@pacharan:~$ kubectl apply -f storageClass.yaml 
-storageclass.storage.k8s.io/local-storage created
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~$ helm version
+version.BuildInfo{Version:&amp;quot;v3.1.2&amp;quot;, GitCommit:&amp;quot;d878d4d45863e42fd5cff6743294a11d28a9abce&amp;quot;, GitTreeState:&amp;quot;clean&amp;quot;, GoVersion:&amp;quot;go1.13.8&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once Helm is ready, add the official &amp;ldquo;Helm stable charts&amp;rdquo; chart repository:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~$ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+&amp;quot;stable&amp;quot; has been added to your repositories
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Add the &amp;ldquo;Incubator&amp;rdquo; repository:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/kubernetes$ helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+&amp;quot;incubator&amp;quot; has been added to your repositories
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;appendix-open-points&#34;&gt;Appendix. Open points:&lt;/h2&gt;
-
-&lt;h3 id=&#34;interaction-with-the-cluster&#34;&gt;Interaction with the cluster&lt;/h3&gt;
-
-&lt;p&gt;I need to configure my laptop to access the cluster over kubectl. I don&amp;rsquo;t need to ssh to the master node for installing or deploying applications.&lt;/p&gt;
 
 &lt;h3 id=&#34;warning&#34;&gt;Warning&lt;/h3&gt;
 
@@ -540,6 +634,14 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
 &lt;p&gt;&lt;a href=&#34;https://kubernetes.io/docs/reference/access-authn-authz/authentication/#users-in-kubernetes&#34; target=&#34;_blank&#34;&gt;Kubernenetes - Authenticating&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/install-kubectl/&#34; target=&#34;_blank&#34;&gt;Install and Set Up kubectl&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://helm.sh/docs/intro/install/&#34; target=&#34;_blank&#34;&gt;Installing Helm&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/helm/helm/releases&#34; target=&#34;_blank&#34;&gt;Helm Releases @Github&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://helm.sh/docs/intro/quickstart&#34; target=&#34;_blank&#34;&gt;Helm Quickstart Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/helm/charts/tree/master/incubator/gogs&#34; target=&#34;_blank&#34;&gt;Gogs Helm Chart @Github&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

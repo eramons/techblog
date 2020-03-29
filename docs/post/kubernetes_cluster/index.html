@@ -8,7 +8,7 @@
   <meta name="theme" content="hugo-academic">
   <meta name="generator" content="Hugo 0.53" />
   <meta name="author" content="E. Ramon">
-  <meta name="description" content="Solution Architect">
+  <meta name="description" content="Solution Architect and Open Source Enthusiast">
 
   
   
@@ -198,8 +198,8 @@
 <li>Install Ubuntu Server 18.04 LTS</li>
 <li>Set up Master Node</li>
 <li>Set up Worker Node</li>
-<li>Storage Class</li>
 <li>Service Account</li>
+<li>Install Helm</li>
 </ol>
 
 <h2 id="1-find-old-hardware">1. Find old hardware</h2>
@@ -282,15 +282,15 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 <p>After installation, restarting kubelet is required;</p>
 
-<pre><code>systemctl daemon-reload
-systemctl restart kubelet
+<pre><code>sudo systemctl daemon-reload
+sudo systemctl restart kubelet
 </code></pre>
 
 <h3 id="3-3-initialise-master-node">3.3 Initialise master node</h3>
 
 <p>The goal was to set up a single control-plane cluster with kubeadm.</p>
 
-<pre><code>kubeadmin init --pod-network-cidr=10.244.0.0/16
+<pre><code>sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ...
 
 Your Kubernetes control-plane has initialized successfully!
@@ -314,8 +314,8 @@ kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 \
 
 <p>To make kubectl work for your non-root user, run these commands, which are also part of the kubeadm init output:</p>
 
-<pre><code>mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+<pre><code>eramon@pacharan:~$ sudo mkdir -p $HOME/.kube
+eramon@pacharan:~$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 eramon@pacharan:~$ sudo chown eramon:eramon .kube/config
 </code></pre>
 
@@ -499,38 +499,55 @@ KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/s
 
 <p>That would be all. With this, the cluster should be ready for the first deployment. See next post.</p>
 
-<h3 id="move">MOVE</h3>
+<h2 id="6-install-helm">6. Install helm</h2>
 
-<h2 id="5-set-up-storage-class">5. Set up Storage Class</h2>
+<p>Helm is a tool for managing Kubernetes packages called <em>charts</em>. The chart is a bundle of information necessary to create an instance of a Kubernetes application.</p>
 
-<p>In order for our future pods to be able to claim persistent volumes for their applications, we need to set up a storage class for the cluster.</p>
+<p>Downloaded latest helm:</p>
 
-<p>Since this is a test setup, I just wanted a StorageClass using the local disk for storage of the persistent volumes:</p>
+<pre><code>eramon@caipirinha:~/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+--2020-03-22 13:12:45--  https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+Resolving get.helm.sh (get.helm.sh)... 2606:2800:233:1cb7:261b:1f9c:2074:3c, 152.199.21.175
+Connecting to get.helm.sh (get.helm.sh)|2606:2800:233:1cb7:261b:1f9c:2074:3c|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 12269190 (12M) [application/x-tar]
+Saving to: ‘helm-v3.1.2-linux-amd64.tar.gz’
 
-<pre><code>eramon@pacharan:~$ vi storageClass.yaml
+helm-v3.1.2-linux-amd64. 100%[==================================&gt;]  11.70M  2.53MB/s    in 4.6s
+
+2020-03-22 13:12:51 (2.53 MB/s) - ‘helm-v3.1.2-linux-amd64.tar.gz’ saved [12269190/12269190]
 </code></pre>
 
-<p>This is the content of the file:</p>
+<p>Unzip it and instal binary:</p>
 
-<pre><code>apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: local-storage
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
+<pre><code>eramon@caipirinha:~/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+linux-amd64/
+linux-amd64/helm
+linux-amd64/README.md
+linux-amd64/LICENSE
+
+eramon@caipirinha:~/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
 </code></pre>
 
-<p>Apply:</p>
+<p>Invoke helm to make sure it&rsquo;s working:</p>
 
-<pre><code>eramon@pacharan:~$ kubectl apply -f storageClass.yaml 
-storageclass.storage.k8s.io/local-storage created
+<pre><code>eramon@caipirinha:~$ helm version
+version.BuildInfo{Version:&quot;v3.1.2&quot;, GitCommit:&quot;d878d4d45863e42fd5cff6743294a11d28a9abce&quot;, GitTreeState:&quot;clean&quot;, GoVersion:&quot;go1.13.8&quot;}
+</code></pre>
+
+<p>Once Helm is ready, add the official &ldquo;Helm stable charts&rdquo; chart repository:</p>
+
+<pre><code>eramon@caipirinha:~$ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+&quot;stable&quot; has been added to your repositories
+</code></pre>
+
+<p>Add the &ldquo;Incubator&rdquo; repository:</p>
+
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+&quot;incubator&quot; has been added to your repositories
 </code></pre>
 
 <h2 id="appendix-open-points">Appendix. Open points:</h2>
-
-<h3 id="interaction-with-the-cluster">Interaction with the cluster</h3>
-
-<p>I need to configure my laptop to access the cluster over kubectl. I don&rsquo;t need to ssh to the master node for installing or deploying applications.</p>
 
 <h3 id="warning">Warning</h3>
 
@@ -570,6 +587,14 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
 <p><a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#users-in-kubernetes" target="_blank">Kubernenetes - Authenticating</a></p>
 
 <p><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/" target="_blank">Install and Set Up kubectl</a></p>
+
+<p><a href="https://helm.sh/docs/intro/install/" target="_blank">Installing Helm</a></p>
+
+<p><a href="https://github.com/helm/helm/releases" target="_blank">Helm Releases @Github</a></p>
+
+<p><a href="https://helm.sh/docs/intro/quickstart" target="_blank">Helm Quickstart Guide</a></p>
+
+<p><a href="https://github.com/helm/charts/tree/master/incubator/gogs" target="_blank">Gogs Helm Chart @Github</a></p>
 
     </div>
   </div>

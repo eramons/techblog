@@ -13,6 +13,18 @@
     
     
     <item>
+      <title>K3S Cluster on Raspberry Pi 4</title>
+      <link>https://eramons.github.io/techblog/post/k3s/</link>
+      <pubDate>Sun, 29 Mar 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/k3s/</guid>
+      <description>Goal:
+Set up a minimal Kubernetes cluster on Rapberry Pi 4.
+I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it&amp;rsquo;s pretty cool, but I actually wasn&amp;rsquo;t sure what I wanted it for. After giving it a thought, I decided to try to set up a K3S cluster on it.
+Possibility 1: the Raspberry Pi 4 will be both master and worker Possibility 2: the Raspberry Pi 4 will be the master.</description>
+    </item>
+    
+    <item>
       <title>First Kubernetes Deployment</title>
       <link>https://eramons.github.io/techblog/post/deploy_gogs/</link>
       <pubDate>Sun, 22 Mar 2020 15:00:00 +0200</pubDate>
@@ -21,7 +33,7 @@
       <description>Goal:
 Deploy Gogs - a painless self-hosted Git service - on homemade Kubernetes Cluster.
 After I had my own Kubernetes cluster ready, I wanted to try it out. Setting up the cluster was almost too easy, so I was expecting some fine-tuning to be necessary. As first application I chose gogs - a self-hosted github clone.
-{{/* I struggle with too many things to do in very little time - like many others, I guess - so I&amp;rsquo;m always trying to optimise life processes.</description>
+I struggle with too many things to do in very little time - like many others, I guess - so I&amp;rsquo;m always trying to optimise life processes.</description>
     </item>
     
     <item>
@@ -33,7 +45,7 @@ After I had my own Kubernetes cluster ready, I wanted to try it out. Setting up 
       <description>Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Storage Class Service Account  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.</description>
+ Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install Helm  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.</description>
     </item>
     
     <item>
