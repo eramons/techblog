@@ -7,7 +7,6 @@ highlight = true
 
 [header]
   caption = ""
-  image = ""
 
 +++
 
@@ -32,6 +31,8 @@ Since kubernetes is lightweight and can run almost everywhere, I decided to go d
 * A PC tower whose components were bought separately and which I proudly assembled myself in 2007. Refurbished through the years, this PC had 6GB RAM and three hard disks: 250GB, 500GB and 2TB. Over the two first disks I had a LVM system installed, with a Debian installation and two separated home partitions. The PC didn't boot anymore, since the first disk - hosting the Master Boot Record - was broken. I removed the broken disk and the second LVM disk, keeping only the 2TB disk on the machine. 
 
 So I thought the MAC Mini should be my Master and the PC Tower should be my Worker :) 
+
+![Home Kubernetes Cluster](/techblog/img/kubehomecluster.jpg)
 
 ## 2. Install Ubuntu Server LTS
 
