@@ -5,43 +5,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/post_backup/vagrant/</loc>
-      <lastmod>2020-04-05T15:00:00+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post_backup/k3s/</loc>
-      <lastmod>2020-03-29T15:00:00+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post_backup/deploy_gogs/</loc>
-      <lastmod>2020-03-22T15:00:00+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>https://eramons.github.io/techblog/post/kubernetes_cluster/</loc>
-      <lastmod>2020-03-21T15:00:00+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post_backup/kubernetes_cluster/</loc>
       <lastmod>2020-03-21T15:00:00+02:00</lastmod>
     </url>
     
@@ -59,25 +23,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/post_backup/debug_coreboot/</loc>
-      <lastmod>2019-03-13T10:00:00+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>https://eramons.github.io/techblog/post/build_coreboot/</loc>
-      <lastmod>2019-02-25T10:00:00+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post_backup/build_coreboot/</loc>
       <lastmod>2019-02-25T10:00:00+02:00</lastmod>
     </url>
     
@@ -95,15 +41,6 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/post_backup/coreboot_librem/</loc>
-      <lastmod>2019-02-18T10:00:00+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>https://eramons.github.io/techblog/post/asuschromebook_debian/</loc>
       <lastmod>2018-12-04T10:00:00+02:00</lastmod>
     </url>
@@ -113,25 +50,7 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/post_backup/asuschromebook_debian/</loc>
-      <lastmod>2018-12-04T10:00:00+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>https://eramons.github.io/techblog/post/rock2_debian/</loc>
-      <lastmod>2017-07-27T15:03:58+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post_backup/rock2_debian/</loc>
       <lastmod>2017-07-27T15:03:58+02:00</lastmod>
     </url>
     
@@ -151,23 +70,6 @@
     
       <loc>https://eramons.github.io/techblog/post/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post_backup/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post_backup/cozy/</loc>
     </url>
     
   
