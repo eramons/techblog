@@ -78,17 +78,5 @@ The available images run with:
  Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:</description>
     </item>
     
-    <item>
-      <title></title>
-      <link>https://eramons.github.io/techblog/post/drafts/cozy/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://eramons.github.io/techblog/post/drafts/cozy/</guid>
-      <description>sudo apt-get install docker.io  Run couch-db instance in a container using the docker container runtime:
-eramon@caipirinha:~$ docker run -d --name cozy-stack-couch -p 5984:5984 -v $HOME/.cozy-stack-couch:/opt/couchdb/data apache/couchdb:2.3 eramon@caipirinha:~$ curl -X PUT http://127.0.0.1:5984/{_users,_replicator} {&amp;quot;ok&amp;quot;:true} {&amp;quot;ok&amp;quot;:true}  Install cozy-stack from binary:
-eramon@caipirinha:~/dev/cozy$ wget https://github.com/cozy/cozy-stack/releases/download/1.4.9/cozy-stack-linux-amd64 eramon@caipirinha:~/dev/cozy$ mv cozy-stack-linux-amd64 cozy-stack eramon@caipirinha:~/dev/cozy$ chmod +x cozy-stack eramon@caipirinha:~/dev/cozy$ sudo mv cozy-stack /usr/local/bin/  Set the admin passphrase:
-eramon@caipirinha:~/dev/cozy$ mkdir .cozy eramon@caipirinha:~/dev/cozy$ cozy-stack config passwd .cozy/cozy-admin-passphrase Hashed passphrase will be written in /home/eramon/dev/cozy/.</description>
-    </item>
-    
   </channel>
 </rss>

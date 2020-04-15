@@ -318,37 +318,6 @@ The available images run with:
     </p></div>
   </div>
   
-  <div>
-    
-    <h2><a href="https://eramons.github.io/techblog/post/drafts/cozy/"></a></h2>
-    
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
-      Mon, Jan 1, 0001
-    </time>
-  </span>
-
-  
-
-  
-
-  
-
-</div>
-
-    <div class="article-style"><p>
-      
-      sudo apt-get install docker.io  Run couch-db instance in a container using the docker container runtime:
-eramon@caipirinha:~$ docker run -d &ndash;name cozy-stack-couch -p 5984:5984 -v $HOME/.cozy-stack-couch:/opt/couchdb/data apache/couchdb:2.3 eramon@caipirinha:~$ curl -X PUT <a href="http://127.0.0.1:5984/{_users,_replicator" target="_blank">http://127.0.0.1:5984/{_users,_replicator</a>} {&quot;ok&quot;:true} {&quot;ok&quot;:true}  Install cozy-stack from binary:
-eramon@caipirinha:~/dev/cozy$ wget <a href="https://github.com/cozy/cozy-stack/releases/download/1.4.9/cozy-stack-linux-amd64" target="_blank">https://github.com/cozy/cozy-stack/releases/download/1.4.9/cozy-stack-linux-amd64</a> eramon@caipirinha:~/dev/cozy$ mv cozy-stack-linux-amd64 cozy-stack eramon@caipirinha:~/dev/cozy$ chmod +x cozy-stack eramon@caipirinha:~/dev/cozy$ sudo mv cozy-stack /usr/local/bin/  Set the admin passphrase:
-eramon@caipirinha:~/dev/cozy$ mkdir .cozy eramon@caipirinha:~/dev/cozy$ cozy-stack config passwd .cozy/cozy-admin-passphrase Hashed passphrase will be written in /home/eramon/dev/cozy/.
-      
-    </p></div>
-  </div>
-  
 
   
 
