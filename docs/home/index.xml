@@ -6,7 +6,7 @@
     <description>Recent content in Homes on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2017 E. Ramon</copyright>
+    <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
     <lastBuildDate>Wed, 20 Apr 2016 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://eramons.github.io/techblog/home/index.xml" rel="self" type="application/rss+xml" />
@@ -18,7 +18,7 @@
       <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
       
       <guid>https://eramons.github.io/techblog/home/about/</guid>
-      <description></description>
+      <description>There are tons of technical posts available on the Internet, about everything you can imagine and beyond. This blog might look like more of the same - and maybe it is. These posts are a collection of step-by-step guides summarizing my experiences when trying out new stuff. At the end, it&amp;rsquo;s just a slightly better way to keep my notes organised than having bunches of text files randomly distributed through several devices :)</description>
     </item>
     
     <item>

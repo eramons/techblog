@@ -6,35 +6,11 @@
     <description>Recent content in Posts on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2017 E. Ramon</copyright>
+    <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
     <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://eramons.github.io/techblog/post/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>K3S Cluster on Raspberry Pi 4</title>
-      <link>https://eramons.github.io/techblog/post/k3s/</link>
-      <pubDate>Sun, 29 Mar 2020 15:00:00 +0200</pubDate>
-      
-      <guid>https://eramons.github.io/techblog/post/k3s/</guid>
-      <description>Goal:
-Set up a minimal Kubernetes cluster on Rapberry Pi 4.
-I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it&amp;rsquo;s pretty cool, but I actually wasn&amp;rsquo;t sure what I wanted it for. After giving it a thought, I decided to try to set up a K3S cluster on it.
-Possibility 1: the Raspberry Pi 4 will be both master and worker Possibility 2: the Raspberry Pi 4 will be the master.</description>
-    </item>
-    
-    <item>
-      <title>First Kubernetes Deployment</title>
-      <link>https://eramons.github.io/techblog/post/deploy_gogs/</link>
-      <pubDate>Sun, 22 Mar 2020 15:00:00 +0200</pubDate>
-      
-      <guid>https://eramons.github.io/techblog/post/deploy_gogs/</guid>
-      <description>Goal:
-Deploy Gogs - a painless self-hosted Git service - on homemade Kubernetes Cluster.
-After I had my own Kubernetes cluster ready, I wanted to try it out. Setting up the cluster was almost too easy, so I was expecting some fine-tuning to be necessary. As first application I chose gogs - a self-hosted github clone.
-I struggle with too many things to do in very little time - like many others, I guess - so I&amp;rsquo;m always trying to optimise life processes.</description>
-    </item>
     
     <item>
       <title>Set up a Home Kubernetes Cluster</title>
@@ -45,7 +21,7 @@ I struggle with too many things to do in very little time - like many others, I 
       <description>Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install Helm  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.</description>
+ Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install Helm Install Ingress  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.</description>
     </item>
     
     <item>
@@ -100,6 +76,18 @@ Available images
 The available images run with:
  A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel.  The goal is to get a pure Debian distribution up and running on the board:
  Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://eramons.github.io/techblog/post/drafts/cozy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/drafts/cozy/</guid>
+      <description>sudo apt-get install docker.io  Run couch-db instance in a container using the docker container runtime:
+eramon@caipirinha:~$ docker run -d --name cozy-stack-couch -p 5984:5984 -v $HOME/.cozy-stack-couch:/opt/couchdb/data apache/couchdb:2.3 eramon@caipirinha:~$ curl -X PUT http://127.0.0.1:5984/{_users,_replicator} {&amp;quot;ok&amp;quot;:true} {&amp;quot;ok&amp;quot;:true}  Install cozy-stack from binary:
+eramon@caipirinha:~/dev/cozy$ wget https://github.com/cozy/cozy-stack/releases/download/1.4.9/cozy-stack-linux-amd64 eramon@caipirinha:~/dev/cozy$ mv cozy-stack-linux-amd64 cozy-stack eramon@caipirinha:~/dev/cozy$ chmod +x cozy-stack eramon@caipirinha:~/dev/cozy$ sudo mv cozy-stack /usr/local/bin/  Set the admin passphrase:
+eramon@caipirinha:~/dev/cozy$ mkdir .cozy eramon@caipirinha:~/dev/cozy$ cozy-stack config passwd .cozy/cozy-admin-passphrase Hashed passphrase will be written in /home/eramon/dev/cozy/.</description>
     </item>
     
   </channel>

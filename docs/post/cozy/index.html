@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.53" />
+  <meta name="author" content="E. Ramon">
+  <meta name="description" content="Solution Architect and Open Source Enthusiast">
+
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/techblog/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.0/css/academicons.min.css" integrity="sha512-GGGNUPDhnG8LEAEDsjqYIQns+Gu8RBs4j5XGlxl7UfRaZBhCCm5jenJkeJL8uPuOXGqgl8/H1gjlWQDRjd3cUQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather%7CRoboto+Mono">
+  <link rel="stylesheet" href="/techblog/css/hugo-academic.css">
+  
+
+  
+
+  <link rel="alternate" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+  <link rel="feed" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+
+  <link rel="icon" type="image/png" href="/techblog/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/techblog/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://eramons.github.io/techblog/post/cozy/">
+
+  
+
+  <title> | Small Technical Blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/techblog/">Small Technical Blog</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name"></h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      Mon, Jan 1, 0001
+    </time>
+  </span>
+
+  
+
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f&amp;title="
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f&amp;title="
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      <pre><code>sudo apt-get install docker.io
+</code></pre>
+
+<p>Run couch-db instance in a container using the docker container runtime:</p>
+
+<pre><code>eramon@caipirinha:~$ docker run -d --name cozy-stack-couch -p 5984:5984 -v $HOME/.cozy-stack-couch:/opt/couchdb/data apache/couchdb:2.3
+
+eramon@caipirinha:~$ curl -X PUT http://127.0.0.1:5984/{_users,_replicator}
+{&quot;ok&quot;:true}
+{&quot;ok&quot;:true}
+</code></pre>
+
+<p>Install cozy-stack from binary:</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy$ wget https://github.com/cozy/cozy-stack/releases/download/1.4.9/cozy-stack-linux-amd64
+
+eramon@caipirinha:~/dev/cozy$ mv cozy-stack-linux-amd64 cozy-stack
+eramon@caipirinha:~/dev/cozy$ chmod +x cozy-stack 
+eramon@caipirinha:~/dev/cozy$ sudo mv cozy-stack /usr/local/bin/
+</code></pre>
+
+<p>Set the admin passphrase:</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy$ mkdir .cozy
+eramon@caipirinha:~/dev/cozy$ cozy-stack config passwd .cozy/cozy-admin-passphrase
+Hashed passphrase will be written in /home/eramon/dev/cozy/.cozy/cozy-admin-passphrase
+Passphrase: 
+Confirmation: 
+</code></pre>
+
+<p>Start the cozy-stack server:</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy$ cozy-stack serve &amp;
+[1] 5895
+eramon@caipirinha:~/dev/cozy$ INFO[0000] Started in-memory broker for 17 workers type  nspace=jobs
+Ready and waiting for connections:
+  http server admin started on &quot;localhost:6060&quot;
+  http server major started on &quot;localhost:8080&quot;
+
+eramon@caipirinha:~/dev/cozy$ curl http://localhost:8080/version
+{&quot;build_mode&quot;:&quot;production&quot;,&quot;build_time&quot;:&quot;2020-04-07T07:51:23Z&quot;,&quot;runtime_version&quot;:&quot;go1.14.1&quot;,&quot;version&quot;:&quot;1.4.9&quot;}
+</code></pre>
+
+<p>eramon@caipirinha:~/dev/cozy$ cozy-stack config gen-keys .cozy/key
+keyfiles written in:
+  /home/eramon/dev/cozy/.cozy/key.enc
+  /home/eramon/dev/cozy/.cozy/key.dec</p>
+
+<p>Download and run Traefik as Docker image:
+<a href="https://docs.traefik.io/getting-started/quick-start/" target="_blank">https://docs.traefik.io/getting-started/quick-start/</a></p>
+
+<pre><code>TODO
+</code></pre>
+
+<p>It needs ports 80 (reverseproxy) and 8080 (admin). Change port for cozy-stack.</p>
+
+<p>Download sample configuration file</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy$ cd .cozy/
+eramon@caipirinha:~/dev/cozy/.cozy$ wget https://raw.githubusercontent.com/cozy/cozy-stack/master/cozy.example.yaml
+Saving to: ‘cozy.example.yaml’
+
+eramon@caipirinha:~/dev/cozy/.cozy$ cp cozy.example.yaml cozy.yaml
+</code></pre>
+
+<p>Modify .cozy/cozy.yaml:
+* To listen on localhost:8008 instead of localhost:8080
+* To use the path to the credential keys generated before</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy$ cozy-stack serve
+INFO[0000] Started in-memory broker for 17 workers type  nspace=jobs
+Ready and waiting for connections:
+  http server major started on &quot;localhost:8008&quot;
+  http server admin started on &quot;localhost:6060&quot;
+</code></pre>
+
+<p>Create instance:</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy$ cozy-stack instances add --passphrase secret --apps drive,photos,settings cozy.tools:8080
+Password:******
+INFO[1522] Start                                         domain=&quot;cozy.test:8008&quot; nspace=apps slug=drive type=install version_start=
+INFO[1524] Successful installer process: 1.23.0          domain=&quot;cozy.test:8008&quot; nspace=apps slug=drive type=install version_start=
+INFO[1524] Start                                         domain=&quot;cozy.test:8008&quot; nspace=apps slug=photos type=install version_start=
+INFO[1525] Successful installer process: 1.23.0          domain=&quot;cozy.test:8008&quot; nspace=apps slug=photos type=install version_start=
+INFO[1525] Start                                         domain=&quot;cozy.test:8008&quot; nspace=apps slug=settings type=install version_start=
+INFO[1526] Successful installer process: 1.13.0          domain=&quot;cozy.test:8008&quot; nspace=apps slug=settings type=install version_start=
+Instance created with success for domain cozy.test:8008
+Registration token: &quot;264255b1ab2a095cc02dffcd2bc2afd7&quot;
+Password:******
+</code></pre>
+
+<p>Not working - csrf token error. Trying to build from source. First install go:</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy$ mkdir go
+eramon@caipirinha:~/dev/cozy$ cd go
+eramon@caipirinha:~/dev/cozy/go$ wget https://dl.google.com/go/go1.13.10.linux-amd64.tar.gz
+eramon@caipirinha:~/dev/cozy/go$ sudo tar -C /usr/local -xzf go1.13.10.linux-amd64.tar.gz
+eramon@caipirinha:~/dev/cozy/go$ export PATH=$PATH:/usr/local/go/bin
+</code></pre>
+
+<p>Clone cozy-stack source code, build and create development instance:</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy$ git clone https://github.com/cozy/cozy-stack.git
+eramon@caipirinha:~/dev/cozy/cozy-stack$ cd cozy-stack
+eramon@caipirinha:~/dev/cozy/cozy-stack$ make
+eramon@caipirinha:~/dev/cozy/cozy-stack$ export PATH=&quot;$(go env GOPATH)/bin:$PATH&quot;
+eramon@caipirinha:~/dev/cozy/cozy-stack$ cozy-stack serve
+eramon@caipirinha:~/dev/cozy/cozy-stack$ make instance
+</code></pre>
+
+<p>Now when connecting to cozy-tools:8080 with passphrase &ldquo;cozy&rdquo; I can navigate through the demo application.</p>
+
+<p>However, I did not want the developer instance but to create an own test instance. So I deleted the developer instance created through &ldquo;make instance&rdquo; and tried cozy-stack instances add again. After entering the password, I got redirected to home.cozy.tools, which gave me an error &ldquo;application not installed&rdquo;. Then I tried accessing photos.cozy.tools and drive.cozy.tools and this seemed to work.</p>
+
+<p>Links:
+<a href="https://golang.org/doc/install" target="_blank">https://golang.org/doc/install</a>
+<a href="https://github.com/cozy/cozy-stack/blob/master/docs/INSTALL.md" target="_blank">https://github.com/cozy/cozy-stack/blob/master/docs/INSTALL.md</a></p>
+
+    </div>
+  </div>
+
+</article>
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+
+    
+    <li class="next"><a href="https://eramons.github.io/techblog/post/rock2_debian/">Debian on Radxa Rock Square <span
+      aria-hidden="true">&rarr;</span></a></li>
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2020 E. Ramon &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.2/imagesloaded.pkgd.min.js" integrity="sha512-iHzEu7GbSc705hE2skyH6/AlTpOfBmkx7nUqTLGzPYR+C1tRaItbRlJ7hT/D3YQ9SV0fqLKzp4XY9wKulTBGTw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js" integrity="sha512-Z5heTz36xTemt1TbtbfXtTq5lMfYnOkXM2/eWcTTiLU01+Sw4ku1i7vScDc8fWhrP2abz9GQzgKH5NGBLoYlAw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/plugins/ScrollToPlugin.min.js" integrity="sha512-CDeU7pRtkPX6XJtF/gcFWlEwyaX7mcAp5sO3VIu/ylsdR74wEw4wmBpD5yYTrmMAiAboi9thyBUr1vXRPA7t0Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/techblog/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+
+  </body>
+</html>
+

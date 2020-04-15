@@ -22,6 +22,7 @@ Tasks:
 4. Set up Worker Node 
 5. Service Account
 6. Install Helm
+7. Install Ingress
 
 ## 1. Find old hardware 
 
@@ -314,7 +315,7 @@ Helm is a tool for managing Kubernetes packages called _charts_. The chart is a 
 
 Downloaded latest helm:
 ```
-eramon@caipirinha:~/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+eramon@caipirinha:~/dev/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
 --2020-03-22 13:12:45--  https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
 Resolving get.helm.sh (get.helm.sh)... 2606:2800:233:1cb7:261b:1f9c:2074:3c, 152.199.21.175
 Connecting to get.helm.sh (get.helm.sh)|2606:2800:233:1cb7:261b:1f9c:2074:3c|:443... connected.
@@ -329,13 +330,13 @@ helm-v3.1.2-linux-amd64. 100%[==================================>]  11.70M  2.53
 
 Unzip it and instal binary:
 ```
-eramon@caipirinha:~/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+eramon@caipirinha:~/dev/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
 linux-amd64/
 linux-amd64/helm
 linux-amd64/README.md
 linux-amd64/LICENSE
 
-eramon@caipirinha:~/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
+eramon@caipirinha:~/dev/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
 ```
 
 Invoke helm to make sure it's working:
@@ -350,12 +351,36 @@ eramon@caipirinha:~$ helm repo add stable https://kubernetes-charts.storage.goog
 "stable" has been added to your repositories
 ```
 
-Add the "Incubator" repository:
+## 7 Install nginx ingress
+My cluster needed an ingress controller in order to listen and serve connection requests. 
+
+Install nginx-ingress using helm:
 ```
-eramon@caipirinha:~/dev/kubernetes$ helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
-"incubator" has been added to your repositories
+eramon@caipirinha:~/dev/kubernetes$ helm repo add nginx-stable https://helm.nginx.com/stable
+"nginx-stable" has been added to your repositories
+eramon@caipirinha:~/dev/kubernetes$ helm repo update 
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "nginx-stable" chart repository
+...Successfully got an update from the "incubator" chart repository
+...Successfully got an update from the "stable" chart repository
+Update Complete. ⎈ Happy Helming!⎈ 
+
+eramon@caipirinha:~/dev/kubernetes$ helm install mynginx1 nginx-stable/nginx-ingress
+NAME: mynginx1
+LAST DEPLOYED: Mon Apr 13 14:51:10 2020
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+The NGINX Ingress Controller has been installed.
 ```
 
+```
+eramon@caipirinha:~/dev/kubernetes$ kubectl get pods
+NAME                                      READY   STATUS    RESTARTS   AGE
+mynginx1-nginx-ingress-847fb568db-2v96s   1/1     Running   0          9m6s
+```
 ## Appendix. Open points:
 
 ### Warning
@@ -387,8 +412,6 @@ I would like to have the whole process scripted and/or described in yaml files a
 
 [Flannel](https://github.com/coreos/flannel)
 
-[StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/#storageos)
-
 [Kubernenetes - Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#users-in-kubernetes)
 
 [Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
@@ -398,5 +421,3 @@ I would like to have the whole process scripted and/or described in yaml files a
 [Helm Releases @Github](https://github.com/helm/helm/releases)
 
 [Helm Quickstart Guide](https://helm.sh/docs/intro/quickstart)
-
-[Gogs Helm Chart @Github](https://github.com/helm/charts/tree/master/incubator/gogs)

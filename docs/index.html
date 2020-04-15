@@ -132,8 +132,8 @@
     <div id="profile">
 
       
-      <div class="portrait" style="background-image: url('https://eramons.github.io/techblog/img/static/img/eve.png');"></div>
-      <meta itemprop="image" content="https://eramons.github.io/techblog/img/static/img/eve.png">
+      <div class="portrait" style="background-image: url('https://eramons.github.io/techblog/img/eve.png');"></div>
+      <meta itemprop="image" content="https://eramons.github.io/techblog/img/eve.png">
       
 
       <div class="portrait-title">
@@ -166,7 +166,8 @@
   </div>
   <div class="col-xs-12 col-md-8" itemprop="description">
 
-    
+    <p>There are tons of technical posts available on the Internet, about everything you can imagine and beyond. This blog might look like more of the same - and maybe it is. These posts are a collection of step-by-step guides summarizing my experiences when trying out new stuff. At the end, it&rsquo;s just a slightly better way to keep my notes organised than having bunches of text files randomly distributed through several devices :)</p>
+
 
     <div class="row">
 
@@ -236,100 +237,6 @@
   
   
   <h3 class="article-title" itemprop="name">
-    <a href="https://eramons.github.io/techblog/post/k3s/" itemprop="url">K3S Cluster on Raspberry Pi 4</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2020-03-29 15:00:00 &#43;0200 CEST" itemprop="datePublished">
-      Sun, Mar 29, 2020
-    </time>
-  </span>
-
-  
-
-  
-  
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    Goal:
-Set up a minimal Kubernetes cluster on Rapberry Pi 4.
-I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it&rsquo;s pretty cool, but I actually wasn&rsquo;t sure what I wanted it for. After giving it a thought, I decided to try to set up a K3S cluster on it.
-Possibility 1: the Raspberry Pi 4 will be both master and worker Possibility 2: the Raspberry Pi 4 will be the master.
-    
-  </div>
-  <p class="read-more">
-    <a href="https://eramons.github.io/techblog/post/k3s/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-      
-        
-        
-
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="https://eramons.github.io/techblog/post/deploy_gogs/" itemprop="url">First Kubernetes Deployment</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2020-03-22 15:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
-      Sun, Mar 22, 2020
-    </time>
-  </span>
-
-  
-
-  
-  
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    Goal:
-Deploy Gogs - a painless self-hosted Git service - on homemade Kubernetes Cluster.
-After I had my own Kubernetes cluster ready, I wanted to try it out. Setting up the cluster was almost too easy, so I was expecting some fine-tuning to be necessary. As first application I chose gogs - a self-hosted github clone.
-I struggle with too many things to do in very little time - like many others, I guess - so I&rsquo;m always trying to optimise life processes.
-    
-  </div>
-  <p class="read-more">
-    <a href="https://eramons.github.io/techblog/post/deploy_gogs/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-      
-        
-        
-
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
     <a href="https://eramons.github.io/techblog/post/kubernetes_cluster/" itemprop="url">Set up a Home Kubernetes Cluster</a>
   </h3>
   
@@ -358,7 +265,7 @@ I struggle with too many things to do in very little time - like many others, I 
     Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install Helm  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
+ Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install Helm Install Ingress  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
     
   </div>
   <p class="read-more">
@@ -459,6 +366,97 @@ After successfully installing coreboot on my librem 13 v1, I noticed that unfort
 </div>
 
       
+        
+        
+
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="https://eramons.github.io/techblog/post/coreboot_librem/" itemprop="url">Install Coreboot on the Librem 13 v.1</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2019-02-18 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Mon, Feb 18, 2019
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    DISCLAIMER: try this at your own risk! The information below it&rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.
+I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.
+    
+  </div>
+  <p class="read-more">
+    <a href="https://eramons.github.io/techblog/post/coreboot_librem/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
+        
+        
+
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="https://eramons.github.io/techblog/post/asuschromebook_debian/" itemprop="url">Debian on Asus Chromebook Flip C101PA</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2018-12-04 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Tue, Dec 4, 2018
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&rdquo; x 7.2&rdquo; x 0.6&rdquo; and weighing 1 kg.
+Features:
+ Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor 4GB LPDDR3 RAM 10.1&rdquo; 1280x800 LED display Mali T860MP4 GPU 16GB eMMC 38 Whrs battery 2x USB 3.1 Type-C ports 1x USB 2.0 Type-A port  ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.
+    
+  </div>
+  <p class="read-more">
+    <a href="https://eramons.github.io/techblog/post/asuschromebook_debian/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
     
 
   </div>
@@ -519,7 +517,7 @@ After successfully installing coreboot on my librem 13 v1, I noticed that unfort
   <div class="container">
     <p class="powered-by">
 
-      &copy; 2017 E. Ramon &middot; 
+      &copy; 2017-2020 E. Ramon &middot; 
 
       Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
       theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.

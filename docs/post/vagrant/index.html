@@ -43,7 +43,7 @@
 
   
 
-  <title>Set up a virtual machine with Vagrant | Small Technical Blog</title>
+  <title>Try out Cozy on Vagrant VM | Small Technical Blog</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -120,14 +120,14 @@
 
 
   <div class="article-container">
-    <h1 itemprop="name">Set up a virtual machine with Vagrant</h1>
+    <h1 itemprop="name">Try out Cozy on Vagrant VM</h1>
     
 
 <div class="article-metadata">
 
   <span class="article-date">
-    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
-      Mon, Jan 1, 0001
+    <time datetime="2020-04-05 15:00:00 &#43;0200 CEST" itemprop="datePublished">
+      Sun, Apr 5, 2020
     </time>
   </span>
 
@@ -151,28 +151,28 @@
     </li>
     <li>
       <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=Set%20up%20a%20virtual%20machine%20with%20Vagrant&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fvagrant%2f"
+         href="https://twitter.com/intent/tweet?text=Try%20out%20Cozy%20on%20Vagrant%20VM&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fvagrant%2f"
          target="_blank">
         <i class="fa fa-twitter"></i>
       </a>
     </li>
     <li>
       <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fvagrant%2f&amp;title=Set%20up%20a%20virtual%20machine%20with%20Vagrant"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fvagrant%2f&amp;title=Try%20out%20Cozy%20on%20Vagrant%20VM"
          target="_blank">
         <i class="fa fa-linkedin"></i>
       </a>
     </li>
     <li>
       <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fvagrant%2f&amp;title=Set%20up%20a%20virtual%20machine%20with%20Vagrant"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fvagrant%2f&amp;title=Try%20out%20Cozy%20on%20Vagrant%20VM"
          target="_blank">
         <i class="fa fa-weibo"></i>
       </a>
     </li>
     <li>
       <a class="email"
-         href="mailto:?subject=Set%20up%20a%20virtual%20machine%20with%20Vagrant&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fvagrant%2f">
+         href="mailto:?subject=Try%20out%20Cozy%20on%20Vagrant%20VM&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fvagrant%2f">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -189,24 +189,197 @@
 
 <p><strong>Goal:</strong></p>
 
-<p>_Try out Vagrant: set up a Debian Testing VM__</p>
+<p><em>Try out Vagrant: set up a Debian Testing VM. Get Cozy up and running.</em></p>
 
-<p>Bla</p>
+<p>Cozy is a free personal cloud platform, self-hostable and written in Go. Since long time I would like to adopt a solution to sync my photographs from my mobile to my server, since I don&rsquo;t like pushing personal photographs directly to a public cloud.</p>
 
 <p>Tasks:</p>
 
 <ol>
-<li>Vagrant</li>
-<li>Bla</li>
+<li>Install Vagrant and create Debian Buster VM</li>
+<li>Install Cozy using the Cozy repositories and the instructions on their website</li>
+<li>Use a private network</li>
 </ol>
 
 <h2 id="1-vagrant">1. Vagrant</h2>
 
-<pre><code></code></pre>
+<p>First of all, install linux-headers and virtualbox:</p>
+
+<pre><code>eramon@caipirinha:~/dev/vagrant$ sudo apt-get install linux-headers-amd64 
+eramon@caipirinha:~/dev/vagrant$ sudo apt-get install virtualbox
+</code></pre>
+
+<p>I downloaded Vagrant (&ldquo;linux&rdquo; version) and installed it manually. Using the available debian package installs Vagrant with libvirt, and I wanted to use Vagrant with Virtualbox. The .deb file from the Vagrant downloads page gave me an error when trying to install it with dpkg.</p>
+
+<pre><code>eramon@caipirinha:~/dev/vagrant$ wget https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_linux_amd64.zip
+
+eramon@caipirinha:~/dev/vagrant$ unzip vagrant_2.2.7_linux_amd64.zip 
+Archive:  vagrant_2.2.7_linux_amd64.zip
+  inflating: vagrant                 
+
+eramon@caipirinha:~/dev/vagrant$ sudo mv vagrant /usr/local/bin/
+</code></pre>
+
+<p>Pull and run a Debian Buster VM:</p>
+
+<pre><code>eramon@caipirinha:~/dev/vagrant$ vagrant init debian/buster64
+ready to `vagrant up` your first virtual environment! Please read
+the comments in the Vagrantfile as well as documentation on
+`vagrantup.com` for more information on using Vagrant.
+
+eramon@caipirinha:~/dev/vagrant$ vagrant up 
+...
+</code></pre>
+
+<p>It didn&rsquo;t work:</p>
+
+<pre><code>==&gt; default: Rsyncing folder: /home/eramon/dev/vagrant/ =&gt; /vagrant
+There was an error when attempting to rsync a synced folder.
+Please inspect the error message below for more info.
+
+Host path: /home/eramon/dev/vagrant/
+Guest path: /vagrant
+Command: &quot;rsync&quot; &quot;--verbose&quot; &quot;--archive&quot; &quot;--delete&quot; &quot;-z&quot; &quot;--copy-links&quot; &quot;--no-owner&quot; &quot;--no-group&quot; &quot;--rsync-path&quot; &quot;sudo rsync&quot; &quot;-e&quot; &quot;ssh -p 2222 -o LogLevel=FATAL   -o ControlMaster=auto -o ControlPath=/tmp/vagrant-rsync-20200405-14231-1enocwj -o ControlPersist=10m  -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i '/home/eramon/dev/vagrant/.vagrant/machines/default/virtualbox/private_key'&quot; &quot;--exclude&quot; &quot;.vagrant/&quot; &quot;/home/eramon/dev/vagrant/&quot; &quot;vagrant@127.0.0.1:/vagrant&quot;
+Error: Auto configuration failed
+140440902825696:error:25066067:DSO support routines:DLFCN_LOAD:could not load the shared library:dso_dlfcn.c:185:filename(libssl_conf.so): libssl_conf.so: cannot open shared object file: No such file or directory
+140440902825696:error:25070067:DSO support routines:DSO_load:could not load the shared library:dso_lib.c:244:
+140440902825696:error:0E07506E:configuration file routines:MODULE_LOAD_DSO:error loading dso:conf_mod.c:285:module=ssl_conf, path=ssl_conf
+140440902825696:error:0E076071:configuration file routines:MODULE_RUN:unknown module name:conf_mod.c:222:module=ssl_conf
+rsync: connection unexpectedly closed (0 bytes received so far) [sender]
+rsync error: error in rsync protocol data stream (code 12) at io.c(235) [sender=3.1.3]
+</code></pre>
+
+<p>I found following workaround online to avoid the error:</p>
+
+<pre><code>eramon@caipirinha:~/dev/vagrant$ export OPENSSL_CONF=/etc/ssl/
+</code></pre>
+
+<p><em>TODO: Report Debian bug?</em></p>
+
+<p>After that, I was able to connect to the new VM:</p>
+
+<pre><code>eramon@caipirinha:~/dev/vagrant$ export OPENSSL_CONF=/etc/ssl/
+eramon@caipirinha:~/dev/vagrant$ vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+==&gt; default: Checking if box 'debian/buster64' version '10.3.0' is up to date...
+==&gt; default: Machine already provisioned. Run `vagrant provision` or use the `--provision`
+==&gt; default: flag to force provisioning. Provisioners marked to run always will still run.
+
+==&gt; default: Machine 'default' has a post `vagrant up` message. This is a message
+==&gt; default: from the creator of the Vagrantfile, and not from Vagrant itself:
+==&gt; default: 
+==&gt; default: Vanilla Debian box. See https://app.vagrantup.com/debian for help and bug reports
+eramon@caipirinha:~/dev/vagrant$ vagrant ssh
+Linux buster 4.19.0-8-amd64 #1 SMP Debian 4.19.98-1 (2020-01-26) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+vagrant@buster:~$ 
+</code></pre>
+
+<p>Inside the vm, it&rsquo;s possible to execute root command with sudo under the <em>vagrant</em> user.</p>
+
+<h2 id="2-cozy">2. Cozy</h2>
+
+<p>On a first try, I&rsquo;m going the easy way. I&rsquo;m using the cozy repositories to install the software exactly as described in the website. Later, I would like to:
+a) User standard (and if possible up to date) software packages
+b) Containerize the application (as I did with an older version of cozy, a couple of years ago, the first time I tried the application)</p>
+
+<p>The instructions on the website will install cozy, couchdb and nginx.</p>
+
+<p>Install curl:</p>
+
+<pre><code>vagrant@buster:~$ sudo apt-get update
+vagrant@buster:~$ sudo apt-get install curl
+</code></pre>
+
+<p>Install nodejs 12 and activate NodeSource repository:</p>
+
+<pre><code>vagrant@buster:~$ curl -sL https://deb.nodesource.com/setup_12.x | bash -
+vagrant@buster:~$ sudo apt-get install -y nodejs
+</code></pre>
+
+<p>Install cozy required packages:</p>
+
+<pre><code>vagrant@buster:~$ sudo apt install ca-certificates apt-transport-https wget
+</code></pre>
+
+<p>Fetch GPG Cozy signing key:</p>
+
+<pre><code>vagrant@buster:~$ wget https://apt.cozy.io/cozy-keyring.deb
+vagrant@buster:~$ sudo dpkg -i cozy-keyring.deb
+</code></pre>
+
+<p>Add cozy repositories:</p>
+
+<pre><code>vagrant@buster:~$ sudo su
+root@buster:/home/vagrant# echo &quot;deb https://apt.cozy.io/debian/ buster testing&quot; &gt; /etc/apt/sources.list.d/cozy.list
+root@buster:/home/vagrant# exit
+vagrant@buster:~$ sudo apt update
+</code></pre>
+
+<p>Install CouchDB:</p>
+
+<pre><code>vagrant@buster:~$ sudo apt install cozy-couchdb
+</code></pre>
+
+<p>Choose &lsquo;standalone&rsquo;
+Set all passwords to &lsquo;supersecret&rsquo;</p>
+
+<pre><code>vagrant@buster:~$ curl http://localhost:5984/
+{&quot;couchdb&quot;:&quot;Welcome&quot;,&quot;version&quot;:&quot;2.3.1&quot;,&quot;git_sha&quot;:&quot;c298091a4&quot;,&quot;uuid&quot;:&quot;3d67b20f20099bf5c92a15e3e8758a51&quot;,&quot;features&quot;:[&quot;pluggable-storage-engines&quot;,&quot;scheduler&quot;],&quot;vendor&quot;:{&quot;name&quot;:&quot;The Apache Software Foundation&quot;}}
+</code></pre>
+
+<p>Install cozy-stack:</p>
+
+<pre><code>vagrant@buster:~$ sudo apt install cozy-stack
+</code></pre>
+
+<p>Cozy user &lsquo;cozy&rsquo;. Admin user &lsquo;admin&rsquo;. Set all paswords to &lsquo;supersecret&rsquo;.</p>
+
+<p>Cozy stack is up and running:</p>
+
+<pre><code>vagrant@buster:~$ curl http://localhost:8080/version
+{&quot;build_mode&quot;:&quot;production&quot;,&quot;build_time&quot;:&quot;2020-03-09T14:00:00Z&quot;,&quot;runtime_version&quot;:&quot;go1.13.5&quot;,&quot;version&quot;:&quot;2:1.4.8&quot;}
+</code></pre>
+
+<p>Enable user namespaces and set permanently:</p>
+
+<pre><code>agrant@buster:~$ sudo sysctl -w kernel.unprivileged_userns_clone=1
+kernel.unprivileged_userns_clone = 1
+vagrant@buster:~$ sudo su
+root@buster:/home/vagrant# echo 'kernel.unprivileged_userns_clone=1' &gt; /etc/sysctl.d/99-cozy.conf
+root@buster:/home/vagrant# exit
+</code></pre>
+
+<p>Finally, install cozy:</p>
+
+<pre><code>vagrant@buster:~$ sudo apt install cozy
+</code></pre>
+
+<h2 id="3-private-network">3. Private network</h2>
+
+<p>All instructions I found for installing and self-hosting Cozy include the configuration of a public URL and the corresponding DNS records. However, I don&rsquo;t want to expose this service to the Internet, I just want to use Cozy to sync my devices directly to my server. So I tried to figure out if Cozy works as well configuring nginx with a self-signed certificate.</p>
+
+<p><em>TODO</em></p>
 
 <h2 id="links">Links:</h2>
 
-<p><a href="https://helm.sh/docs/intro/install/" target="_blank">Installing Helm</a></p>
+<p><a href="https://wiki.debian.org/Teams/Cloud/VagrantQuickStart" target="_blank">Debian wiki: Vagrant Quick Start</a></p>
+
+<p><a href="https://www.vagrantup.com/downloads.html" target="_blank">Download Vagrant</a></p>
+
+<p><a href="https://www.vagrantup.com/intro/getting-started/index.html" target="_blank">Vagrant: Getting Started</a></p>
+
+<p><a href="https://docs.cozy.io/en/tutorials/selfhost-debian/" target="_blank">Install Cozy on Debian Server</a></p>
+
+<p><a href="https://github.com/nodesource/distributions#user-content-installation-instructions" target="_blank">Activate NodeSource repository</a></p>
+
+<p><a href="https://wiki.archlinux.org/index.php/Cozy" target="_blank">Cozy - ArchWiki</a></p>
 
     </div>
   </div>
@@ -217,10 +390,10 @@
   <nav>
   <ul class="pager">
     
-
+    <li class="previous"><a href="https://eramons.github.io/techblog/post/k3s/"><span
+      aria-hidden="true">&larr;</span> K3S Cluster on Raspberry Pi 4</a></li>
     
-    <li class="next"><a href="https://eramons.github.io/techblog/post/rock2_debian/">Debian on Radxa Rock Square <span
-      aria-hidden="true">&rarr;</span></a></li>
+
     
   </ul>
 </nav>
@@ -236,7 +409,7 @@
   <div class="container">
     <p class="powered-by">
 
-      &copy; 2017 E. Ramon &middot; 
+      &copy; 2017-2020 E. Ramon &middot; 
 
       Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
       theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.

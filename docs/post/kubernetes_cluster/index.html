@@ -200,6 +200,7 @@
 <li>Set up Worker Node</li>
 <li>Service Account</li>
 <li>Install Helm</li>
+<li>Install Ingress</li>
 </ol>
 
 <h2 id="1-find-old-hardware">1. Find old hardware</h2>
@@ -212,6 +213,8 @@
 </ul>
 
 <p>So I thought the MAC Mini should be my Master and the PC Tower should be my Worker :)</p>
+
+<p><img src="/techblog/img/kubehomecluster.jpg" alt="Home Kubernetes Cluster" /></p>
 
 <h2 id="2-install-ubuntu-server-lts">2. Install Ubuntu Server LTS</h2>
 
@@ -505,7 +508,7 @@ KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/s
 
 <p>Downloaded latest helm:</p>
 
-<pre><code>eramon@caipirinha:~/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+<pre><code>eramon@caipirinha:~/dev/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
 --2020-03-22 13:12:45--  https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
 Resolving get.helm.sh (get.helm.sh)... 2606:2800:233:1cb7:261b:1f9c:2074:3c, 152.199.21.175
 Connecting to get.helm.sh (get.helm.sh)|2606:2800:233:1cb7:261b:1f9c:2074:3c|:443... connected.
@@ -520,13 +523,13 @@ helm-v3.1.2-linux-amd64. 100%[==================================&gt;]  11.70M  2
 
 <p>Unzip it and instal binary:</p>
 
-<pre><code>eramon@caipirinha:~/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+<pre><code>eramon@caipirinha:~/dev/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
 linux-amd64/
 linux-amd64/helm
 linux-amd64/README.md
 linux-amd64/LICENSE
 
-eramon@caipirinha:~/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
+eramon@caipirinha:~/dev/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
 </code></pre>
 
 <p>Invoke helm to make sure it&rsquo;s working:</p>
@@ -541,10 +544,35 @@ version.BuildInfo{Version:&quot;v3.1.2&quot;, GitCommit:&quot;d878d4d45863e42fd5
 &quot;stable&quot; has been added to your repositories
 </code></pre>
 
-<p>Add the &ldquo;Incubator&rdquo; repository:</p>
+<h2 id="7-install-nginx-ingress">7 Install nginx ingress</h2>
 
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
-&quot;incubator&quot; has been added to your repositories
+<p>My cluster needed an ingress controller in order to listen and serve connection requests.</p>
+
+<p>Install nginx-ingress using helm:</p>
+
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ helm repo add nginx-stable https://helm.nginx.com/stable
+&quot;nginx-stable&quot; has been added to your repositories
+eramon@caipirinha:~/dev/kubernetes$ helm repo update 
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the &quot;nginx-stable&quot; chart repository
+...Successfully got an update from the &quot;incubator&quot; chart repository
+...Successfully got an update from the &quot;stable&quot; chart repository
+Update Complete. ⎈ Happy Helming!⎈ 
+
+eramon@caipirinha:~/dev/kubernetes$ helm install mynginx1 nginx-stable/nginx-ingress
+NAME: mynginx1
+LAST DEPLOYED: Mon Apr 13 14:51:10 2020
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+The NGINX Ingress Controller has been installed.
+</code></pre>
+
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl get pods
+NAME                                      READY   STATUS    RESTARTS   AGE
+mynginx1-nginx-ingress-847fb568db-2v96s   1/1     Running   0          9m6s
 </code></pre>
 
 <h2 id="appendix-open-points">Appendix. Open points:</h2>
@@ -582,8 +610,6 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
 
 <p><a href="https://github.com/coreos/flannel" target="_blank">Flannel</a></p>
 
-<p><a href="https://kubernetes.io/docs/concepts/storage/storage-classes/#storageos" target="_blank">StorageClass</a></p>
-
 <p><a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#users-in-kubernetes" target="_blank">Kubernenetes - Authenticating</a></p>
 
 <p><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/" target="_blank">Install and Set Up kubectl</a></p>
@@ -593,8 +619,6 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
 <p><a href="https://github.com/helm/helm/releases" target="_blank">Helm Releases @Github</a></p>
 
 <p><a href="https://helm.sh/docs/intro/quickstart" target="_blank">Helm Quickstart Guide</a></p>
-
-<p><a href="https://github.com/helm/charts/tree/master/incubator/gogs" target="_blank">Gogs Helm Chart @Github</a></p>
 
     </div>
   </div>
@@ -610,9 +634,6 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
     
 
     
-    <li class="next"><a href="https://eramons.github.io/techblog/post/deploy_gogs/">First Kubernetes Deployment <span
-      aria-hidden="true">&rarr;</span></a></li>
-    
   </ul>
 </nav>
 
@@ -627,7 +648,7 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
   <div class="container">
     <p class="powered-by">
 
-      &copy; 2017 E. Ramon &middot; 
+      &copy; 2017-2020 E. Ramon &middot; 
 
       Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
       theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
