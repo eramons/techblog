@@ -1,7 +1,7 @@
 +++
 math = true
 date = "2020-03-21T15:00:00+02:00"
-title = "Set up a Home Kubernetes Cluster"
+title = "Home-made Kubernetes Cluster"
 tags = []
 highlight = true
 
@@ -21,8 +21,9 @@ Tasks:
 3. Set up Master Node
 4. Set up Worker Node 
 5. Service Account
-6. Install Helm
-7. Install Ingress
+6. Install helm
+7. Install ingress
+8. Install cert-manager
 
 ## 1. Find old hardware 
 
@@ -354,33 +355,99 @@ eramon@caipirinha:~$ helm repo add stable https://kubernetes-charts.storage.goog
 ## 7 Install nginx ingress
 My cluster needed an ingress controller in order to listen and serve connection requests. 
 
+Since I'm working with a home-made cluster installed directly on physical machines running on my home network, the default nginx-ingress configuration won't work for me. On a home configuration there is no load balancer on-demand as with a cloud provider. 
+
+Taking a "bare-metal' cluster configuration as a reference, I chose following setup for my ingress controller:
+* DaemonSet
+* No service
+* Host network
+* ...
+
+Parameters:
+```
+controller.admisionWebhooks.enabled=false
+controller.service=false
+controller.hostNetwork=true
+controller.kind=DaemonSet
+controller.useHostPorts=true
+```
+
 Install nginx-ingress using helm:
 ```
-eramon@caipirinha:~/dev/kubernetes$ helm repo add nginx-stable https://helm.nginx.com/stable
-"nginx-stable" has been added to your repositories
-eramon@caipirinha:~/dev/kubernetes$ helm repo update 
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "nginx-stable" chart repository
-...Successfully got an update from the "incubator" chart repository
-...Successfully got an update from the "stable" chart repository
-Update Complete. ⎈ Happy Helming!⎈ 
-
-eramon@caipirinha:~/dev/kubernetes$ helm install mynginx1 nginx-stable/nginx-ingress
+eramon@caipirinha:~/dev/kubernetes$ helm install mynginx1 stable/nginx-ingress --set controller.admisionWebhooks.enabled=false --set controller.service.enabled=false --set controller.daemonset.useHostPorts=true --set controller.kind=DaemonSet
 NAME: mynginx1
-LAST DEPLOYED: Mon Apr 13 14:51:10 2020
+LAST DEPLOYED: Sun May  3 15:01:37 2020
 NAMESPACE: default
 STATUS: deployed
 REVISION: 1
 TEST SUITE: None
 NOTES:
-The NGINX Ingress Controller has been installed.
+The nginx-ingress controller has been installed.
+It may take a few minutes for the LoadBalancer IP to be available.
+You can watch the status by running 'kubectl --namespace default get services -o wide -w mynginx1-nginx-ingress-controller'
+
+An example Ingress that makes use of the controller:
+
+  apiVersion: extensions/v1beta1
+  kind: Ingress
+  metadata:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    name: example
+    namespace: foo
+  spec:
+    rules:
+      - host: www.example.com
+        http:
+          paths:
+            - backend:
+                serviceName: exampleService
+                servicePort: 80
+              path: /
+    # This section is only required if TLS is to be enabled for the Ingress
+    tls:
+        - hosts:
+            - www.example.com
+          secretName: example-tls
+
+If TLS is enabled for the Ingress, a Secret containing the certificate and key must also be provided:
+
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: example-tls
+    namespace: foo
+  data:
+    tls.crt: <base64 encoded cert>
+    tls.key: <base64 encoded key>
+  type: kubernetes.io/tls
 ```
 
+## 8 Install cert-manager
+
+The issuance, renewal and configuration of TLS server certificates for web applications deployed in the cluster can be automated with Let's Encrypt and cert-manager.
+
+Install cert-manager from manifest (rather as using helm):
 ```
-eramon@caipirinha:~/dev/kubernetes$ kubectl get pods
+eramon@caipirinha:~/dev/kubernetes$ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.3/cert-manager.yaml
+```
+
+The cert-manager is installed in an own new namespace called _cert-manager_.
+
+To make sure cert-manager was installed correctly, list the pods on the namespace:
+```
+eramon@caipirinha:~/dev/techblog$ kubectl get pods -n cert-manager
 NAME                                      READY   STATUS    RESTARTS   AGE
-mynginx1-nginx-ingress-847fb568db-2v96s   1/1     Running   0          9m6s
+cert-manager-77fcb5c94-dfgjm              1/1     Running   0          58m
+cert-manager-cainjector-8fff85c75-nmmhn   1/1     Running   0          58m
+cert-manager-webhook-54647cbd5-w4fkr      1/1     Running   0          58m
 ```
+
+If the cert-manager, the cainjector and the webhook are up and running, we should be good.
+
+Done :) My new cluster was ready for its first deployment.
+
+
 ## Appendix. Open points:
 
 ### Warning
@@ -421,3 +488,7 @@ I would like to have the whole process scripted and/or described in yaml files a
 [Helm Releases @Github](https://github.com/helm/helm/releases)
 
 [Helm Quickstart Guide](https://helm.sh/docs/intro/quickstart)
+
+[Kubernetes cert-manager](https://cert-manager.io/docs/installation/kubernetes)
+
+[nginx helm chart](https://github.com/helm/charts/tree/master/stable/nginx-ingress)
