@@ -11,16 +11,17 @@ highlight = true
 
 __Goal:__
 
-_Deploy cozy on my home made kubernetes cluster__
+_Deploy cozy on my home made kubernetes cluster_
 
 The k8s home-made cluster on bare-metal was meant to be an exercise more than a permanent setup. Still I needed at least an application in order to try it out :)
 
-Cozy is ... TODO
+Cozy is a personal, free and self-hostable cloud platform, written in Go. The platform aims at simplifying the use of a personal cloud and at allowing the users to take back ownership of their privacy.  
 
 According to the developer documentation, there are following "official" ways for hosting cozy:
 - non-official debian packages
-- ?
 - self-built
+
+There is no official Docker images. There is some work available on Dockerhub, ...
 
 __Milestones:__
 
@@ -33,18 +34,19 @@ __Milestones:__
 ## 1. Applications 
 
 First of all, we need to identify the applications we want to deploy to the cluster.
-
-TODO
-
 * couchdb
 * cozy-stack
+
+Dependecies (for cozy-stack):
+* smtp-server
+* imagemagick
 
 ## 2. Cozy configuration
 
 * Storage
 * Database
 * Admin password
-* Vault?
+* Vault
 
 TODO Include changes to sample cozy.yaml and link to github
 ```
@@ -116,6 +118,8 @@ eramon@caipirinha:~/dev/kubernetes/cozy-stack$ docker image build -t eramon/cozy
 eramon@caipirinha:~/dev/kubernetes/cozy-stack$ docker push eramon/cozy-stack
 ```
 
+_The configuration file should be better excluded from the Dockerfile and mounted as a ConfigMap._
+
 ## 4. k8s configuration
 
 Pre-conditions:
@@ -130,6 +134,7 @@ For deploying cozy in k8s, I wrote yaml manifests for:
 
 * The services
 * The secrets
+* The configMap
 * The ingress
 * The cluster issuer
 
@@ -173,9 +178,11 @@ spec:
 
 ### 4.2 Secrets
 
-### 4.3 Deployments
+### 4.3 ConfigMap
 
-### 4.4 ClusterIssuer
+### 4.4 Deployments
+
+### 4.5 ClusterIssuer
 
 The ClusterIssuer (...) TODO
 
