@@ -47,6 +47,7 @@ Dependecies (for cozy-stack):
 * Database
 * Admin password
 * Vault
+* E-Mail
 
 TODO Include changes to sample cozy.yaml and link to github
 ```
@@ -71,7 +72,12 @@ couchdb:
 
 ```
 
-## 3. Write docker image
+### 2.5. Mailhog
+Apparently having a working SMTP server up und running is a requirement in order for cozy-stack to work. I wasn't actually interested in my cozy writting me e-mails. I found out the cozy development image uses _Mailhog_. The e-mails can be viewed on the browser but are not actually sent.
+
+Mailhog has an available docker image.
+
+## 3. Write docker image for cozy-stack
 Although there are some instructions and several cozy docker images available in dockerhub, there is no up-to-date cozy-stack docker image which I could directly deploy to k8s.
 
 The cozy-stack is a (statically-linked?) Go binary (...)
@@ -180,7 +186,120 @@ spec:
 
 ### 4.3 ConfigMap
 
+### 4.4 Persistent Volume 
+
+Preparations:
+* I set up a NFS share folder on my synology NAS
+* I installed nfs-common on my worker's node
+
+#### Set up NFS Share on Synology NAS
+
+_TODO Screenshot_
+
+#### Persistent Volume
+
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cozy-nfs
+spec:
+  capacity:
+    storage: 10Gi
+  storageClassName: standard
+  accessModes:
+  - ReadWriteMany
+  nfs:
+    server: 192.168.1.111 
+    path: /volume1/cozy
+``` 
+
+_TODO Second PV for couchdb_
+```
+
+```
+#### Persistent Volume Claim for storage
+
+```
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: cozy-nfs 
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 10Gi
+```
+
+#### Persistent Volume Claim for data
+
+In order for cozy-stack and couchdb to use this persistent volume to store its data, the corresponding volume mounts must be configured on their respective deployment manifests.
+
+
+
+```
+TODO couchdb
+```
+
+
+```
+mount -t nfs 192.168.1.111:/volume1/cozy/data /var/lib/kubelet/pods/54ed3ddb-8a56-4f33-bfa6-a13e753aac80/volumes/kubernetes.io~nfs/couchdb-nfs
+
+eramon@whisky:~$ sudo mount -t nfs 192.168.1.111:/volume1/cozy/data mnt
+[sudo] password for eramon: 
+mount: /home/eramon/mnt: bad option; for several filesystems (e.g. nfs, cifs) you might need a /sbin/mount.<type> helper program.
+```
+
 ### 4.4 Deployments
+
+#### 4.4.1 couchdb
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: couchdb
+  labels:
+    app: couchdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: couchdb
+  template:
+    metadata:
+      labels:
+        app: couchdb
+    spec:
+      volumes:
+      - name: couchdb-data
+        persistentVolumeClaim:
+          claimName: couchdb-nfs
+      containers:
+      - name: couchdb
+        image: apache/couchdb:2.3
+        ports:
+          - containerPort: 5984
+        volumeMounts:
+        - name: couchdb-data
+          mountPath: /opt/couchdb/data
+```
+
+#### 4.4.2 cozy-stack
+
+```
+
+```
+
+_NOTE: in order for NFS to work, I had to install manually _nfs_common_ on the worker node. Not sure if this is best practice._
+
+
+#### 4.3 mailhog
+
+
 
 ### 4.5 ClusterIssuer
 
@@ -323,9 +442,16 @@ https://empanadilla.net/settings
 
 In order to be able to access to the applications, I have to log in using the passphrase defined during the instance creation.
 
+I installed then the client applications on my devices:
+- On my android mobile phone, _cozy drive_, available in the Google Playstore.
+- On my debian laptop, the cozy desktop client
+
+```
+
 TODO Screenshot
 
 ## Links:
-https://wiki.archlinux.org/index.php/Cozy
-
+[Archlinux](https://wiki.archlinux.org/index.php/Cozy)
+[Desktop client](https://docs.cozy.io/en/howTos/sync/linux)
+[Mailhog](https://github.com/mailhog/MailHog)
 

@@ -24,6 +24,7 @@ Tasks:
 6. Install helm
 7. Install ingress
 8. Install cert-manager
+9. Persistent volumes
 
 ## 1. Find old hardware 
 
@@ -445,7 +446,12 @@ cert-manager-webhook-54647cbd5-w4fkr      1/1     Running   0          58m
 
 If the cert-manager, the cainjector and the webhook are up and running, we should be good.
 
-Done :) My new cluster was ready for its first deployment.
+## 9 Storage
+
+_ TODO Not sure if this section belongs here or rather in the cozy post_
+
+
+After all these preparations, my new cluster was ready for its first deployment :)
 
 
 ## Appendix. Open points:
