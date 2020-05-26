@@ -77,7 +77,6 @@ containerd - open and reliable container runtime
 docker.io - Linux container runtime
 ...
 ```
-
 Although containerd would be enough, I installed docker.io since having the extra docker tools for debugging or whatever might be useful later:
 ```
 sudo apt-get install docker.io
@@ -136,7 +135,6 @@ eramon@pacharan:~$ sudo mkdir -p $HOME/.kube
 eramon@pacharan:~$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 eramon@pacharan:~$ sudo chown eramon:eramon .kube/config
 ```
-
 After these steps, looking at the output of kubectl cluster-info we see kubectl is interacting with our new cluster:
 ```
 eramon@pacharan:~$ kubectl cluster-info
@@ -250,53 +248,12 @@ eramon@caipirinha:~/dev/kubernetes$ sudo mv kubectl /usr/local/bin/kubectl
 ```
 
 ### 5.2. Grant access to the cluster API for the client machine
-_On the master node_
 
-Output information about the default service account:
-```
-eramon@pacharan:~$ kubectl get serviceaccounts default -o yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  creationTimestamp: "2020-03-18T12:06:13Z"
-  name: default
-  namespace: default
-  resourceVersion: "358"
-  selfLink: /api/v1/namespaces/default/serviceaccounts/default
-  uid: e0a693d0-cb23-4ab4-8205-34962d0f9f33
-secrets:
-- name: default-token-52cj5
-```
+I just copied the kube configuration from the Master node to my laptop. 
 
-Examining the secrets we see the token for the default service account:
-```
-eramon@pacharan:~$ kubectl get secret
-NAME                  TYPE                                  DATA   AGE
-default-token-52cj5   kubernetes.io/service-account-token   3      4d1h
-```
+_NOTE: Not sure if this is exactly best practice._
 
-Examine the secret:
-```
-eramon@pacharan:~$ kubectl describe secret default-token-52cj5
-Name:         default-token-52cj5
-Namespace:    default
-Labels:       <none>
-Annotations:  kubernetes.io/service-account.name: default
-              kubernetes.io/service-account.uid: e0a693d0-cb23-4ab4-8205-34962d0f9f33
-
-Type:  kubernetes.io/service-account-token
-
-Data
-====
-ca.crt:     1025 bytes
-namespace:  7 bytes
-token:	    eyJhbGciO...p0q
-```
-
-So we just found out the bearer token for the default service account.
-
-_On the client machine_
-I just copied the kube configuration from the Master node to the client machine. Not sure if this is exactly best practice, but I did not find any documentation about how to manage this. The file is located here:
+The file is located here:
 ```
 eramon@pacharan:~$ ls -la /home/eramon/.kube/config 
 -rw------- 1 eramon eramon 5449 Mar 18 14:42 /home/eramon/.kube/config
@@ -308,8 +265,6 @@ eramon@caipirinha:~$ kubectl cluster-info
 Kubernetes master is running at https://192.168.1.129:6443
 KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 ```
-
-That would be all. With this, the cluster should be ready for the first deployment. See next post.
 
 ## 6. Install helm
 
@@ -358,70 +313,20 @@ My cluster needed an ingress controller in order to listen and serve connection 
 
 Since I'm working with a home-made cluster installed directly on physical machines running on my home network, the default nginx-ingress configuration won't work for me. On a home configuration there is no load balancer on-demand as with a cloud provider. 
 
-Taking a "bare-metal' cluster configuration as a reference, I chose following setup for my ingress controller:
-* DaemonSet
-* No service
-* Host network
-* ...
+Taking a "bare-metal' cluster configuration as a reference, this is the setup for my ingress controller:
 
-Parameters:
-```
-controller.admisionWebhooks.enabled=false
-controller.service=false
-controller.hostNetwork=true
-controller.kind=DaemonSet
-controller.useHostPorts=true
-```
+*  _kind=DaemonSet_: deploy the ingress controler on every node
+*  _hostNetwork=true_: the nginx daemonset runs on the host namespace
+*  _service.enabled=false_: no service will be created, since we are using DaemonSet
+*  _admisionWebhooks.enabled=false_: we don't want to have ingress admission webhooks
 
 Install nginx-ingress using helm:
 ```
-eramon@caipirinha:~/dev/kubernetes$ helm install mynginx1 stable/nginx-ingress --set controller.admisionWebhooks.enabled=false --set controller.service.enabled=false --set controller.daemonset.useHostPorts=true --set controller.kind=DaemonSet
-NAME: mynginx1
-LAST DEPLOYED: Sun May  3 15:01:37 2020
-NAMESPACE: default
-STATUS: deployed
-REVISION: 1
-TEST SUITE: None
-NOTES:
-The nginx-ingress controller has been installed.
-It may take a few minutes for the LoadBalancer IP to be available.
-You can watch the status by running 'kubectl --namespace default get services -o wide -w mynginx1-nginx-ingress-controller'
-
-An example Ingress that makes use of the controller:
-
-  apiVersion: extensions/v1beta1
-  kind: Ingress
-  metadata:
-    annotations:
-      kubernetes.io/ingress.class: nginx
-    name: example
-    namespace: foo
-  spec:
-    rules:
-      - host: www.example.com
-        http:
-          paths:
-            - backend:
-                serviceName: exampleService
-                servicePort: 80
-              path: /
-    # This section is only required if TLS is to be enabled for the Ingress
-    tls:
-        - hosts:
-            - www.example.com
-          secretName: example-tls
-
-If TLS is enabled for the Ingress, a Secret containing the certificate and key must also be provided:
-
-  apiVersion: v1
-  kind: Secret
-  metadata:
-    name: example-tls
-    namespace: foo
-  data:
-    tls.crt: <base64 encoded cert>
-    tls.key: <base64 encoded key>
-  type: kubernetes.io/tls
+helm install mynginx1 stable/nginx-ingress \
+	--set controller.admisionWebhooks.enabled=false \
+	--set controller.service.enabled=false \
+	--set controller.hostNetwork=true \
+        --set controller.kind=DaemonSet
 ```
 
 ## 8 Install cert-manager
@@ -448,11 +353,16 @@ If the cert-manager, the cainjector and the webhook are up and running, we shoul
 
 ## 9 Storage
 
-_ TODO Not sure if this section belongs here or rather in the cozy post_
+### 9.1 Install nfs-common
+Since I was planing to use NFS shares as persistent volumes for my deployments, I installed nfs-common on the worker node:
+```
+sudo apt-get install nfs-common
+```
+
+With this, the worker will be able to nfs-mount folders on my NAS as persistent volumes for the pods.
 
 
 After all these preparations, my new cluster was ready for its first deployment :)
-
 
 ## Appendix. Open points:
 
@@ -461,7 +371,6 @@ In both master and worker, I get this warning:
 ```
 [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
 ```
-Not sure what this does exactly mean or how to fix it yet.
 
 ### Warning
 When running kubeadm init and when creating a new token, I got warnings on the output:
@@ -488,6 +397,8 @@ I would like to have the whole process scripted and/or described in yaml files a
 [Kubernenetes - Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#users-in-kubernetes)
 
 [Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
+[nginx-ingress](https://github.com/kubernetes/ingress-nginx)
 
 [Installing Helm](https://helm.sh/docs/intro/install/)
 
