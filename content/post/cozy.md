@@ -66,7 +66,7 @@ Thus, the setup of the domain zone has to look like this:
 
 Currently the list of apps is: home, settings, drive, photos, onboarding.
 
-So a wildcard SSL certificate covering *.cozy.mydomain.net and cozy.mydomain.net is needed, or alternatively a certificate for cozy.mydomain.net with apps domains added as Subject Alternative Name.
+So a wildcard SSL certificate covering *.cozy.example.com and cozy.example.com is needed, or alternatively a certificate for cozy.example.com with the app domains added as Subject Alternative Name.
 
 I used cloudflare for my DNS configuration.
 
