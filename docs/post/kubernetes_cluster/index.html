@@ -43,7 +43,7 @@
 
   
 
-  <title>Home-made Kubernetes Cluster | Small Technical Blog</title>
+  <title>Home-made K8s Cluster | Small Technical Blog</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -120,7 +120,7 @@
 
 
   <div class="article-container">
-    <h1 itemprop="name">Home-made Kubernetes Cluster</h1>
+    <h1 itemprop="name">Home-made K8s Cluster</h1>
     
 
 <div class="article-metadata">
@@ -151,28 +151,28 @@
     </li>
     <li>
       <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=Home-made%20Kubernetes%20Cluster&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f"
+         href="https://twitter.com/intent/tweet?text=Home-made%20K8s%20Cluster&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f"
          target="_blank">
         <i class="fa fa-twitter"></i>
       </a>
     </li>
     <li>
       <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Home-made%20Kubernetes%20Cluster"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Home-made%20K8s%20Cluster"
          target="_blank">
         <i class="fa fa-linkedin"></i>
       </a>
     </li>
     <li>
       <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Home-made%20Kubernetes%20Cluster"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f&amp;title=Home-made%20K8s%20Cluster"
          target="_blank">
         <i class="fa fa-weibo"></i>
       </a>
     </li>
     <li>
       <a class="email"
-         href="mailto:?subject=Home-made%20Kubernetes%20Cluster&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f">
+         href="mailto:?subject=Home-made%20K8s%20Cluster&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fkubernetes_cluster%2f">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -552,15 +552,9 @@ cert-manager-webhook-54647cbd5-w4fkr      1/1     Running   0          58m
 
 <p>There are many different kinds of persistent volumes for K8s. One of them is a NFS server.</p>
 
-<h3 id="9-1-pre-condition">9.1 Pre-condition</h3>
-
-<ul>
-<li>Set up a NFS share</li>
-</ul>
+<h3 id="9-1-set-up-a-nfs-share">9.1 Set up a NFS share</h3>
 
 <p>Setting up the NFS share on the Synology NAS was quite straightforward.</p>
-
-<p><em>The instructions for setting up nfs, either on a NAS or on another server, are out of the scope of this post.</em></p>
 
 <h3 id="9-2-install-nfs-common">9.2 Install nfs-common</h3>
 
@@ -614,10 +608,6 @@ W0321 15:16:13.144929   25354 validation.go:28] Cannot validate kube-proxy confi
 W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config - no validator is available
 4w2xrh.i1phnkxkzz7ja5fi
 </code></pre>
-
-<h3 id="infrastructure-as-code">Infrastructure as code</h3>
-
-<p>I would like to have the whole process scripted and/or described in yaml files and these pushed to github, so the environment can be set up at any time.</p>
 
 <h2 id="references-and-useful-or-interesting-links">References and useful or interesting links:</h2>
 

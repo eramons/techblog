@@ -13,7 +13,7 @@
     <item>
       <title>Self-hosted cozy on K8s</title>
       <link>https://eramons.github.io/techblog/post/cozy/</link>
-      <pubDate>Wed, 20 May 2020 17:00:00 +0200</pubDate>
+      <pubDate>Thu, 28 May 2020 17:00:00 +0200</pubDate>
       
       <guid>https://eramons.github.io/techblog/post/cozy/</guid>
       <description>
@@ -22,9 +22,9 @@
 
 &lt;p&gt;&lt;em&gt;Deploy cozy on my homemade kubernetes cluster&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;The k8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still I needed to deploy something on it in order to properly try it out :)&lt;/p&gt;
+&lt;p&gt;The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)&lt;/p&gt;
 
-&lt;p&gt;So I decided to try out Cozy Cloud deploying the software and its dependencies as containers in my K8s cluster.&lt;/p&gt;
+&lt;p&gt;I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.&lt;/p&gt;
 
 &lt;p&gt;Cozy is a personal, free and self-hostable cloud platform, written in Go. The platform aims at simplifying the use of a personal cloud and at allowing the users to take back ownership of their privacy.&lt;/p&gt;
 
@@ -49,13 +49,13 @@
 &lt;li&gt;run a docker developer cozy image, which all dependencies and configuration included&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;The &amp;ldquo;official&amp;rdquo; way seemed to use the debian packages. This way does not only install cozy-stack and their dependencies, but also a nginx reverse proxy and an application called cozy-coclyco which is meant to manage cozy instances and SSL certificates.&lt;/p&gt;
+&lt;p&gt;The &amp;ldquo;official&amp;rdquo; way seemed to be to use the debian packages. This way does not only install cozy-stack and their dependencies, but an application called cozy-coclyco which is meant to manage cozy instances and SSL certificates. During the installation, the packages prompt the user to provide usernames and passwords and generate the configuration.&lt;/p&gt;
 
 &lt;p&gt;I didn&amp;rsquo;t need coclyco, since my cluster uses cert-manager and nginx-ingress for SSL termination and issuance and renewal of TLS server certificates.&lt;/p&gt;
 
 &lt;p&gt;I figured out that the only part of cozy I needed was actually the cozy-stack binary application.&lt;/p&gt;
 
-&lt;p&gt;Basing on this premise, I identified the applications and dependencies to be considered:&lt;/p&gt;
+&lt;p&gt;Basing on this premise, I identified applications and dependencies to be considered:&lt;/p&gt;
 
 &lt;h3 id=&#34;1-1-applications&#34;&gt;1.1. Applications&lt;/h3&gt;
 
@@ -75,7 +75,7 @@
 
 &lt;p&gt;As a security measure, Cozy needs to be served over HTTPS, which means it needs a reverse proxy in front of it.&lt;/p&gt;
 
-&lt;p&gt;Cozy needs a full domain name for the instance (something like &lt;instance&gt;.mydomain.net) and use one domain name per application, in the form of &lt;app&gt;.&lt;instance&gt;.mydomain.net&lt;/p&gt;
+&lt;p&gt;Cozy needs a full domain name for the instance (something like instance.example.com) and use one domain name per application, in the form of app.instance.example.com&lt;/p&gt;
 
 &lt;p&gt;Thus, the setup of the domain zone has to look like this:&lt;/p&gt;
 
@@ -85,12 +85,13 @@
 
 &lt;p&gt;Currently the list of apps is: home, settings, drive, photos, onboarding.&lt;/p&gt;
 
-&lt;p&gt;A wildcard SSL certificate covering *.cozy.mydomain.net and cozy.mydomain.net or a certificate for cozy.mydomain.net with apps domains added as Subject Alternative Name.&lt;/p&gt;
+&lt;p&gt;So a wildcard SSL certificate covering *.cozy.mydomain.net and cozy.mydomain.net is needed, or alternatively a certificate for cozy.mydomain.net with apps domains added as Subject Alternative Name.&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;I used Cloudflare for the DNS configuration.&lt;/li&gt;
-&lt;li&gt;In order to have proper DNS resolution inside of the home network, I set up an own DNS server.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;I used cloudflare for my DNS configuration.&lt;/p&gt;
+
+&lt;p&gt;It remains the issue of the internal hostname resolution. Most provider&amp;rsquo;s internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;TODO Coming soon: DNS Configuration for bare-metal K8s&lt;/em&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;3-docker&#34;&gt;3. Docker&lt;/h2&gt;
 
@@ -99,42 +100,37 @@
 &lt;p&gt;From the applications identified in the last section:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;couchdb and mailhog have official docker images available&lt;/li&gt;
-&lt;li&gt;imagemagick is available as debian package and should be included on the cozy-stack docker image&lt;/li&gt;
-&lt;li&gt;for cozy-stack I decided to write my own Dockerfile&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;couchdb&lt;/strong&gt; and &lt;strong&gt;mailhog&lt;/strong&gt; have official docker images available&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;imagemagick&lt;/strong&gt; is available as debian package (and should be included on the cozy-stack docker image)&lt;/li&gt;
+&lt;li&gt;for &lt;strong&gt;cozy-stack&lt;/strong&gt; I decided to create my own docker image&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;3-2-docker-image-for-cozy-stack&#34;&gt;3.2 Docker image for cozy-stack&lt;/h3&gt;
 
-&lt;p&gt;The cozy-stack is a (statically-linked?) go binary. Two options for the new image:&lt;/p&gt;
+&lt;p&gt;The cozy-stack is a go binary. There was two options for writting a docker image:&lt;/p&gt;
 
-&lt;p&gt;a)   Build the go binary inside the container
-   b)   Pull the binary directly from github inside the container&lt;/p&gt;
+&lt;p&gt;a)   Build the go binary inside the container&lt;/p&gt;
 
-&lt;p&gt;For now, I&amp;rsquo;m going for the second option. The Dockerfile looks like follows:&lt;/p&gt;
+&lt;p&gt;b)   Pull the binary directly from github inside the container&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;https://github.com/eramons/kubecozy/blob/master/docker/Dockerfile
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I went for the second option. The Dockerfile looks like follows:
+&lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/docker/Dockerfile&#34; target=&#34;_blank&#34;&gt;Dockerfile&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Let&amp;rsquo;s take a closer look at the Dockerfile:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;The basis image is debian (bullseye)&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;Imagemagick&lt;/em&gt; is installed as a dependency&lt;/li&gt;
-&lt;li&gt;I created a &lt;em&gt;cozy&lt;/em&gt; user for running cozy-stack&lt;/li&gt;
-&lt;li&gt;The workdir is the home directory of the &lt;em&gt;cozy&lt;/em&gt; user&lt;/li&gt;
-&lt;li&gt;The application will be executed as &lt;em&gt;cozy&lt;/em&gt; user (NOT as root)&lt;/li&gt;
+&lt;li&gt;A &lt;em&gt;cozy&lt;/em&gt; user is created&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;workdir&lt;/em&gt; is the home directory of the &lt;em&gt;cozy&lt;/em&gt; user&lt;/li&gt;
+&lt;li&gt;The application will be executed as &lt;em&gt;cozy&lt;/em&gt; user (and therefore NOT as root)&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Once ready, I build the image and push it to dockerhub:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;docker login
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;docker image build -t eramon/cozy-stack .
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;docker push eramon/cozy-stack
+docker image build -t eramon/cozy-stack .
+docker push eramon/cozy-stack
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;2-cozy-configuration&#34;&gt;2. Cozy configuration&lt;/h2&gt;
@@ -143,10 +139,7 @@
 
 &lt;p&gt;I prefered to use a config file in order to keep the configuration separated from the container image.&lt;/p&gt;
 
-&lt;p&gt;My &lt;em&gt;cozy.yaml&lt;/em&gt; config file looks like follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;https://github.com/eramons/kubecozy/blob/master/docker/Dockerfile
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;See my &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/config/cozy.yaml&#34; target=&#34;_blank&#34;&gt;cozy.yaml&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Let&amp;rsquo;s go over the most important configuration settings:&lt;/p&gt;
 
@@ -184,16 +177,16 @@ port: 8080
   url: file://localhost/var/lib/cozy
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Filesystem path for the storage of user data: photos, documents, etc.&lt;/p&gt;
+&lt;p&gt;Filesystem path for the storage of user data: photos, documents, etc. Later we&amp;rsquo;ll see on this path a nfs share folder will be mounted.&lt;/p&gt;
 
 &lt;h3 id=&#34;vault&#34;&gt;Vault&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;vault:
-  credentials_encryptor_key: /etc/cozy/vault.enc
-  credentials_decryptor_key: /etc/cozy/vault.dec
+  credentials_encryptor_key: /etc/cozy/keys/vault.enc
+  credentials_decryptor_key: /etc/cozy/keys/vault.dec
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Cozy encrypts user credentials. The genertion of the encryption and decryption keys must be done manually before the cozy-stack is started (see K8s configuration: secrets).&lt;/p&gt;
+&lt;p&gt;Cozy encrypts user credentials. The generation of the encryption and decryption keys must be done before the cozy-stack is started (see K8s configuration: secrets).&lt;/p&gt;
 
 &lt;h3 id=&#34;smtp-server&#34;&gt;SMTP Server&lt;/h3&gt;
 
@@ -204,26 +197,27 @@ port: 8080
   skip_certificate_validation: true 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Apparently having a working SMTP server up und running is a requirement in order for cozy-stack to work. I wasn&amp;rsquo;t actually interested in my cozy writting me e-mails. I found out the cozy development image uses &lt;em&gt;Mailhog&lt;/em&gt;. The e-mails can be viewed on the browser but are not actually sent. So I configured mailog as the smtp server.&lt;/p&gt;
+&lt;p&gt;Apparently having a working SMTP server up und running is a requirement for cozy-stack. I wasn&amp;rsquo;t actually interested in my cozy writting me e-mails. In the cozy documentation, I read that the cozy development image use &lt;em&gt;Mailhog&lt;/em&gt;. The e-mails can be viewed on the browser but are not actually sent. I liked this approach, so I did the same.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Note: mailhog does not allow to configure a username and a password. Otherwise, it fails with an &amp;ldquo;unencrypted connection&amp;rdquo; error&lt;/em&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;4-k8s-configuration&#34;&gt;4. k8s configuration&lt;/h2&gt;
+&lt;h2 id=&#34;4-k8s-configuration&#34;&gt;4. K8s configuration&lt;/h2&gt;
 
 &lt;p&gt;Now that I had the docker images an the cozy-stack configuration file prepared, the next step was to deploy the applications in my home-made K8s cluster.&lt;/p&gt;
 
 &lt;p&gt;Pre-conditions:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;To have kubectl installed on my laptop and the credentials to the k8s cluster stored under .kube/config on the home directory&lt;/li&gt;
-&lt;li&gt;To have helm installed on my laptop&lt;/li&gt;
-&lt;li&gt;To have cert-manager deployed on the cluster&lt;/li&gt;
-&lt;li&gt;To have nfs-common installed on all worker nodes of the cluster&lt;/li&gt;
+&lt;li&gt;To have &lt;strong&gt;kubectl&lt;/strong&gt; installed on my laptop and the credentials to the k8s cluster stored under &lt;em&gt;.kube/config&lt;/em&gt; on the home directory&lt;/li&gt;
+&lt;li&gt;To have &lt;strong&gt;helm&lt;/strong&gt; installed on my laptop&lt;/li&gt;
+&lt;li&gt;To have &lt;strong&gt;cert-manager&lt;/strong&gt; deployed on the cluster&lt;/li&gt;
+&lt;li&gt;To have &lt;strong&gt;nfs-common&lt;/strong&gt; installed on all worker nodes of the cluster&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;em&gt;Note: I addressed these topics already on my previous post: Home-made Kubernetes Cluster&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;I addressed these topics already on my previous post:
+&lt;a href=&#34;https://eramons.github.io/techblog/post/kubernetes_cluster/&#34; target=&#34;_blank&#34;&gt;Home-made K8s cluster&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;For deploying cozy in k8s, I wrote yaml manifests for:&lt;/p&gt;
+&lt;p&gt;For deploying cozy in K8s, I wrote yaml manifests for:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;The services&lt;/li&gt;
@@ -238,26 +232,29 @@ port: 8080
 
 &lt;h3 id=&#34;4-1-services&#34;&gt;4.1 Services&lt;/h3&gt;
 
+&lt;p&gt;A K8s &lt;strong&gt;Service&lt;/strong&gt; is an abstract way to expose an application running on a set of pods as a network service.&lt;/p&gt;
+
 &lt;p&gt;I defined four services:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;The couchdb database service: &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/cozy-stack-service.yaml&#34; target=&#34;_blank&#34;&gt;cozy-stack-service.yaml&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;The cozy-stack service: &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/couchdb-service.yaml&#34; target=&#34;_blank&#34;&gt;couchdb-service.yaml&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The cozy-stack service: &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/cozy-stack-service.yaml&#34; target=&#34;_blank&#34;&gt;cozy-stack-service.yaml&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The couchdb service: &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/couchdb-service.yaml&#34; target=&#34;_blank&#34;&gt;couchdb-service.yaml&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;The smtp-server service: &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/smtp-service.yaml&#34; target=&#34;_blank&#34;&gt;smtp-service.yaml&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;The mailhog webserver service: &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/mailhog-service.yaml&#34; target=&#34;_blank&#34;&gt;mailhog-service.yaml&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h3 id=&#34;4-2-secrets&#34;&gt;4.2 Secrets&lt;/h3&gt;
 
+&lt;p&gt;Kubernetes &lt;strong&gt;Secrets&lt;/strong&gt; let you store and manage sensitive information, such as passwords, tokens and keys.&lt;/p&gt;
+
 &lt;h4 id=&#34;4-2-1-admin-passphrase&#34;&gt;4.2.1 admin passphrase&lt;/h4&gt;
 
-&lt;p&gt;I needed the cozy-stack binary for generate the admin password. Since my cozy-stack wasn&amp;rsquo;t up and running yet, I started a standalone instance under docker in order to be able to use the cozy-stack binary:&lt;/p&gt;
+&lt;p&gt;The &lt;em&gt;cozy-stack&lt;/em&gt; binary is necessary for generate the admin password. Since my cozy wasn&amp;rsquo;t up and running yet, I started a standalone instance under docker in order to be able to use the binary to generate the password:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;docker run --rm -it -p 8080:8080 -v &amp;quot;$(pwd)/build&amp;quot;:/data/cozy-app/test cozy/cozy-app-dev
-docker ps
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;I found out the container id and logged into the running container:&lt;/p&gt;
+&lt;p&gt;With &lt;em&gt;docker ps&lt;/em&gt;, I found out the container id and logged into the running container:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/cozy/docker$ docker exec -it 0b1400039866 /bin/bash
 root@0b1400039866:/# 
@@ -280,7 +277,7 @@ eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/cozy-admin-passphra
 secret/cozy-admin-passphrase-secret created
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This secret will be mounted afterwards in the corresponding location on the cozy-stack pod, via the deployment manifest.&lt;/p&gt;
+&lt;p&gt;This secret will be mounted afterwards in the expected location on the &lt;em&gt;cozy-stack&lt;/em&gt; pod, via the deployment manifest.&lt;/p&gt;
 
 &lt;h4 id=&#34;4-2-2-vault-keys&#34;&gt;4.2.2 vault keys&lt;/h4&gt;
 
@@ -302,15 +299,21 @@ eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/etc/vault.dec ../..
 secret/cozy-vault-secret created
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;This secret will be mounted afterwards in the corresponding location on the cozy-stack pod, via the deployment manifest.&lt;/p&gt;
+&lt;p&gt;This secret will be mounted afterwards in the configured location on the &lt;em&gt;cozy-stack&lt;/em&gt; pod, via the deployment manifest.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note: another (better) way would be to use an init container for generating and mount the vault keys. Contrary to the admin passphrase, the vault keys don&amp;rsquo;t need to prompt the user for a passphrase.&lt;/em&gt;&lt;/p&gt;
 
 &lt;h4 id=&#34;4-2-3-couchdb-credentials&#34;&gt;4.2.3 couchdb credentials&lt;/h4&gt;
+
+&lt;p&gt;Generate a secret for the couchdb username and password and pass it as environment variable to the deployment.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;TODO&lt;/em&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;4-3-configmap&#34;&gt;4.3 ConfigMap&lt;/h3&gt;
 
-&lt;p&gt;As mentioned in the &lt;em&gt;Configuration&lt;/em&gt; section, I decided to use a config file for cozy-stack rather than having flags passed as arguments to cozy-stack. The file cozy.yaml must be included in a ConfigMap and mounted under /etc/cozy/cozy.yaml in the cozy-stack container.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ConfigMaps&lt;/strong&gt; allow to decouple configuration artifacts from image content to keep containerized applications portable.&lt;/p&gt;
+
+&lt;p&gt;As mentioned above, I decided to use a config file for rather than having flags passed as arguments. The file &lt;em&gt;cozy.yaml&lt;/em&gt; would be included in a config map and mounted under &lt;em&gt;/etc/cozy&lt;/em&gt; in the &lt;em&gt;cozy-stack&lt;/em&gt; container.&lt;/p&gt;
 
 &lt;p&gt;To generate the config map, I directly include it in the resource list of kustomization.yaml:&lt;/p&gt;
 
@@ -323,31 +326,35 @@ configMapGenerator:
 
 &lt;h3 id=&#34;4-4-persistent-volume-claims&#34;&gt;4.4 Persistent Volume Claims&lt;/h3&gt;
 
+&lt;p&gt;A &lt;strong&gt;PersistentVolume (PV)&lt;/strong&gt; is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned.&lt;/p&gt;
+
+&lt;p&gt;A &lt;strong&gt;PersistentVolumeClaim (PVC)&lt;/strong&gt; is a request for storage by a user.&lt;/p&gt;
+
+&lt;p&gt;To store user and application data, we need to use persistent volumes and bind them to the applications through persistent volume claims and volume mounts.&lt;/p&gt;
+
 &lt;p&gt;&lt;em&gt;Pre-condition:&lt;/em&gt; the cluster has available persistent volumes&lt;/p&gt;
 
-&lt;p&gt;I did this in &lt;em&gt;TODO Reference&lt;/em&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;persistent-volume-claims-for-storage-and-data&#34;&gt;Persistent Volume Claims for storage and data&lt;/h4&gt;
-
-&lt;p&gt;To bind persistent volumes to pods, I created first the Persistent Volume Claims:&lt;/p&gt;
+&lt;p&gt;I created two PVCs:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;PVC for couchdb (application data): &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/couchdb-pvc.yaml&#34; target=&#34;_blank&#34;&gt;couchdb-pvc.yaml&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;PVC for cozy-stack (user data): &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/cozy-stack-pvc.yaml&#34; target=&#34;_blank&#34;&gt;cozy-stack-pvc.yaml&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;In order for cozy-stack and couchdb to use these persistent volume to store its data, the corresponding volume mounts must be configured on their respective deployments.&lt;/p&gt;
+&lt;p&gt;The volume mounts must be configured later on the corresponding deployment manifests.&lt;/p&gt;
 
 &lt;h3 id=&#34;4-4-deployments&#34;&gt;4.4 Deployments&lt;/h3&gt;
 
 &lt;p&gt;Finally, we come to the manifests for the deployments of couchdb, cozy-stack and mailhog.&lt;/p&gt;
+
+&lt;p&gt;A &lt;strong&gt;Deployment&lt;/strong&gt; provides declarative updates for Pods and ReplicaSets.&lt;/p&gt;
 
 &lt;h4 id=&#34;4-4-1-couchdb&#34;&gt;4.4.1 couchdb&lt;/h4&gt;
 
 &lt;p&gt;Deployment for couchdb (application data): &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/couchdb-deployment.yaml&#34; target=&#34;_blank&#34;&gt;couchdb-deployment.yaml&lt;/a&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;The pvc we created before is mounted under /opt/couchdb/data.&lt;/li&gt;
+&lt;li&gt;The pvc we created before is mounted under &lt;em&gt;/opt/couchdb/data&lt;/em&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h4 id=&#34;4-4-2-cozy-stack&#34;&gt;4.4.2 cozy-stack&lt;/h4&gt;
@@ -357,11 +364,11 @@ configMapGenerator:
 &lt;p&gt;Taking a closer look at the file we can see:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;The configMap containing the cozy.yaml is mounted under /etc/cozy/cozy.yaml&lt;/li&gt;
-&lt;li&gt;The persistent volume (nfs) is mounted under /var/lib/cozy&lt;/li&gt;
+&lt;li&gt;The configMap containing &lt;em&gt;cozy.yaml&lt;/em&gt; is mounted under &lt;em&gt;/etc/cozy/cozy.yaml&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;The persistent volume (nfs) is mounted under &lt;em&gt;/var/lib/cozy&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;Since the docker image is NOT ran as root, I needed an init container to mount the persistent volume and set the permissions&lt;/li&gt;
-&lt;li&gt;The secret containing the admin-passphrase is mounted under /etc/cozy/cozy-admin-passphrase&lt;/li&gt;
-&lt;li&gt;The secret containing the vault keys is mounted under /etc/cozy/vault.enc and /etc/cozy/vault.dec&lt;/li&gt;
+&lt;li&gt;The secret containing the admin-passphrase is mounted under &lt;em&gt;/etc/cozy/cozy-admin-passphrase&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;The secret containing the vault keys is mounted under &lt;em&gt;/etc/cozy/vault.enc&lt;/em&gt; and &lt;em&gt;/etc/cozy/vault.dec&lt;/em&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h4 id=&#34;4-4-3-mailhog&#34;&gt;4.4.3 mailhog&lt;/h4&gt;
@@ -370,13 +377,15 @@ configMapGenerator:
 
 &lt;h3 id=&#34;4-5-clusterissuer&#34;&gt;4.5 ClusterIssuer&lt;/h3&gt;
 
-&lt;p&gt;Issuers (and ClusterIssuers) represent a certificate authority from which signed x509 certificates can be obtained, such as Let’s Encrypt. I needed one ClusterIssuer in order to generate certificates for my cluster with the cert-manager.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Issuers&lt;/strong&gt; (and &lt;strong&gt;ClusterIssuers&lt;/strong&gt;) represent a certificate authority from which signed x509 certificates can be obtained, such as Let’s Encrypt. I needed one ClusterIssuer in order to generate certificates for my cluster with the cert-manager.&lt;/p&gt;
 
-&lt;p&gt;DNS01 solver with acme version 2 is mandatory for issuance of wildcard certificates. I needed a wildcard certificate to cover all subdomains use by the cozy applications, so I used a DNS01 challenge with an api token provided by Cloudflare.&lt;/p&gt;
+&lt;p&gt;A DNS01 solver with acme version 2 is mandatory for issuance of wildcard certificates. I needed a wildcard certificate to cover all subdomains use by the cozy applications, so I used a DNS01 challenge with an api token provided by Cloudflare.&lt;/p&gt;
 
 &lt;p&gt;ClusterIssuer: &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/cozy-stack-deployment.yaml&#34; target=&#34;_blank&#34;&gt;cozy-stack-deployment.yaml&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;4-5-ingress&#34;&gt;4.5 Ingress&lt;/h3&gt;
+
+&lt;p&gt;An &lt;strong&gt;Ingress&lt;/strong&gt; manages external access to the services in a cluster, typically HTTP.&lt;/p&gt;
 
 &lt;p&gt;The cozy-ingress will expose our services via the nginx ingres controller installed previously:
 &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/cozy-ingress-example.yaml&#34; target=&#34;_blank&#34;&gt;cozy-ingress-example.yaml&lt;/a&gt;&lt;/p&gt;
@@ -400,22 +409,23 @@ configMapGenerator:
 &lt;p&gt;Following annotations for the nginx-ingress controller must be included:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;The enable-cors, in order to disable CORS in nginx. The application already handles correctly the Access-Control-Allow-Origin headers&lt;/li&gt;
-&lt;li&gt;The proxy-body-size, in order to set the client_max_body_size parameter in the nginx configuration. I set it to 1G, according to the example in &lt;a href=&#34;https://github.com/cozy/cozy-coclyco/blob/master/nginx.conf&#34; target=&#34;_blank&#34;&gt;nginx.conf&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;The proxy-connect, -read, and -send timeouts. The nginx-ingress controller supports websockets out of the box, however the default values of these attributes is set by default to 60s. That&amp;rsquo;s not enough to backup photos from the mobile phone to the cozy drive.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;enable-cors&lt;/em&gt;, in order to disable CORS in nginx. The application already handles correctly the Access-Control-Allow-Origin headers&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;proxy-body-size&lt;/em&gt;, in order to set the _client_max_body&lt;em&gt;size&lt;/em&gt; parameter in the nginx configuration. I set it to 1G, according to the example in &lt;a href=&#34;https://github.com/cozy/cozy-coclyco/blob/master/nginx.conf&#34; target=&#34;_blank&#34;&gt;nginx.conf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;proxy-connect-&lt;/em&gt;, &lt;em&gt;-read-&lt;/em&gt;, and &lt;em&gt;-send-timeout&lt;/em&gt;. The nginx-ingress controller supports websockets out of the box, however the default values of these attributes is set by default to 60s. That&amp;rsquo;s not enough to backup photos from the mobile phone to the cozy drive. I set it to 2 hours (5200s).&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;4-6-kustomize&#34;&gt;4.6 kustomize&lt;/h3&gt;
 
-&lt;p&gt;In order to ease re-deployments, I used _kustomize.&lt;/p&gt;
+&lt;p&gt;In order to ease re-deployments after configuration changes, I used &lt;em&gt;kustomize&lt;/em&gt;.&lt;/p&gt;
 
-&lt;p&gt;Kustomize introduces a template-free way to customize application configuration and it&amp;rsquo;s built into the &lt;em&gt;kubectl&lt;/em&gt; command. After any change to a configuration file or manifest file, it&amp;rsquo;s enough to run:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Kustomize&lt;/strong&gt; introduces a template-free way to customize application configuration and it&amp;rsquo;s built into the &lt;em&gt;kubectl&lt;/em&gt; command.&lt;/p&gt;
+
+&lt;p&gt;After any change to a configuration file or manifest file, it&amp;rsquo;s enough to run:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;kubectl apply -k .
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The &lt;em&gt;kustomization.yaml&lt;/em&gt; file includes all manifests and config files:
-&lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/kustomization.yaml&#34; target=&#34;_blank&#34;&gt;kustomization.yaml&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&#34;https://github.com/eramons/kubecozy/blob/master/kustomization.yaml&#34; target=&#34;_blank&#34;&gt;kustomization.yaml&lt;/a&gt; file includes all manifests and config files:&lt;/p&gt;
 
 &lt;p&gt;For applying any configuration changes to the cluster, it&amp;rsquo;s enough to execute:&lt;/p&gt;
 
@@ -424,7 +434,7 @@ configMapGenerator:
 
 &lt;h2 id=&#34;7-create-instance&#34;&gt;7. Create instance&lt;/h2&gt;
 
-&lt;p&gt;The Dockerfile includes instructions for downloading the latest cozy-stack binary, create directories, create a cozy user, set permissions, create the vault keys and finally start cozy-stack serve. The creation of the instance must be done manually once by each user and it must not be part of the docker image.&lt;/p&gt;
+&lt;p&gt;The Dockerfile includes commands for downloading the latest cozy-stack binary, create directories, create a cozy user, set permissions and finally start &lt;em&gt;cozy-stack serve&lt;/em&gt;. The creation of the instances must be done manually after deployment, using the binary. The creation of the instances is not part of the image build.&lt;/p&gt;
 
 &lt;p&gt;For executing the cozy-stack binary to create my cozy instance, I logged into the running container:&lt;/p&gt;
 
@@ -437,6 +447,11 @@ configMapGenerator:
 Password:****
 Instance created with success for domain cozy.example.com
 Password:****
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: another way:&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl exec -it &amp;lt;pod&amp;gt; cozy-stack instances add &amp;lt;arguments&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Show running instances:&lt;/p&gt;
@@ -459,7 +474,7 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 
 &lt;p&gt;To access the applications, I have to log in using the passphrase defined during the instance creation.&lt;/p&gt;
 
-&lt;p&gt;Client applications:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Client applications:&lt;/strong&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;On my android mobile phone, &lt;em&gt;cozy drive&lt;/em&gt;, available in the Google Playstore.&lt;/li&gt;
@@ -490,7 +505,7 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
     </item>
     
     <item>
-      <title>Home-made Kubernetes Cluster</title>
+      <title>Home-made K8s Cluster</title>
       <link>https://eramons.github.io/techblog/post/kubernetes_cluster/</link>
       <pubDate>Sat, 21 Mar 2020 15:00:00 +0200</pubDate>
       
@@ -862,15 +877,9 @@ cert-manager-webhook-54647cbd5-w4fkr      1/1     Running   0          58m
 
 &lt;p&gt;There are many different kinds of persistent volumes for K8s. One of them is a NFS server.&lt;/p&gt;
 
-&lt;h3 id=&#34;9-1-pre-condition&#34;&gt;9.1 Pre-condition&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Set up a NFS share&lt;/li&gt;
-&lt;/ul&gt;
+&lt;h3 id=&#34;9-1-set-up-a-nfs-share&#34;&gt;9.1 Set up a NFS share&lt;/h3&gt;
 
 &lt;p&gt;Setting up the NFS share on the Synology NAS was quite straightforward.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;The instructions for setting up nfs, either on a NAS or on another server, are out of the scope of this post.&lt;/em&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;9-2-install-nfs-common&#34;&gt;9.2 Install nfs-common&lt;/h3&gt;
 
@@ -924,10 +933,6 @@ W0321 15:16:13.144929   25354 validation.go:28] Cannot validate kube-proxy confi
 W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config - no validator is available
 4w2xrh.i1phnkxkzz7ja5fi
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;infrastructure-as-code&#34;&gt;Infrastructure as code&lt;/h3&gt;
-
-&lt;p&gt;I would like to have the whole process scripted and/or described in yaml files and these pushed to github, so the environment can be set up at any time.&lt;/p&gt;
 
 &lt;h2 id=&#34;references-and-useful-or-interesting-links&#34;&gt;References and useful or interesting links:&lt;/h2&gt;
 

@@ -15,18 +15,18 @@
     <item>
       <title>Self-hosted cozy on K8s</title>
       <link>https://eramons.github.io/techblog/post/cozy/</link>
-      <pubDate>Wed, 20 May 2020 17:00:00 +0200</pubDate>
+      <pubDate>Thu, 28 May 2020 17:00:00 +0200</pubDate>
       
       <guid>https://eramons.github.io/techblog/post/cozy/</guid>
       <description>Goal:
 Deploy cozy on my homemade kubernetes cluster
-The k8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still I needed to deploy something on it in order to properly try it out :)
-So I decided to try out Cozy Cloud deploying the software and its dependencies as containers in my K8s cluster.
-Cozy is a personal, free and self-hostable cloud platform, written in Go.</description>
+The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
+I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
+Cozy is a personal, free and self-hostable cloud platform, written in Go. The platform aims at simplifying the use of a personal cloud and at allowing the users to take back ownership of their privacy.</description>
     </item>
     
     <item>
-      <title>Home-made Kubernetes Cluster</title>
+      <title>Home-made K8s Cluster</title>
       <link>https://eramons.github.io/techblog/post/kubernetes_cluster/</link>
       <pubDate>Sat, 21 Mar 2020 15:00:00 +0200</pubDate>
       

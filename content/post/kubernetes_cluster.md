@@ -1,7 +1,7 @@
 +++
 math = true
 date = "2020-03-21T15:00:00+02:00"
-title = "Home-made Kubernetes Cluster"
+title = "Home-made K8s Cluster"
 tags = []
 highlight = true
 
@@ -355,13 +355,9 @@ If the cert-manager, the cainjector and the webhook are up and running, we shoul
 
 There are many different kinds of persistent volumes for K8s. One of them is a NFS server.
 
-### 9.1 Pre-condition
+### 9.1 Set up a NFS share
 
-* Set up a NFS share
-
-Setting up the NFS share on the Synology NAS was quite straightforward. 
-
-_The instructions for setting up nfs, either on a NAS or on another server, are out of the scope of this post._
+Setting up the NFS share on the Synology NAS was quite straightforward.
 
 ### 9.2 Install nfs-common
 
@@ -414,9 +410,6 @@ W0321 15:16:13.144929   25354 validation.go:28] Cannot validate kube-proxy confi
 W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config - no validator is available
 4w2xrh.i1phnkxkzz7ja5fi
 ```
-
-###  Infrastructure as code
-I would like to have the whole process scripted and/or described in yaml files and these pushed to github, so the environment can be set up at any time.
 
 ## References and useful or interesting links:
 
