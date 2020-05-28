@@ -17,7 +17,7 @@ The K8s homemade cluster on baremetal was meant to be just an exercise and not a
 
 I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
 
-Cozy is a personal, free and self-hostable cloud platform, written in Go. The platform aims at simplifying the use of a personal cloud and at allowing the users to take back ownership of their privacy.  
+Cozy is a personal, free and self-hostable cloud platform, written in Go.
 
 __Milestones:__
  
@@ -36,11 +36,9 @@ According to the developer documentation, there are following ways of installing
 * self build the application
 * run a docker developer cozy image, which all dependencies and configuration included 
 
-The "official" way seemed to be to use the debian packages. This way does not only install cozy-stack and their dependencies, but an application called cozy-coclyco which is meant to manage cozy instances and SSL certificates. During the installation, the packages prompt the user to provide usernames and passwords and generate the configuration.
+The official way seemed to be to use the debian packages. This way does not only install cozy-stack and their dependencies, but an application called cozy-coclyco which manages cozy instances and SSL certificates. During the installation, the packages prompt the user to provide usernames and passwords and generate the configuration.
 
-I didn't need coclyco, since my cluster uses cert-manager and nginx-ingress for SSL termination and issuance and renewal of TLS server certificates.
-
-I figured out that the only part of cozy I needed was actually the cozy-stack binary application.
+I didn't need coclyco, since my cluster uses cert-manager and nginx-ingress for SSL termination and issuance and renewal of TLS server certificates. I figured out that the only part of cozy I needed was actually the cozy-stack binary application.
 
 Basing on this premise, I identified applications and dependencies to be considered:
 
