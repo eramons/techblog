@@ -26,18 +26,6 @@ Cozy is a personal, free and self-hostable cloud platform, written in Go.</descr
     </item>
     
     <item>
-      <title>DNS Configuration for K8S bare-metal cluster</title>
-      <link>https://eramons.github.io/techblog/post/dns/</link>
-      <pubDate>Tue, 19 May 2020 10:00:00 +0200</pubDate>
-      
-      <guid>https://eramons.github.io/techblog/post/dns/</guid>
-      <description>Goal:
-_Configure DNS, so applications running on the K8S cluster are reachable from the internet and TLS-protected__
-Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, a home network with the standard provider&amp;rsquo;s internet box is way too limited.
-In my case, I just wanted to deploy a web application (cozy) on my cluster. In order to have this working, I needed the following: * A FQDN or better a *.</description>
-    </item>
-    
-    <item>
       <title>Home-made Kubernetes Cluster</title>
       <link>https://eramons.github.io/techblog/post/kubernetes_cluster/</link>
       <pubDate>Sat, 21 Mar 2020 15:00:00 +0200</pubDate>
