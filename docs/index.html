@@ -237,7 +237,102 @@
   
   
   <h3 class="article-title" itemprop="name">
-    <a href="https://eramons.github.io/techblog/post/kubernetes_cluster/" itemprop="url">Set up a Home Kubernetes Cluster</a>
+    <a href="https://eramons.github.io/techblog/post/cozy/" itemprop="url">Self-hosted cozy on K8s</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2020-05-20 17:00:00 &#43;0200 CEST" itemprop="datePublished">
+      Wed, May 20, 2020
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    Goal:
+Deploy cozy on my homemade kubernetes cluster
+The k8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still I needed to deploy something on it in order to properly try it out :)
+So I decided to try out Cozy Cloud deploying the software and its dependencies as containers in my K8s cluster.
+Cozy is a personal, free and self-hostable cloud platform, written in Go.
+    
+  </div>
+  <p class="read-more">
+    <a href="https://eramons.github.io/techblog/post/cozy/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
+        
+        
+
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="https://eramons.github.io/techblog/post/dns/" itemprop="url">DNS Configuration for K8S bare-metal cluster</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2020-05-19 10:00:00 &#43;0200 CEST" itemprop="datePublished">
+      Tue, May 19, 2020
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    Goal:
+_Configure DNS, so applications running on the K8S cluster are reachable from the internet and TLS-protected__
+Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, a home network with the standard provider&rsquo;s internet box is way too limited.
+In my case, I just wanted to deploy a web application (cozy) on my cluster. In order to have this working, I needed the following: * A FQDN or better a *.
+    
+  </div>
+  <p class="read-more">
+    <a href="https://eramons.github.io/techblog/post/dns/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
+        
+        
+
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="https://eramons.github.io/techblog/post/kubernetes_cluster/" itemprop="url">Home-made Kubernetes Cluster</a>
   </h3>
   
 
@@ -265,7 +360,7 @@
     Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install Helm Install Ingress  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
+ Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
     
   </div>
   <p class="read-more">
@@ -360,97 +455,6 @@ After successfully installing coreboot on my librem 13 v1, I noticed that unfort
   </div>
   <p class="read-more">
     <a href="https://eramons.github.io/techblog/post/build_coreboot/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-      
-        
-        
-
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="https://eramons.github.io/techblog/post/coreboot_librem/" itemprop="url">Install Coreboot on the Librem 13 v.1</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2019-02-18 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
-      Mon, Feb 18, 2019
-    </time>
-  </span>
-
-  
-
-  
-  
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    DISCLAIMER: try this at your own risk! The information below it&rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.
-I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.
-    
-  </div>
-  <p class="read-more">
-    <a href="https://eramons.github.io/techblog/post/coreboot_librem/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-      
-        
-        
-
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="https://eramons.github.io/techblog/post/asuschromebook_debian/" itemprop="url">Debian on Asus Chromebook Flip C101PA</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2018-12-04 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
-      Tue, Dec 4, 2018
-    </time>
-  </span>
-
-  
-
-  
-  
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&rdquo; x 7.2&rdquo; x 0.6&rdquo; and weighing 1 kg.
-Features:
- Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor 4GB LPDDR3 RAM 10.1&rdquo; 1280x800 LED display Mali T860MP4 GPU 16GB eMMC 38 Whrs battery 2x USB 3.1 Type-C ports 1x USB 2.0 Type-A port  ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.
-    
-  </div>
-  <p class="read-more">
-    <a href="https://eramons.github.io/techblog/post/asuschromebook_debian/" class="btn btn-primary btn-outline">
       CONTINUE READING
     </a>
   </p>

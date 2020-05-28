@@ -24,7 +24,7 @@ Tasks:
 6. Install helm
 7. Install ingress
 8. Install cert-manager
-9. Persistent volumes
+9. Storage 
 
 ## 1. Find old hardware 
 
@@ -351,15 +351,49 @@ cert-manager-webhook-54647cbd5-w4fkr      1/1     Running   0          58m
 
 If the cert-manager, the cainjector and the webhook are up and running, we should be good.
 
-## 9 Storage
+## 9 Storage 
 
-### 9.1 Install nfs-common
-Since I was planing to use NFS shares as persistent volumes for my deployments, I installed nfs-common on the worker node:
+There are many different kinds of persistent volumes for K8s. One of them is a NFS server.
+
+### 9.1 Pre-condition
+
+* Set up a NFS share
+
+Setting up the NFS share on the Synology NAS was quite straightforward. 
+
+_The instructions for setting up nfs, either on a NAS or on another server, are out of the scope of this post._
+
+### 9.2 Install nfs-common
+
+I installed nfs-common on my worker node:
 ```
 sudo apt-get install nfs-common
 ```
-
 With this, the worker will be able to nfs-mount folders on my NAS as persistent volumes for the pods.
+
+_Note: not sure if this is best practice. I guess for productive setups required software is installed on each node automatically._
+
+### 9.3 Persistent Volume
+
+After the NFS share was available on my NAS, I wrote manifests for persistent nfs volumes. I created a dedicated persistent volume for each application. 
+
+The manifest reference the hostname or IP of the NFS server and the path to the share:
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: synology-nfs
+spec:
+  capacity:
+    storage: 10Gi
+  storageClassName: standard
+  accessModes:
+  - ReadWriteMany
+  nfs:
+    server: myServerIP
+    path: /path/to/share
+```
+
 
 
 After all these preparations, my new cluster was ready for its first deployment :)

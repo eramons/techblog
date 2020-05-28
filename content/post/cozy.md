@@ -28,7 +28,6 @@ __Milestones:__
 5. k8s configuration
 6. Create cozy instance
 
-
 ## 1. Applications 
 
 According to the developer documentation, there are following ways of installing and self-hosting cozy:
@@ -69,7 +68,7 @@ Currently the list of apps is: home, settings, drive, photos, onboarding.
 
 A wildcard SSL certificate covering *.cozy.mydomain.net and cozy.mydomain.net or a certificate for cozy.mydomain.net with apps domains added as Subject Alternative Name.
 
-* I used Clodflare for the DNS configuration. 
+* I used Cloudflare for the DNS configuration. 
 * In order to have proper DNS resolution inside of the home network, I set up an own DNS server. 
 
 ## 3. Docker 
@@ -196,73 +195,21 @@ For deploying cozy in k8s, I wrote yaml manifests for:
 
 * The services
 * The secrets
-* The configMap
-* The ingress
+* The config map
+* The persistent volume claims
 * The cluster issuer
+* The ingress
 
-All manifest files available here:
-```
-https://github.com/eramons/kubecozy
-```
+All yaml files are available under my [kubecozy](https://github.com/eramons/kubecozy).
 
 ### 4.1 Services
 
-There are three services:
+I defined four services:
 
-1. The couchdb database service
-2. The cozy-stack service 
-3. The mailhog smtp-server
-
-__couchdb-service.yaml__:
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: couchdb
-  labels:
-    run: couchdb
-spec:
-  ports:
-  - port: 5984
-    protocol: TCP
-  selector:
-    app: couchdb
-
-```
-
-__cozy-stack-service.yaml__:
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: cozy-stack
-spec:
-  selector:
-    app: cozy-stack
-  ports:
-  - port: 8080
-    protocol: TCP
-```
-
-__mailhog-service.yaml__:
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: mailhog 
-  labels:
-    run: mailhog 
-spec:
-  ports:
-  - port: 1025 
-    name: smtp-server 
-    protocol: TCP
-  - port: 8025
-    name: http-server
-    protocol: TCP
-  selector:
-    app: mailhog 
-```
+1. The couchdb database service: [cozy-stack-service.yaml](https://github.com/eramons/kubecozy/blob/master/cozy-stack-service.yaml)
+2. The cozy-stack service: [couchdb-service.yaml](https://github.com/eramons/kubecozy/blob/master/couchdb-service.yaml)
+3. The smtp-server service: [smtp-service.yaml](https://github.com/eramons/kubecozy/blob/master/smtp-service.yaml)
+4. The mailhog webserver service: [mailhog-service.yaml](https://github.com/eramons/kubecozy/blob/master/mailhog-service.yaml)
 
 ### 4.2 Secrets
 
@@ -270,7 +217,7 @@ spec:
 
 I needed the cozy-stack binary for generate the admin password. Since my cozy-stack wasn't up and running yet, I started a standalone instance under docker in order to be able to use the cozy-stack binary:
 ```
-docker run --rm -it -p 8080:8080 -v "$(pwd)/build":/data/cozy-app/evita cozy/cozy-app-dev
+docker run --rm -it -p 8080:8080 -v "$(pwd)/build":/data/cozy-app/test cozy/cozy-app-dev
 docker ps
 ```
 I found out the container id and logged into the running container:
@@ -294,17 +241,33 @@ I manually generated a K8s secret for the password:
 ```
 eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-admin-passphrase-secret --from-file=cozy-admin-passphrase
 secret/cozy-admin-passphrase-secret created
-
 ```
 This secret will be mounted afterwards in the corresponding location on the cozy-stack pod, via the deployment manifest.
 
 #### 4.2.2 vault keys
 
-_TODO Open - I need the cozy binary_
+Same as for the admin passphrase, I needed to generate the vault keys beforehand and include them in a secret:
+```
+eramon@caipirinha:~/dev/cozy/docker$ docker exec -it 0b1400039866 /bin/bash
+root@0b1400039866:/# cozy-stack config gen-keys /etc/vault
+keyfiles written in:
+  /etc/vault.enc
+  /etc/vault.dec
+root@0b1400039866:/# exit
+eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/etc/vault.enc ../../kubernetes/vault.enc
+eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/etc/vault.dec ../../kubernetes/vault.dec
+```
+
+Generate the K8s secret for the vault keys:
+```
+eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-vault-secret --from-file=vault.enc --from-file=vault.dec
+secret/cozy-vault-secret created
+```
+This secret will be mounted afterwards in the corresponding location on the cozy-stack pod, via the deployment manifest.
 
 #### 4.2.3 couchdb credentials
 
-_TODO_ Not sure. I could create them and include them either as ENV or directly on ...
+_TODO_ 
 
 ### 4.3 ConfigMap
 
@@ -319,145 +282,46 @@ configMapGenerator:
   - config/cozy.yaml
 ```
 
-### 4.4 Persistent Volume 
+### 4.4 Persistent Volume Claims
 
-Preparations:
-* I set up a NFS share folder on my synology NAS
-* I installed nfs-common on my worker's node
+_Pre-condition:_ the cluster has available persistent volumes 
 
-#### Set up NFS Share on Synology NAS
-
-Setting up the NFS share on the Synology NAS was quite straightforward. 
-
-_TODO Screenshot_
-
-#### Persistent Volumes
-
-After the NFS share was available on my NAS, I wrote the manifests for the persistent volumes, which reference the NFS serverIP and the path to the share:
-```
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: cozy-nfs
-spec:
-  capacity:
-    storage: 10Gi
-  storageClassName: standard
-  accessModes:
-  - ReadWriteMany
-  nfs:
-    server: 192.168.1.xyz
-    path: /volume1/cozy
-``` 
-
-Same for the couchdb data:
-```
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: cozy-nfs
-spec:
-  capacity:
-    storage: 10Gi
-  storageClassName: standard
-  accessModes:
-  - ReadWriteMany
-  nfs:
-    server: 192.168.1.xyz
-    path: /volume1/cozy/storage
-```
+I did this in _TODO Reference_
 
 #### Persistent Volume Claims for storage and data
 
-To bind the persistent volumes to the pods, I needed to create the Persistent Volume Claims.
+To bind persistent volumes to pods, I created first the Persistent Volume Claims:
 
-__cozy-stack-pvc.yaml__ (storage i.e user data):
-```
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: cozy-nfs 
-spec:
-  accessModes:
-  - ReadWriteMany
-  storageClassName: standard
-  resources:
-    requests:
-      storage: 10Gi
-```
+1. PVC for couchdb (application data): [couchdb-pvc.yaml](https://github.com/eramons/kubecozy/blob/master/couchdb-pvc.yaml)
+2. PVC for cozy-stack (user data): [cozy-stack-pvc.yaml](https://github.com/eramons/kubecozy/blob/master/cozy-stack-pvc.yaml)
 
-__couchdb-pvc.yaml__ (application data):
-```
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: couchdb-nfs
-spec:
-  accessModes:
-  - ReadWriteMany
-  storageClassName: standard
-  resources:
-    requests:
-      storage: 1Gi
-```
-
-In order for cozy-stack and couchdb to use this persistent volume to store its data, the corresponding volume mounts must be configured on their respective deployment manifests.
+In order for cozy-stack and couchdb to use these persistent volume to store its data, the corresponding volume mounts must be configured on their respective deployments.
 
 ### 4.4 Deployments
 
 Finally, we come to the manifests for the deployments of couchdb, cozy-stack and mailhog.
 
 #### 4.4.1 couchdb
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: couchdb
-  labels:
-    app: couchdb
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: couchdb
-  template:
-    metadata:
-      labels:
-        app: couchdb
-    spec:
-      volumes:
-      - name: couchdb-data
-        persistentVolumeClaim:
-          claimName: couchdb-nfs
-      containers:
-      - name: couchdb
-        image: apache/couchdb:2.3
-        ports:
-          - containerPort: 5984
-        volumeMounts:
-        - name: couchdb-data
-          mountPath: /opt/couchdb/data
-```
 
-The pvc is mounted under /opt/couchdb/data.
+Deployment for couchdb (application data): [couchdb-deployment.yaml](https://github.com/eramons/kubecozy/blob/master/couchdb-deployment.yaml)
+
+* The pvc we created before is mounted under /opt/couchdb/data.
 
 #### 4.4.2 cozy-stack
-```
-https://github.com/eramons/kubecozy/blob/master/cozy-stack-deployment.yaml
-```
-_TODO Not sure if I want to include here the code of all manifests or just the links. 
 
-Taking a closer look:
+Deployment for cozy-stack (user data): [cozy-stack-deployment.yaml](https://github.com/eramons/kubecozy/blob/master/cozy-stack-deployment.yaml)
+
+Taking a closer look at the file we can see:
 
 * The configMap containing the cozy.yaml is mounted under /etc/cozy/cozy.yaml
 * The persistent volume (nfs) is mounted under /var/lib/cozy
 * Since the docker image is NOT ran as root, I needed an init container to mount the persistent volume and set the permissions
 * The secret containing the admin-passphrase is mounted under /etc/cozy/cozy-admin-passphrase
+* The secret containing the vault keys is mounted under /etc/cozy/vault.enc and /etc/cozy/vault.dec
 
-#### 4.3 mailhog
-```
-https://github.com/eramons/kubecozy/blob/master/mailhog-deployment.yaml
-```
+#### 4.4.3 mailhog
+
+Deployment for mailhog (smtp server): [mailhog-deployment.yaml](https://github.com/eramons/kubecozy/blob/master/mailhog-deployment.yaml)
 
 ### 4.5 ClusterIssuer
 
@@ -465,73 +329,30 @@ Issuers (and ClusterIssuers) represent a certificate authority from which signed
 
 DNS01 solver with acme version 2 is mandatory for issuance of wildcard certificates. I needed a wildcard certificate to cover all subdomains use by the cozy applications, so I used a DNS01 challenge with an api token provided by Cloudflare.
 
-__cozy-ingress.yaml__
-```
-apiVersion: cert-manager.io/v1alpha2
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt-prod
-spec:
-  acme:
-    # The ACME server URL
-    server: https://acme-v02.api.letsencrypt.org/directory
-    # EMail address used for ACME registration
-    email: eva.ramon@swisscom.com
-    # Name of a secret to store the ACME account private key
-    privateKeySecretRef:
-      name: letsencrypt-prod
-
-    # Enable HTTP01 challenge provider using nginx
-    solvers:
-    # Enable DNS01 challenge provider using Cloudflare
-    - dns01:
-        cloudflare:
-          email: me@mydomain.net 
-          apiTokenSecretRef:
-            name: cloudflare-api-token-secret
-            key: api-token
-```
+ClusterIssuer: [cozy-stack-deployment.yaml](https://github.com/eramons/kubecozy/blob/master/cozy-stack-deployment.yaml)
 
 ### 4.5 Ingress
 
-The ingress must expose the cozy-stack via the nginx ingress controller installed previously.
+The cozy-ingress will expose our services via the nginx ingres controller installed previously:
+[cozy-ingress-example.yaml](https://github.com/eramons/kubecozy/blob/master/cozy-ingress-example.yaml)
 
-```
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: cozy-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    cert-manager.io/acme-challenge-type: dns01
-spec:
-  tls:
-  - hosts:
-    - '*.empanadilla.net'
-    - empanadilla.net
-    secretName: empanadilla-tls
-  rules:
-  - host: '*.empanadilla.net'
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: cozy-stack
-          servicePort: 8080
-  - host: empanadilla.net
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: cozy-stack
-          servicePort: 8080
-```
+The ingress must expose following services, via the nginx ingress controller installed previously:
 
-* The ingress redirects all requests to *.mydomain.net and mydomain.net to the cozy-stack service listening in port 8080.
-* Including two hosts in the _tls_ section results in the issuance of a certificate including both of them
+* Forward all requests for *.cozy.example.com (home, drive, settings, photos) to the cozy-stack service
+* Forward all requests for cozy.example.com to the cozy-stack service 
+* Expose the mailhog web interface, to see the e-mails generated by cozy
 
-_TODO CORS not finished_
+The TLS certificate is generated and managed by letsencrypt. For that:
+
+* We include the cluster-issuer annotation, referencing our clusterissuer for let's encrypt
+* We set the challenge type annotation to dns01, since this is the mechanism we need to prove full control of our domain cozy.example.com
+* We say a secret cozy-tls must be generated for both the main domain and the wildcard one. These will result on a wildcard certificate with cozy.example.com as Subject Alternative Name 
+
+Following annotations for the nginx-ingress controller must be included:
+
+* The enable-cors, in order to disable CORS in nginx. The application already handles correctly the Access-Control-Allow-Origin headers
+* The proxy-body-size, in order to set the client_max_body_size parameter in the nginx configuration. I set it to 1G, according to the example in [nginx.conf](https://github.com/cozy/cozy-coclyco/blob/master/nginx.conf)
+* The proxy-connect, -read, and -send timeouts. The nginx-ingress controller supports websockets out of the box, however the default values of these attributes is set by default to 60s. That's not enough to backup photos from the mobile phone to the cozy drive.
 
 ### 4.6 kustomize
 
@@ -542,33 +363,8 @@ Kustomize introduces a template-free way to customize application configuration 
 kubectl apply -k .
 ```
 
-The _kustomization.yaml_ file includes all manifests and config files.
-```
-https://github.com/eramons/kubecozy/blob/master/kustomization.yaml
-```
-```
-eramon@caipirinha:~/dev/kubernetes$ cat kustomization.yaml 
-resources:
-
-# Ingress and certmanager
-- letsencrypt-prod.yaml
-- ingress.yaml
-- cloudflare.yaml
-
-# Secrets
-secretGenerator:
-- name: cozy-admin-passphrasse-secret
-  files:
-  - cozy-admin-passphrase
-
-# Deployments
-- couchdb-deployment.yaml
-- cozy-stack-deployment.yaml
-
-# Services
-- couchdb-service.yaml
-- cozy-stack-service.yaml
-```
+The _kustomization.yaml_ file includes all manifests and config files:
+[kustomization.yaml](https://github.com/eramons/kubecozy/blob/master/kustomization.yaml)
 
 For applying any configuration changes to the cluster, it's enough to execute:
 ```
@@ -586,9 +382,9 @@ kubectl exec -it cozy-stack-b6dbd5db8-m58dt /bin/bash
 
 Then I created a new cozy-stack instance:
 ```
-cozy@cozy-stack-b6dbd5db8-4j2fw:~$ cozy-stack instances add --passphrase cozy --apps home,drive,photos,settings cozy.mydomain.net     
+cozy@cozy-stack-b6dbd5db8-4j2fw:~$ cozy-stack instances add --passphrase cozy --apps home,drive,photos,settings cozy.example.com     
 Password:****
-Instance created with success for domain cozy.mydomain.net
+Instance created with success for domain cozy.example.com
 Password:****
 ```
 
@@ -596,31 +392,43 @@ Show running instances:
 ```
 cozy@cozy-stack-b6dbd5db8-4j2fw:~$ cozy-stack instances ls
 Password:****
-cozy.mydomain.net  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0bb8af  cozyf55261b8a5b88690387587c7af0bb8af
+cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0bb8af  cozyf55261b8a5b88690387587c7af0bb8af
 ```
 
 Looking good :)
 
 After this, I was able to connect to my cozy applications under following urls:
-https://empanadilla.net/drive
-https://empanadilla.net/photos
-https://empanadilla.net/settings
 
-In order to be able to access to the applications, I have to log in using the passphrase defined during the instance creation.
+* https://home.cozy.example.com
+* https://drive.cozy.example.com
+* https://photos.cozy.example.com
+* https://settings.cozy.example.com
 
-I tried following client applications on my devices:
-- On my android mobile phone, _cozy drive_, available in the Google Playstore.
-- On my debian laptop, the cozy desktop client
-- The browser
-```
+To access the applications, I have to log in using the passphrase defined during the instance creation.
 
-TODO Screenshot
+Client applications:
+
+* On my android mobile phone, _cozy drive_, available in the Google Playstore.
+* On my debian laptop, the cozy desktop client
+* Directly access cozy applications from the browser 
 
 ## Links:
-CORS
-Kustomize
-[Kubernetes](https://kubernetes.io/docs/home)
-[Archlinux](https://wiki.archlinux.org/index.php/Cozy)
-[Desktop client](https://docs.cozy.io/en/howTos/sync/linux)
-[Mailhog](https://github.com/mailhog/MailHog)
+
+ [Cozy](https://cozy.io/)
+
+ [Self-host in Debian](https://docs.cozy.io/en/tutorials/selfhost-debian)
+
+ [Kubernetes](https://kubernetes.io/docs/home)
+
+ [nginx-ingress annotations](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/)
+
+ [cert-manager](https://cert-manager.io/docs/configuration/acme/dns01/)
+ 
+ [Kustomize](https://kustomize.io/)
+
+ [Mailhog](https://github.com/mailhog/MailHog)
+
+ [Archlinux](https://wiki.archlinux.org/index.php/Cozy)
+
+ [Desktop client](https://docs.cozy.io/en/howTos/sync/linux)
 

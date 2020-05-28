@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.53" />
+  <meta name="author" content="E. Ramon">
+  <meta name="description" content="Solution Architect">
+
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/techblog/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.0/css/academicons.min.css" integrity="sha512-GGGNUPDhnG8LEAEDsjqYIQns+Gu8RBs4j5XGlxl7UfRaZBhCCm5jenJkeJL8uPuOXGqgl8/H1gjlWQDRjd3cUQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather%7CRoboto+Mono">
+  <link rel="stylesheet" href="/techblog/css/hugo-academic.css">
+  
+
+  
+
+  <link rel="alternate" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+  <link rel="feed" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+
+  <link rel="icon" type="image/png" href="/techblog/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/techblog/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://eramons.github.io/techblog/post/cozy/">
+
+  
+
+  <title>Self-hosted cozy on K8s | Small Technical Blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/techblog/">Small Technical Blog</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">Self-hosted cozy on K8s</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2020-05-20 17:00:00 &#43;0200 CEST" itemprop="datePublished">
+      Wed, May 20, 2020
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Self-hosted%20cozy%20on%20K8s&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f&amp;title=Self-hosted%20cozy%20on%20K8s"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f&amp;title=Self-hosted%20cozy%20on%20K8s"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Self-hosted%20cozy%20on%20K8s&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<p><strong>Goal:</strong></p>
+
+<p><em>Deploy cozy on my homemade kubernetes cluster</em></p>
+
+<p>The k8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still I needed to deploy something on it in order to properly try it out :)</p>
+
+<p>So I decided to try out Cozy Cloud deploying the software and its dependencies as containers in my K8s cluster.</p>
+
+<p>Cozy is a personal, free and self-hostable cloud platform, written in Go. The platform aims at simplifying the use of a personal cloud and at allowing the users to take back ownership of their privacy.</p>
+
+<p><strong>Milestones:</strong></p>
+
+<ol>
+<li>Applications</li>
+<li>Networking</li>
+<li>Docker images</li>
+<li>Cozy configuration</li>
+<li>k8s configuration</li>
+<li>Create cozy instance</li>
+</ol>
+
+<h2 id="1-applications">1. Applications</h2>
+
+<p>According to the developer documentation, there are following ways of installing and self-hosting cozy:</p>
+
+<ul>
+<li>using cozy-customized debian packages (non-debian official) following the self-hosting guide</li>
+<li>self build the application</li>
+<li>run a docker developer cozy image, which all dependencies and configuration included</li>
+</ul>
+
+<p>The &ldquo;official&rdquo; way seemed to use the debian packages. This way does not only install cozy-stack and their dependencies, but also a nginx reverse proxy and an application called cozy-coclyco which is meant to manage cozy instances and SSL certificates.</p>
+
+<p>I didn&rsquo;t need coclyco, since my cluster uses cert-manager and nginx-ingress for SSL termination and issuance and renewal of TLS server certificates.</p>
+
+<p>I figured out that the only part of cozy I needed was actually the cozy-stack binary application.</p>
+
+<p>Basing on this premise, I identified the applications and dependencies to be considered:</p>
+
+<h3 id="1-1-applications">1.1. Applications</h3>
+
+<ul>
+<li><strong>cozy-stack</strong>: the core server of the cozy platform, which consists of a single process</li>
+<li><strong>couchdb</strong>: database for storing the cozy application data</li>
+</ul>
+
+<h3 id="1-2-dependencies-cozy-stack">1.2. Dependencies (cozy-stack)</h3>
+
+<ul>
+<li><strong>mailhog</strong>: cozy-stack needs a smtp server in order to work. <em>Mailhog</em> is an e-mail testing tool for developers. I intended to use mailhog instead of configuring a smtp server.</li>
+<li><strong>imagemagick</strong>: image manipulation program binaries</li>
+</ul>
+
+<h2 id="2-dns-and-reverse-proxy">2. DNS and reverse-proxy</h2>
+
+<p>As a security measure, Cozy needs to be served over HTTPS, which means it needs a reverse proxy in front of it.</p>
+
+<p>Cozy needs a full domain name for the instance (something like <instance>.mydomain.net) and use one domain name per application, in the form of <app>.<instance>.mydomain.net</p>
+
+<p>Thus, the setup of the domain zone has to look like this:</p>
+
+<pre><code>   &lt;instance&gt; 1h IN A &lt;my external IP&gt; 
+   *.&lt;instance&gt; 1h IN CNAME &lt;instance&gt;
+</code></pre>
+
+<p>Currently the list of apps is: home, settings, drive, photos, onboarding.</p>
+
+<p>A wildcard SSL certificate covering *.cozy.mydomain.net and cozy.mydomain.net or a certificate for cozy.mydomain.net with apps domains added as Subject Alternative Name.</p>
+
+<ul>
+<li>I used Cloudflare for the DNS configuration.</li>
+<li>In order to have proper DNS resolution inside of the home network, I set up an own DNS server.</li>
+</ul>
+
+<h2 id="3-docker">3. Docker</h2>
+
+<h3 id="3-1-available-docker-images">3.1 Available Docker Images</h3>
+
+<p>From the applications identified in the last section:</p>
+
+<ul>
+<li>couchdb and mailhog have official docker images available</li>
+<li>imagemagick is available as debian package and should be included on the cozy-stack docker image</li>
+<li>for cozy-stack I decided to write my own Dockerfile</li>
+</ul>
+
+<h3 id="3-2-docker-image-for-cozy-stack">3.2 Docker image for cozy-stack</h3>
+
+<p>The cozy-stack is a (statically-linked?) go binary. Two options for the new image:</p>
+
+<p>a)   Build the go binary inside the container
+   b)   Pull the binary directly from github inside the container</p>
+
+<p>For now, I&rsquo;m going for the second option. The Dockerfile looks like follows:</p>
+
+<pre><code>https://github.com/eramons/kubecozy/blob/master/docker/Dockerfile
+</code></pre>
+
+<p>Let&rsquo;s take a closer look at the Dockerfile:</p>
+
+<ul>
+<li>The basis image is debian (bullseye)</li>
+<li><em>Imagemagick</em> is installed as a dependency</li>
+<li>I created a <em>cozy</em> user for running cozy-stack</li>
+<li>The workdir is the home directory of the <em>cozy</em> user</li>
+<li>The application will be executed as <em>cozy</em> user (NOT as root)</li>
+</ul>
+
+<p>Once ready, I build the image and push it to dockerhub:</p>
+
+<pre><code>docker login
+</code></pre>
+
+<pre><code>docker image build -t eramon/cozy-stack .
+</code></pre>
+
+<pre><code>docker push eramon/cozy-stack
+</code></pre>
+
+<h2 id="2-cozy-configuration">2. Cozy configuration</h2>
+
+<p>The <em>cozy-stack</em> binary and its command <em>serve</em> allow to pass flags as configuration options. As an alternative, a <em>cozy.yaml</em> configuration file can be placed under <em>/etc/cozy</em>.</p>
+
+<p>I prefered to use a config file in order to keep the configuration separated from the container image.</p>
+
+<p>My <em>cozy.yaml</em> config file looks like follows:</p>
+
+<pre><code>https://github.com/eramons/kubecozy/blob/master/docker/Dockerfile
+</code></pre>
+
+<p>Let&rsquo;s go over the most important configuration settings:</p>
+
+<h3 id="service-hosts-port">Service hosts &amp; port</h3>
+
+<pre><code>host: 0.0.0.0 
+port: 8080
+</code></pre>
+
+<p>The bind address and the port where cozy-stack will listen for connections. Important to use 0.0.0.0 and NOT localhost, otherwise the application will only bind to 127.0.0.1.</p>
+
+<h3 id="admin-interface">Admin interface</h3>
+
+<pre><code>admin:
+  host: localhost 
+  port: 6060
+  secret_filename: cozy-admin-passphrase
+</code></pre>
+
+<p>The admin interface to send requests to cozy-stack. The cozy admin password is stored encrypted in the filesystem. It must be generated beforehand using the cozy-stack binary (see K8s configuration: secrets).</p>
+
+<h3 id="database">Database</h3>
+
+<pre><code>couchdb:
+  url: http://couchdb:5984
+</code></pre>
+
+<p>The Couchdb stores the cozy application data.</p>
+
+<p><em>Note: in kubernetes, an image name can be used as a resolvable hostname inside the cluster network.</em></p>
+
+<h3 id="storage">Storage</h3>
+
+<pre><code>fs:
+  url: file://localhost/var/lib/cozy
+</code></pre>
+
+<p>Filesystem path for the storage of user data: photos, documents, etc.</p>
+
+<h3 id="vault">Vault</h3>
+
+<pre><code>vault:
+  credentials_encryptor_key: /etc/cozy/vault.enc
+  credentials_decryptor_key: /etc/cozy/vault.dec
+</code></pre>
+
+<p>Cozy encrypts user credentials. The genertion of the encryption and decryption keys must be done manually before the cozy-stack is started (see K8s configuration: secrets).</p>
+
+<h3 id="smtp-server">SMTP Server</h3>
+
+<pre><code>mail:
+  host: mailhog 
+  port: 1025 
+  disable_tls: true 
+  skip_certificate_validation: true 
+</code></pre>
+
+<p>Apparently having a working SMTP server up und running is a requirement in order for cozy-stack to work. I wasn&rsquo;t actually interested in my cozy writting me e-mails. I found out the cozy development image uses <em>Mailhog</em>. The e-mails can be viewed on the browser but are not actually sent. So I configured mailog as the smtp server.</p>
+
+<p><em>Note: mailhog does not allow to configure a username and a password. Otherwise, it fails with an &ldquo;unencrypted connection&rdquo; error</em></p>
+
+<h2 id="4-k8s-configuration">4. k8s configuration</h2>
+
+<p>Now that I had the docker images an the cozy-stack configuration file prepared, the next step was to deploy the applications in my home-made K8s cluster.</p>
+
+<p>Pre-conditions:</p>
+
+<ul>
+<li>To have kubectl installed on my laptop and the credentials to the k8s cluster stored under .kube/config on the home directory</li>
+<li>To have helm installed on my laptop</li>
+<li>To have cert-manager deployed on the cluster</li>
+<li>To have nfs-common installed on all worker nodes of the cluster</li>
+</ul>
+
+<p><em>Note: I addressed these topics already on my previous post: Home-made Kubernetes Cluster</em></p>
+
+<p>For deploying cozy in k8s, I wrote yaml manifests for:</p>
+
+<ul>
+<li>The services</li>
+<li>The secrets</li>
+<li>The config map</li>
+<li>The persistent volume claims</li>
+<li>The cluster issuer</li>
+<li>The ingress</li>
+</ul>
+
+<p>All yaml files are available under my <a href="https://github.com/eramons/kubecozy" target="_blank">kubecozy</a>.</p>
+
+<h3 id="4-1-services">4.1 Services</h3>
+
+<p>I defined four services:</p>
+
+<ol>
+<li>The couchdb database service: <a href="https://github.com/eramons/kubecozy/blob/master/cozy-stack-service.yaml" target="_blank">cozy-stack-service.yaml</a></li>
+<li>The cozy-stack service: <a href="https://github.com/eramons/kubecozy/blob/master/couchdb-service.yaml" target="_blank">couchdb-service.yaml</a></li>
+<li>The smtp-server service: <a href="https://github.com/eramons/kubecozy/blob/master/smtp-service.yaml" target="_blank">smtp-service.yaml</a></li>
+<li>The mailhog webserver service: <a href="https://github.com/eramons/kubecozy/blob/master/mailhog-service.yaml" target="_blank">mailhog-service.yaml</a></li>
+</ol>
+
+<h3 id="4-2-secrets">4.2 Secrets</h3>
+
+<h4 id="4-2-1-admin-passphrase">4.2.1 admin passphrase</h4>
+
+<p>I needed the cozy-stack binary for generate the admin password. Since my cozy-stack wasn&rsquo;t up and running yet, I started a standalone instance under docker in order to be able to use the cozy-stack binary:</p>
+
+<pre><code>docker run --rm -it -p 8080:8080 -v &quot;$(pwd)/build&quot;:/data/cozy-app/test cozy/cozy-app-dev
+docker ps
+</code></pre>
+
+<p>I found out the container id and logged into the running container:</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy/docker$ docker exec -it 0b1400039866 /bin/bash
+root@0b1400039866:/# 
+</code></pre>
+
+<p>Then I generated the password and copied the file outside the container:</p>
+
+<pre><code>root@0b1400039866:/# cozy-stack config passwd cozy-admin-passphrase
+Hashed passphrase will be written in /cozy-admin-passphrase
+Passphrase: 
+Confirmation: 
+root@0b1400039866:/# 
+exit
+eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/cozy-admin-passphrase ./../../kubernetes/cozy-admin-passphrase
+</code></pre>
+
+<p>I manually generated a K8s secret for the password:</p>
+
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-admin-passphrase-secret --from-file=cozy-admin-passphrase
+secret/cozy-admin-passphrase-secret created
+</code></pre>
+
+<p>This secret will be mounted afterwards in the corresponding location on the cozy-stack pod, via the deployment manifest.</p>
+
+<h4 id="4-2-2-vault-keys">4.2.2 vault keys</h4>
+
+<p>Same as for the admin passphrase, I needed to generate the vault keys beforehand and include them in a secret:</p>
+
+<pre><code>eramon@caipirinha:~/dev/cozy/docker$ docker exec -it 0b1400039866 /bin/bash
+root@0b1400039866:/# cozy-stack config gen-keys /etc/vault
+keyfiles written in:
+  /etc/vault.enc
+  /etc/vault.dec
+root@0b1400039866:/# exit
+eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/etc/vault.enc ../../kubernetes/vault.enc
+eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/etc/vault.dec ../../kubernetes/vault.dec
+</code></pre>
+
+<p>Generate the K8s secret for the vault keys:</p>
+
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-vault-secret --from-file=vault.enc --from-file=vault.dec
+secret/cozy-vault-secret created
+</code></pre>
+
+<p>This secret will be mounted afterwards in the corresponding location on the cozy-stack pod, via the deployment manifest.</p>
+
+<h4 id="4-2-3-couchdb-credentials">4.2.3 couchdb credentials</h4>
+
+<p><em>TODO</em></p>
+
+<h3 id="4-3-configmap">4.3 ConfigMap</h3>
+
+<p>As mentioned in the <em>Configuration</em> section, I decided to use a config file for cozy-stack rather than having flags passed as arguments to cozy-stack. The file cozy.yaml must be included in a ConfigMap and mounted under /etc/cozy/cozy.yaml in the cozy-stack container.</p>
+
+<p>To generate the config map, I directly include it in the resource list of kustomization.yaml:</p>
+
+<pre><code># ConfigMaps
+configMapGenerator:
+- name: cozy-config-map
+  files:
+  - config/cozy.yaml
+</code></pre>
+
+<h3 id="4-4-persistent-volume-claims">4.4 Persistent Volume Claims</h3>
+
+<p><em>Pre-condition:</em> the cluster has available persistent volumes</p>
+
+<p>I did this in <em>TODO Reference</em></p>
+
+<h4 id="persistent-volume-claims-for-storage-and-data">Persistent Volume Claims for storage and data</h4>
+
+<p>To bind persistent volumes to pods, I created first the Persistent Volume Claims:</p>
+
+<ol>
+<li>PVC for couchdb (application data): <a href="https://github.com/eramons/kubecozy/blob/master/couchdb-pvc.yaml" target="_blank">couchdb-pvc.yaml</a></li>
+<li>PVC for cozy-stack (user data): <a href="https://github.com/eramons/kubecozy/blob/master/cozy-stack-pvc.yaml" target="_blank">cozy-stack-pvc.yaml</a></li>
+</ol>
+
+<p>In order for cozy-stack and couchdb to use these persistent volume to store its data, the corresponding volume mounts must be configured on their respective deployments.</p>
+
+<h3 id="4-4-deployments">4.4 Deployments</h3>
+
+<p>Finally, we come to the manifests for the deployments of couchdb, cozy-stack and mailhog.</p>
+
+<h4 id="4-4-1-couchdb">4.4.1 couchdb</h4>
+
+<p>Deployment for couchdb (application data): <a href="https://github.com/eramons/kubecozy/blob/master/couchdb-deployment.yaml" target="_blank">couchdb-deployment.yaml</a></p>
+
+<ul>
+<li>The pvc we created before is mounted under /opt/couchdb/data.</li>
+</ul>
+
+<h4 id="4-4-2-cozy-stack">4.4.2 cozy-stack</h4>
+
+<p>Deployment for cozy-stack (user data): <a href="https://github.com/eramons/kubecozy/blob/master/cozy-stack-deployment.yaml" target="_blank">cozy-stack-deployment.yaml</a></p>
+
+<p>Taking a closer look at the file we can see:</p>
+
+<ul>
+<li>The configMap containing the cozy.yaml is mounted under /etc/cozy/cozy.yaml</li>
+<li>The persistent volume (nfs) is mounted under /var/lib/cozy</li>
+<li>Since the docker image is NOT ran as root, I needed an init container to mount the persistent volume and set the permissions</li>
+<li>The secret containing the admin-passphrase is mounted under /etc/cozy/cozy-admin-passphrase</li>
+<li>The secret containing the vault keys is mounted under /etc/cozy/vault.enc and /etc/cozy/vault.dec</li>
+</ul>
+
+<h4 id="4-4-3-mailhog">4.4.3 mailhog</h4>
+
+<p>Deployment for mailhog (smtp server): <a href="https://github.com/eramons/kubecozy/blob/master/mailhog-deployment.yaml" target="_blank">mailhog-deployment.yaml</a></p>
+
+<h3 id="4-5-clusterissuer">4.5 ClusterIssuer</h3>
+
+<p>Issuers (and ClusterIssuers) represent a certificate authority from which signed x509 certificates can be obtained, such as Let’s Encrypt. I needed one ClusterIssuer in order to generate certificates for my cluster with the cert-manager.</p>
+
+<p>DNS01 solver with acme version 2 is mandatory for issuance of wildcard certificates. I needed a wildcard certificate to cover all subdomains use by the cozy applications, so I used a DNS01 challenge with an api token provided by Cloudflare.</p>
+
+<p>ClusterIssuer: <a href="https://github.com/eramons/kubecozy/blob/master/cozy-stack-deployment.yaml" target="_blank">cozy-stack-deployment.yaml</a></p>
+
+<h3 id="4-5-ingress">4.5 Ingress</h3>
+
+<p>The cozy-ingress will expose our services via the nginx ingres controller installed previously:
+<a href="https://github.com/eramons/kubecozy/blob/master/cozy-ingress-example.yaml" target="_blank">cozy-ingress-example.yaml</a></p>
+
+<p>The ingress must expose following services, via the nginx ingress controller installed previously:</p>
+
+<ul>
+<li>Forward all requests for *.cozy.example.com (home, drive, settings, photos) to the cozy-stack service</li>
+<li>Forward all requests for cozy.example.com to the cozy-stack service</li>
+<li>Expose the mailhog web interface, to see the e-mails generated by cozy</li>
+</ul>
+
+<p>The TLS certificate is generated and managed by letsencrypt. For that:</p>
+
+<ul>
+<li>We include the cluster-issuer annotation, referencing our clusterissuer for let&rsquo;s encrypt</li>
+<li>We set the challenge type annotation to dns01, since this is the mechanism we need to prove full control of our domain cozy.example.com</li>
+<li>We say a secret cozy-tls must be generated for both the main domain and the wildcard one. These will result on a wildcard certificate with cozy.example.com as Subject Alternative Name</li>
+</ul>
+
+<p>Following annotations for the nginx-ingress controller must be included:</p>
+
+<ul>
+<li>The enable-cors, in order to disable CORS in nginx. The application already handles correctly the Access-Control-Allow-Origin headers</li>
+<li>The proxy-body-size, in order to set the client_max_body_size parameter in the nginx configuration. I set it to 1G, according to the example in <a href="https://github.com/cozy/cozy-coclyco/blob/master/nginx.conf" target="_blank">nginx.conf</a></li>
+<li>The proxy-connect, -read, and -send timeouts. The nginx-ingress controller supports websockets out of the box, however the default values of these attributes is set by default to 60s. That&rsquo;s not enough to backup photos from the mobile phone to the cozy drive.</li>
+</ul>
+
+<h3 id="4-6-kustomize">4.6 kustomize</h3>
+
+<p>In order to ease re-deployments, I used _kustomize.</p>
+
+<p>Kustomize introduces a template-free way to customize application configuration and it&rsquo;s built into the <em>kubectl</em> command. After any change to a configuration file or manifest file, it&rsquo;s enough to run:</p>
+
+<pre><code>kubectl apply -k .
+</code></pre>
+
+<p>The <em>kustomization.yaml</em> file includes all manifests and config files:
+<a href="https://github.com/eramons/kubecozy/blob/master/kustomization.yaml" target="_blank">kustomization.yaml</a></p>
+
+<p>For applying any configuration changes to the cluster, it&rsquo;s enough to execute:</p>
+
+<pre><code>kubectl apply -k .
+</code></pre>
+
+<h2 id="7-create-instance">7. Create instance</h2>
+
+<p>The Dockerfile includes instructions for downloading the latest cozy-stack binary, create directories, create a cozy user, set permissions, create the vault keys and finally start cozy-stack serve. The creation of the instance must be done manually once by each user and it must not be part of the docker image.</p>
+
+<p>For executing the cozy-stack binary to create my cozy instance, I logged into the running container:</p>
+
+<pre><code>kubectl exec -it cozy-stack-b6dbd5db8-m58dt /bin/bash
+</code></pre>
+
+<p>Then I created a new cozy-stack instance:</p>
+
+<pre><code>cozy@cozy-stack-b6dbd5db8-4j2fw:~$ cozy-stack instances add --passphrase cozy --apps home,drive,photos,settings cozy.example.com     
+Password:****
+Instance created with success for domain cozy.example.com
+Password:****
+</code></pre>
+
+<p>Show running instances:</p>
+
+<pre><code>cozy@cozy-stack-b6dbd5db8-4j2fw:~$ cozy-stack instances ls
+Password:****
+cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0bb8af  cozyf55261b8a5b88690387587c7af0bb8af
+</code></pre>
+
+<p>Looking good :)</p>
+
+<p>After this, I was able to connect to my cozy applications under following urls:</p>
+
+<ul>
+<li><a href="https://home.cozy.example.com" target="_blank">https://home.cozy.example.com</a></li>
+<li><a href="https://drive.cozy.example.com" target="_blank">https://drive.cozy.example.com</a></li>
+<li><a href="https://photos.cozy.example.com" target="_blank">https://photos.cozy.example.com</a></li>
+<li><a href="https://settings.cozy.example.com" target="_blank">https://settings.cozy.example.com</a></li>
+</ul>
+
+<p>To access the applications, I have to log in using the passphrase defined during the instance creation.</p>
+
+<p>Client applications:</p>
+
+<ul>
+<li>On my android mobile phone, <em>cozy drive</em>, available in the Google Playstore.</li>
+<li>On my debian laptop, the cozy desktop client</li>
+<li>Directly access cozy applications from the browser</li>
+</ul>
+
+<h2 id="links">Links:</h2>
+
+<p><a href="https://cozy.io/" target="_blank">Cozy</a></p>
+
+<p><a href="https://docs.cozy.io/en/tutorials/selfhost-debian" target="_blank">Self-host in Debian</a></p>
+
+<p><a href="https://kubernetes.io/docs/home" target="_blank">Kubernetes</a></p>
+
+<p><a href="https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/" target="_blank">nginx-ingress annotations</a></p>
+
+<p><a href="https://cert-manager.io/docs/configuration/acme/dns01/" target="_blank">cert-manager</a></p>
+
+<p><a href="https://kustomize.io/" target="_blank">Kustomize</a></p>
+
+<p><a href="https://github.com/mailhog/MailHog" target="_blank">Mailhog</a></p>
+
+<p><a href="https://wiki.archlinux.org/index.php/Cozy" target="_blank">Archlinux</a></p>
+
+<p><a href="https://docs.cozy.io/en/howTos/sync/linux" target="_blank">Desktop client</a></p>
+
+    </div>
+  </div>
+
+</article>
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+    <li class="previous"><a href="https://eramons.github.io/techblog/post/dns/"><span
+      aria-hidden="true">&larr;</span> DNS Configuration for K8S bare-metal cluster</a></li>
+    
+
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2020 E. Ramon &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.2/imagesloaded.pkgd.min.js" integrity="sha512-iHzEu7GbSc705hE2skyH6/AlTpOfBmkx7nUqTLGzPYR+C1tRaItbRlJ7hT/D3YQ9SV0fqLKzp4XY9wKulTBGTw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js" integrity="sha512-Z5heTz36xTemt1TbtbfXtTq5lMfYnOkXM2/eWcTTiLU01+Sw4ku1i7vScDc8fWhrP2abz9GQzgKH5NGBLoYlAw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/plugins/ScrollToPlugin.min.js" integrity="sha512-CDeU7pRtkPX6XJtF/gcFWlEwyaX7mcAp5sO3VIu/ylsdR74wEw4wmBpD5yYTrmMAiAboi9thyBUr1vXRPA7t0Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/techblog/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
+    
+    
+
+  </body>
+</html>
+
