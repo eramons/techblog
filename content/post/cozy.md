@@ -72,7 +72,7 @@ Following software and tools must be available on the client machine (laptop):
 So the pre-requisite is to have a K8s cluster available to deploy in and to have the necessary tools on the client to make the deployments. 
 
 I addressed all these topics on my previous post: 
-[Home-made K8s cluster]({{< ref "post/kubernetes_cluster" >}})
+[Home-made K8s cluster]({{< ref "/post/kubernetes_cluster" >}})
 
 ## 2. Cozy 
 

@@ -151,8 +151,7 @@ Deploy cozy on my homemade kubernetes cluster
 The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
 I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
 Cozy is a personal, free and self-hostable cloud platform, written in Go.
-Milestones:
- Applications Networking Docker images Cozy configuration k8s configuration Create cozy instance  1.
+Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1.
       
     </p></div>
   </div>
@@ -186,7 +185,7 @@ Milestones:
       Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
+ Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
       
     </p></div>
   </div>

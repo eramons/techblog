@@ -202,6 +202,7 @@
 <li>Install helm</li>
 <li>Install ingress</li>
 <li>Install cert-manager</li>
+<li>Cluster Issuer (Let&rsquo;s Encrypt)</li>
 <li>Storage</li>
 </ol>
 
@@ -548,15 +549,25 @@ cert-manager-webhook-54647cbd5-w4fkr      1/1     Running   0          58m
 
 <p>If the cert-manager, the cainjector and the webhook are up and running, we should be good.</p>
 
-<h2 id="9-storage">9 Storage</h2>
+<h2 id="9-clusterissuer">9 ClusterIssuer</h2>
+
+<p><strong>Issuers</strong> (and <strong>ClusterIssuers</strong>) represent a certificate authority from which signed x509 certificates can be obtained. A ClusterIssuer is necessary to issue certificates with cert-manager and Let&rsquo;s Encrypt.</p>
+
+<p>I used a DNS01 challenge with an api token provided by Cloudflare.</p>
+
+<p><em>NOTE: A DNS01 solver with acme version 2 is mandatory for issuance of wildcard certificates.</em></p>
+
+<p>ClusterIssuer: <a href="https://github.com/eramons/kubecozy/blob/master/letsencrypt-prod.yaml.example" target="_blank">letsencrypt-prod.yaml.example</a></p>
+
+<h2 id="10-storage">10 Storage</h2>
 
 <p>There are many different kinds of persistent volumes for K8s. One of them is a NFS server.</p>
 
-<h3 id="9-1-set-up-a-nfs-share">9.1 Set up a NFS share</h3>
+<h3 id="10-1-set-up-a-nfs-share">10.1 Set up a NFS share</h3>
 
 <p>Setting up the NFS share on the Synology NAS was quite straightforward.</p>
 
-<h3 id="9-2-install-nfs-common">9.2 Install nfs-common</h3>
+<h3 id="10-2-install-nfs-common">10.2 Install nfs-common</h3>
 
 <p>I installed nfs-common on my worker node:</p>
 
@@ -567,7 +578,7 @@ cert-manager-webhook-54647cbd5-w4fkr      1/1     Running   0          58m
 
 <p><em>Note: not sure if this is best practice. I guess for productive setups required software is installed on each node automatically.</em></p>
 
-<h3 id="9-3-persistent-volume">9.3 Persistent Volume</h3>
+<h3 id="10-3-persistent-volume">10.3 Persistent Volume</h3>
 
 <p>After the NFS share was available on my NAS, I wrote manifests for persistent nfs volumes. I created a dedicated persistent volume for each application.</p>
 
@@ -632,6 +643,8 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
 <p><a href="https://helm.sh/docs/intro/quickstart" target="_blank">Helm Quickstart Guide</a></p>
 
 <p><a href="https://cert-manager.io/docs/installation/kubernetes" target="_blank">Kubernetes cert-manager</a></p>
+
+<p><a href="https://cert-manager.io/docs/configuration/acme/dns01/cloudflare" target="_blank">Cloudflare API token</a></p>
 
 <p><a href="https://github.com/helm/charts/tree/master/stable/nginx-ingress" target="_blank">nginx helm chart</a></p>
 
