@@ -24,7 +24,8 @@ Tasks:
 6. Install helm
 7. Install ingress
 8. Install cert-manager
-9. Storage 
+9. Cluster Issuer (Let's Encrypt)
+10. Storage 
 
 ## 1. Find old hardware 
 
@@ -351,15 +352,25 @@ cert-manager-webhook-54647cbd5-w4fkr      1/1     Running   0          58m
 
 If the cert-manager, the cainjector and the webhook are up and running, we should be good.
 
-## 9 Storage 
+## 9 ClusterIssuer
+
+__Issuers__ (and __ClusterIssuers__) represent a certificate authority from which signed x509 certificates can be obtained. A ClusterIssuer is necessary to issue certificates with cert-manager and Let's Encrypt. 
+
+I used a DNS01 challenge with an api token provided by Cloudflare.
+
+_NOTE: A DNS01 solver with acme version 2 is mandatory for issuance of wildcard certificates._
+
+ClusterIssuer: [letsencrypt-prod.yaml.example](https://github.com/eramons/kubecozy/blob/master/letsencrypt-prod.yaml.example)
+
+## 10 Storage 
 
 There are many different kinds of persistent volumes for K8s. One of them is a NFS server.
 
-### 9.1 Set up a NFS share
+### 10.1 Set up a NFS share
 
 Setting up the NFS share on the Synology NAS was quite straightforward.
 
-### 9.2 Install nfs-common
+### 10.2 Install nfs-common
 
 I installed nfs-common on my worker node:
 ```
@@ -369,7 +380,7 @@ With this, the worker will be able to nfs-mount folders on my NAS as persistent 
 
 _Note: not sure if this is best practice. I guess for productive setups required software is installed on each node automatically._
 
-### 9.3 Persistent Volume
+### 10.3 Persistent Volume
 
 After the NFS share was available on my NAS, I wrote manifests for persistent nfs volumes. I created a dedicated persistent volume for each application. 
 
@@ -434,5 +445,7 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
 [Helm Quickstart Guide](https://helm.sh/docs/intro/quickstart)
 
 [Kubernetes cert-manager](https://cert-manager.io/docs/installation/kubernetes)
+
+[Cloudflare API token](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare)
 
 [nginx helm chart](https://github.com/helm/charts/tree/master/stable/nginx-ingress)
