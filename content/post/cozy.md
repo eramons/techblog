@@ -125,9 +125,9 @@ The admin interface to send requests to cozy-stack. The cozy admin password is s
 #### Database
 ```
 couchdb:
-  url: http://couchdb:5984
+  url: http://{{.Env.COUCHDB_USERNAME}}:{{.Env.COUCHDB_PASSPHRASE}}@couchdb:5984/
 ```
-The Couchdb stores the cozy application data.
+The Couchdb stores the cozy application data. The environment variables must be provided later in the cozy-stack deployment manifest.
 
 _Note: in kubernetes, an image name can be used as a resolvable hostname inside the cluster network._
 
@@ -228,9 +228,11 @@ Kubernetes __Secrets__ let you store and manage sensitive information, such as p
 
 #### 4.2.1 admin passphrase
 
-The _cozy-stack_ binary is necessary for generate the admin password. Since my cozy wasn't up and running yet, I started a standalone instance under docker in order to be able to use the binary to generate the password:
+The _cozy-stack_ binary is necessary for generate the admin password. However, to be able to start my cozy-stack instance I need the passwords to have been generated and mapped to K8s secrets, since my image executes _cozy-stack serve_ at the end.
+
+Since my cozy wasn't up and running yet, I started a standalone developer instance under docker mapping the three files containing the admin passphrase, the encryption key and the decryption key to the local files on the host I'll need to generate the secrets: 
 ```
-docker run --rm -it -p 8080:8080 -v "$(pwd)/build":/data/cozy-app/test cozy/cozy-app-dev
+docker run --rm -it -p 8080:8080 -v /home/eramon/dev/kubernetes/vault.enc:/etc/vault.enc -v /home/eramon/dev/kubernetes/vault.dec:/etc/vault.dec -v /home/eramon/dev/kubernetes/cozy-admin-passphrase:/home/cozy/cozy-admin-passphrase cozy/cozy-app-dev
 ```
 With _docker ps_, I found out the container id and logged into the running container:
 ```
@@ -238,18 +240,15 @@ eramon@caipirinha:~/dev/cozy/docker$ docker exec -it 0b1400039866 /bin/bash
 root@0b1400039866:/# 
 ```
 
-Then I generated the password and copied the file outside the container:
+Then I generated the password:
 ```
 root@0b1400039866:/# cozy-stack config passwd cozy-admin-passphrase
 Hashed passphrase will be written in /cozy-admin-passphrase
 Passphrase: 
 Confirmation: 
-root@0b1400039866:/# 
-exit
-eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/cozy-admin-passphrase ./../../kubernetes/cozy-admin-passphrase
 ```
 
-I manually generated a K8s secret for the password:
+In another terminal (without exiting the container yet) I manually generated a K8s secret for the password:
 ```
 eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-admin-passphrase-secret --from-file=cozy-admin-passphrase
 secret/cozy-admin-passphrase-secret created
@@ -258,19 +257,13 @@ This secret will be mounted afterwards in the expected location on the _cozy-sta
 
 #### 4.2.2 vault keys
 
-Same as for the admin passphrase, I needed to generate the vault keys beforehand and include them in a secret:
+Still logged in the dev running container, I generated the vault keys
 ```
-eramon@caipirinha:~/dev/cozy/docker$ docker exec -it 0b1400039866 /bin/bash
 root@0b1400039866:/# cozy-stack config gen-keys /etc/vault
 keyfiles written in:
   /etc/vault.enc
   /etc/vault.dec
-root@0b1400039866:/# exit
-eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/etc/vault.enc ../../kubernetes/vault.enc
-eramon@caipirinha:~/dev/cozy/docker$ docker cp 0b1400039866:/etc/vault.dec ../../kubernetes/vault.dec
 ```
-
-_TODO: use my own docker image and not the development one. Mount the files directly on the host and make one-liner from this._
 
 Generate the K8s secret for the vault keys:
 ```
@@ -279,13 +272,16 @@ secret/cozy-vault-secret created
 ```
 This secret will be mounted afterwards in the configured location on the _cozy-stack_ pod, via the deployment manifest.
 
-_Note: another (better) way would be to use an init container for generating and mount the vault keys. Contrary to the admin passphrase, the vault keys don't need to prompt the user for a passphrase._
-
 #### 4.2.3 couchdb credentials
 
 Generate a secret for the couchdb username and password and pass it as environment variable to the deployment.
 
-_TODO_
+```
+eramon@caipirinha:~/dev/kubernetes$ echo "cozy" > dbusername
+eramon@caipirinha:~/dev/kubernetes$ pwgen -s -1 16 > dbpassphrase
+eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-db-secret --from-file=dbusername --from-file=dbpassphrase
+```
+This secret will be used to set the environment variables COUCHDB_PASSPHRASE and COUCHDB_USERNAME in the cozy-stack deployment afterwards.
 
 ### 4.3 ConfigMap
 
@@ -342,6 +338,7 @@ Taking a closer look at the file we can see:
 * Since the docker image is NOT ran as root, I needed an init container to mount the persistent volume and set the permissions
 * The secret containing the admin-passphrase is mounted under _/etc/cozy/cozy-admin-passphrase_
 * The secret containing the vault keys is mounted under _/etc/cozy/vault.enc_ and _/etc/cozy/vault.dec_
+* The secret containing the couchdb username and passphrase are passed as environment variables
 
 #### 4.5.3 mailhog
 
