@@ -125,11 +125,19 @@ The admin interface to send requests to cozy-stack. The cozy admin password is s
 #### Database
 ```
 couchdb:
+  url: http://couchdb:5984/
+```
+The Couchdb stores the cozy application data.
+
+url: http://{{.Env.COUCHDB_USERNAME}}:{{.Env.COUCHDB_PASSPHRASE}}@couchdb:5984/
+
+_TODO Configure the couchdb credentials as environment variables as follows:_
+```
+couchdb:
   url: http://{{.Env.COUCHDB_USERNAME}}:{{.Env.COUCHDB_PASSPHRASE}}@couchdb:5984/
 ```
-The Couchdb stores the cozy application data. The environment variables must be provided later in the cozy-stack deployment manifest.
+_If doing so, the environment variables must be provided later in the cozy-stack deployment manifest. In addition, a init container for couchdb would be necessary to set the couchdb credentials for the cozy user._
 
-_Note: in kubernetes, an image name can be used as a resolvable hostname inside the cluster network._
 
 #### Storage
 ```
@@ -274,18 +282,31 @@ This secret will be mounted afterwards in the configured location on the _cozy-s
 
 #### 4.2.3 couchdb credentials
 
-Generate a secret for the couchdb username and password and pass it as environment variable to the deployment.
+Is it possible to generate a secret for the couchdb username and password and pass it as environment variable to the deployments.
 
 ```
 eramon@caipirinha:~/dev/kubernetes$ echo "cozy" > dbusername
 eramon@caipirinha:~/dev/kubernetes$ pwgen -s -1 16 > dbpassphrase
 eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-db-secret --from-file=dbusername --from-file=dbpassphrase
 ```
-This secret will be used to set the environment variables COUCHDB_PASSPHRASE and COUCHDB_USERNAME in the cozy-stack deployment afterwards.
+This secret must be used to set the environment variables in the couchdb and cozy-stack deployment afterwards.
+
+_TODO Use the same secret as couchdb admin credentials and as couchdb credentials for the cozy user._
 
 ### 4.3 ConfigMap
 
 __ConfigMaps__ allow to decouple configuration artifacts from image content to keep containerized applications portable. 
+
+#### 4.3.1. ingress-nginx configmap
+
+For customising the nginx configuration I mainly used annotations. The annotations allow to provide configuration customization on the virtual host level, that's way they are included in the ingress. However at some point I had to struggle with an issue which could not be solved through annotations: I had to deactivate http2. This configuration has to be done on the server level. For that I used a configmap:
+
+[ingress-nginx-configmap.yaml](https://github.com/eramons/kubecozy/blob/master/ingress-nginx-configmap.yaml)
+
+_Note: apparently is known that there is an issue for nginx when using http2. I didn't find an explanation yet._ 
+
+
+### 4.3.2. ConfigMapGenerator
 
 As mentioned above, I decided to use a config file for rather than having flags passed as arguments. The file _cozy.yaml_ would be included in a config map and mounted under _/etc/cozy_ in the _cozy-stack_ container.
 
@@ -327,6 +348,8 @@ Deployment for couchdb (application data): [couchdb-deployment.yaml](https://git
 
 * The pvc we created before is mounted under _/opt/couchdb/data_.
 
+_TODO: set the username and password for the cozy user using an init container._
+
 #### 4.5.2 cozy-stack
 
 Deployment for cozy-stack (user data): [cozy-stack-deployment.yaml](https://github.com/eramons/kubecozy/blob/master/cozy-stack-deployment.yaml)
@@ -338,7 +361,8 @@ Taking a closer look at the file we can see:
 * Since the docker image is NOT ran as root, I needed an init container to mount the persistent volume and set the permissions
 * The secret containing the admin-passphrase is mounted under _/etc/cozy/cozy-admin-passphrase_
 * The secret containing the vault keys is mounted under _/etc/cozy/vault.enc_ and _/etc/cozy/vault.dec_
-* The secret containing the couchdb username and passphrase are passed as environment variables
+
+_TODO: pass the secret containing the couchdb username and passphrase as environment variables_
 
 #### 4.5.3 mailhog
 
@@ -439,6 +463,8 @@ __Client applications:__
  [Kubernetes](https://kubernetes.io/docs/home)
 
  [nginx-ingress annotations](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/)
+
+ [nginx-ingress configmap](https://kubernetes.github.io/ingress-nginx/examples/customization/custom-configuration/)
 
  [cert-manager](https://cert-manager.io/docs/configuration/acme/dns01/)
  
