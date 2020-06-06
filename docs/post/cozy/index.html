@@ -324,9 +324,9 @@ port: 8080
   url: http://{{.Env.COUCHDB_USERNAME}}:{{.Env.COUCHDB_PASSPHRASE}}@couchdb:5984/
 </code></pre>
 
-<p>The Couchdb stores the cozy application data. The environment variables must be provided later in the cozy-stack deployment manifest.</p>
+<p>The Couchdb stores the cozy application data.</p>
 
-<p><em>Note: in kubernetes, an image name can be used as a resolvable hostname inside the cluster network.</em></p>
+<p>The environment variables must be provided later in the cozy-stack deployment manifest.</p>
 
 <h4 id="storage">Storage</h4>
 
@@ -348,13 +348,15 @@ port: 8080
 <h4 id="smtp-server">SMTP Server</h4>
 
 <pre><code>mail:
-  host: mailhog 
+  host: smtp 
   port: 1025 
   disable_tls: true 
   skip_certificate_validation: true 
 </code></pre>
 
 <p>Apparently having a working SMTP server up und running is a requirement for cozy-stack. I wasn&rsquo;t actually interested in my cozy writting me e-mails. In the cozy documentation, I read that the cozy development image use <em>Mailhog</em>. The e-mails can be viewed on the browser but are not actually sent. I liked this approach, so I did the same.</p>
+
+<p>The hostname <em>smtp</em> is the dns name of a K8s service we&rsquo;ll define later, which will point to the mailhog instance.</p>
 
 <p><em>Note: mailhog does not allow to configure a username and a password. Otherwise, it fails with an &ldquo;unencrypted connection&rdquo; error</em></p>
 
@@ -436,28 +438,16 @@ docker push eramon/cozy-stack
 
 <h4 id="4-2-1-admin-passphrase">4.2.1 admin passphrase</h4>
 
-<p>The <em>cozy-stack</em> binary is necessary for generate the admin password. However, to be able to start my cozy-stack instance I need the passwords to have been generated and mapped to K8s secrets, since my image executes <em>cozy-stack serve</em> at the end.</p>
+<p>The <em>cozy-stack</em> binary is necessary for generate the admin password. However my cozy-stack image executes <em>cozy serve</em> at the end, what does not work before generating the admin password. The solution was to run the docker image overriding the default CMD to generate the admin passphrase instead starting serve, mounting the new generated passphrase to an empty file on the host:</p>
 
-<p>Since my cozy wasn&rsquo;t up and running yet, I started a standalone developer instance under docker mapping the three files containing the admin passphrase, the encryption key and the decryption key to the local files on the host I&rsquo;ll need to generate the secrets:</p>
-
-<pre><code>docker run --rm -it -p 8080:8080 -v /home/eramon/dev/kubernetes/vault.enc:/etc/vault.enc -v /home/eramon/dev/kubernetes/vault.dec:/etc/vault.dec -v /home/eramon/dev/kubernetes/cozy-admin-passphrase:/home/cozy/cozy-admin-passphrase cozy/cozy-app-dev
-</code></pre>
-
-<p>With <em>docker ps</em>, I found out the container id and logged into the running container:</p>
-
-<pre><code>eramon@caipirinha:~/dev/cozy/docker$ docker exec -it 0b1400039866 /bin/bash
-root@0b1400039866:/# 
-</code></pre>
-
-<p>Then I generated the password:</p>
-
-<pre><code>root@0b1400039866:/# cozy-stack config passwd cozy-admin-passphrase
-Hashed passphrase will be written in /cozy-admin-passphrase
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ touch cozy-admin-passphrase
+eramon@caipirinha:~/dev/kubernetes$ docker run --rm -it -p 8080:8080 -v /home/eramon/dev/kubernetes/cozy-admin-passphrase:/home/cozy/cozy-admin-passphrase eramon/cozy-stack cozy-stack config passwd cozy-admin-passphrase
+Hashed passphrase will be written in /home/cozy/cozy-admin-passphrase
 Passphrase: 
-Confirmation: 
+Confirmation:
 </code></pre>
 
-<p>In another terminal (without exiting the container yet) I manually generated a K8s secret for the password:</p>
+<p>Then I created the K8s secret:</p>
 
 <pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-admin-passphrase-secret --from-file=cozy-admin-passphrase
 secret/cozy-admin-passphrase-secret created
@@ -467,17 +457,17 @@ secret/cozy-admin-passphrase-secret created
 
 <h4 id="4-2-2-vault-keys">4.2.2 vault keys</h4>
 
-<p>Still logged in the dev running container, I generated the vault keys</p>
+<p>I followed the same procedure to generate the vault keys</p>
 
-<pre><code>root@0b1400039866:/# cozy-stack config gen-keys /etc/vault
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ docker run --rm -it -p 8080:8080 -v /home/eramon/dev/kubernetes/vault:/home/cozy/vault eramon/cozy-stack cozy-stack config gen-keys /home/cozy/vault
 keyfiles written in:
-  /etc/vault.enc
-  /etc/vault.dec
+  /home/cozy/vault.enc
+  /home/cozy/vault.dec
 </code></pre>
 
 <p>Generate the K8s secret for the vault keys:</p>
 
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-vault-secret --from-file=vault.enc --from-file=vault.dec
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-vault-secret --from-file=vault/vault.enc --from-file=vault/vault.dec
 secret/cozy-vault-secret created
 </code></pre>
 
@@ -485,18 +475,28 @@ secret/cozy-vault-secret created
 
 <h4 id="4-2-3-couchdb-credentials">4.2.3 couchdb credentials</h4>
 
-<p>Generate a secret for the couchdb username and password and pass it as environment variable to the deployment.</p>
+<p>I generated a secret for the couchdb username and password:</p>
 
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ echo &quot;cozy&quot; &gt; dbusername
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ echo &quot;admin&quot; &gt; dbusername
 eramon@caipirinha:~/dev/kubernetes$ pwgen -s -1 16 &gt; dbpassphrase
-eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-db-secret --from-file=dbusername --from-file=dbpassphrase
+eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic db-secret --from-file=dbusername --from-file=dbpassphrase
 </code></pre>
 
-<p>This secret will be used to set the environment variables COUCHDB_PASSPHRASE and COUCHDB_USERNAME in the cozy-stack deployment afterwards.</p>
+<p>This secret must be used to set the environment variables in the couchdb and cozy-stack deployment afterwards.</p>
 
 <h3 id="4-3-configmap">4.3 ConfigMap</h3>
 
 <p><strong>ConfigMaps</strong> allow to decouple configuration artifacts from image content to keep containerized applications portable.</p>
+
+<h4 id="4-3-1-ingress-nginx-configmap">4.3.1. ingress-nginx configmap</h4>
+
+<p>For customising the nginx configuration I mainly used annotations. The annotations allow to provide configuration customization on the virtual host level, that&rsquo;s way they are included in the ingress. However at some point I had to struggle with an issue which could not be solved through annotations: I had to deactivate http2. This configuration has to be done on the server level. For that I used a configmap:</p>
+
+<p><a href="https://github.com/eramons/kubecozy/blob/master/ingress-nginx-configmap.yaml" target="_blank">ingress-nginx-configmap.yaml</a></p>
+
+<p><em>Note: apparently nginx has an issue with http2. I didn&rsquo;t find an explanation.</em></p>
+
+<h3 id="4-3-2-configmapgenerator">4.3.2. ConfigMapGenerator</h3>
 
 <p>As mentioned above, I decided to use a config file for rather than having flags passed as arguments. The file <em>cozy.yaml</em> would be included in a config map and mounted under <em>/etc/cozy</em> in the <em>cozy-stack</em> container.</p>
 
@@ -540,6 +540,7 @@ configMapGenerator:
 
 <ul>
 <li>The pvc we created before is mounted under <em>/opt/couchdb/data</em>.</li>
+<li>The secret containing the couchdb credentials is passed as environment variables</li>
 </ul>
 
 <h4 id="4-5-2-cozy-stack">4.5.2 cozy-stack</h4>
@@ -554,7 +555,7 @@ configMapGenerator:
 <li>Since the docker image is NOT ran as root, I needed an init container to mount the persistent volume and set the permissions</li>
 <li>The secret containing the admin-passphrase is mounted under <em>/etc/cozy/cozy-admin-passphrase</em></li>
 <li>The secret containing the vault keys is mounted under <em>/etc/cozy/vault.enc</em> and <em>/etc/cozy/vault.dec</em></li>
-<li>The secret containing the couchdb username and passphrase are passed as environment variables</li>
+<li>The secret containing the couchdb credentials is passed as environment variables</li>
 </ul>
 
 <h4 id="4-5-3-mailhog">4.5.3 mailhog</h4>
@@ -667,6 +668,8 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 
 <p><a href="https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/" target="_blank">nginx-ingress annotations</a></p>
 
+<p><a href="https://kubernetes.github.io/ingress-nginx/examples/customization/custom-configuration/" target="_blank">nginx-ingress configmap</a></p>
+
 <p><a href="https://cert-manager.io/docs/configuration/acme/dns01/" target="_blank">cert-manager</a></p>
 
 <p><a href="https://kustomize.io/" target="_blank">Kustomize</a></p>
@@ -676,6 +679,8 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 <p><a href="https://wiki.archlinux.org/index.php/Cozy" target="_blank">Archlinux</a></p>
 
 <p><a href="https://docs.cozy.io/en/howTos/sync/linux" target="_blank">Desktop client</a></p>
+
+<p><a href="https://forum.cozy.io/t/unencrypted-connection-storage-limit-nearly-reached/7011" target="_blank">cozy.io forum thread</a></p>
 
     </div>
   </div>
