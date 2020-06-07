@@ -40,17 +40,14 @@ Following pre-requisites must be fullfilled by the infrastructure:
 * A wildcard certificate covering _*.cozy.example.com_ (CN) and _cozy.example.com_ (SAN) is needed
 
 I used cloudflare for my DNS configuration, setting up my domain zone like this:
-```
+``` 
    <instance> 1h IN A <my external IP> 
    *.<instance> 1h IN CNAME <instance>
 ```
 
-It remained the issue of the internal hostname resolution. Most provider's internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server. 
-
-I'm addressing the DNS topic on my next post:
-_TODO Coming soon: Home DNS Configuration_
-
 TLS certificate issuance, wildcard certificates and reverse proxy are requirements which must be fullfilled by the K8s cluster (see next section).
+
+It remained the issue of the internal hostname resolution. Most provider's internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server, setting host overrides for cozy.example.com and *.cozy.example.com. Since the nginx controller on my cluster is deployed as a DaemonSet with HostNetwork, the internal IP is the worker's node one.
 
 ### 1.2. K8s Cluster
 
