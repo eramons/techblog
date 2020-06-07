@@ -268,8 +268,8 @@ This secret will be mounted afterwards in the configured location on the _cozy-s
 I generated a secret for the couchdb username and password:
 
 ```
-eramon@caipirinha:~/dev/kubernetes$ echo "admin" > dbusername
-eramon@caipirinha:~/dev/kubernetes$ pwgen -s -1 16 > dbpassphrase
+eramon@caipirinha:~/dev/kubernetes$ echo -n "admin" > dbusername
+eramon@caipirinha:~/dev/kubernetes$ echo -n `pwgen -s -1 16` > dbpassphrase 
 eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic db-secret --from-file=dbusername --from-file=dbpassphrase
 ```
 This secret must be used to set the environment variables in the couchdb and cozy-stack deployment afterwards.
