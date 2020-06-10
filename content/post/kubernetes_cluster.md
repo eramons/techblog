@@ -426,26 +426,23 @@ W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config -
 
 [Install kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm)
 
+[Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
 [Create single-control node cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm)
 
 [Install pod network](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#pod-network)
 
 [Flannel](https://github.com/coreos/flannel)
 
-[Kubernenetes - Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#users-in-kubernetes)
-
-[Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-
-[nginx-ingress](https://github.com/kubernetes/ingress-nginx)
-
-[Installing Helm](https://helm.sh/docs/intro/install/)
+[Introduction to Helm](https://helm.sh/docs/intro/)
 
 [Helm Releases @Github](https://github.com/helm/helm/releases)
 
-[Helm Quickstart Guide](https://helm.sh/docs/intro/quickstart)
-
-[Kubernetes cert-manager](https://cert-manager.io/docs/installation/kubernetes)
-
-[Cloudflare API token](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare)
+[nginx-ingress](https://github.com/kubernetes/ingress-nginx)
 
 [nginx helm chart](https://github.com/helm/charts/tree/master/stable/nginx-ingress)
+
+[cert-manager](https://cert-manager.io/docs/installation/kubernetes)
+
+[Cloudflare DNS01 solver](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare)
+
