@@ -227,12 +227,9 @@
    *.&lt;instance&gt; 1h IN CNAME &lt;instance&gt;
 </code></pre>
 
-<p>It remained the issue of the internal hostname resolution. Most provider&rsquo;s internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server.</p>
-
-<p>I&rsquo;m addressing the DNS topic on my next post:
-<em>TODO Coming soon: Home DNS Configuration</em></p>
-
 <p>TLS certificate issuance, wildcard certificates and reverse proxy are requirements which must be fullfilled by the K8s cluster (see next section).</p>
+
+<p>It remained the issue of the internal hostname resolution. Most provider&rsquo;s internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server, setting host overrides for cozy.example.com and *.cozy.example.com. Since the nginx controller on my cluster is deployed as a DaemonSet with HostNetwork, the internal IP is the worker&rsquo;s node one.</p>
 
 <h3 id="1-2-k8s-cluster">1.2. K8s Cluster</h3>
 
@@ -477,8 +474,8 @@ secret/cozy-vault-secret created
 
 <p>I generated a secret for the couchdb username and password:</p>
 
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ echo &quot;admin&quot; &gt; dbusername
-eramon@caipirinha:~/dev/kubernetes$ pwgen -s -1 16 &gt; dbpassphrase
+<pre><code>eramon@caipirinha:~/dev/kubernetes$ echo -n &quot;admin&quot; &gt; dbusername
+eramon@caipirinha:~/dev/kubernetes$ echo -n `pwgen -s -1 16` &gt; dbpassphrase 
 eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic db-secret --from-file=dbusername --from-file=dbpassphrase
 </code></pre>
 
