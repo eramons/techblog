@@ -49,7 +49,7 @@ sudo ifconfig eth0 192.168.1.4 netmask 255.255.255.0 up
 
 After this I was able to access the router on the browser under 192.168.1.1.
 
-### 1.2 Configure switch interface
+### 1.3 Configure switch interface
 
 First of all, I had to configure the _switch_ interface.
 
@@ -72,7 +72,7 @@ Once the router has restarted, I disconnected the router from my laptop.
 
 I connected the eth1 port to a switch serving my home network and rebooted (disconnecting the power cord and connecting it again). After this, the router was accessible on the browser under 192.168.1.140. 
 
-### 1.3 DNS configuration
+### 1.4 DNS configuration
 
 Next step is the effective DNS configuration. The idea was to configure a public name server (as Google) and to manually override static some host mappings to have the right DNS resolution from inside the internal network for my applications on the K8s cluster. 
 
