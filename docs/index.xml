@@ -58,12 +58,12 @@
    *.&amp;lt;instance&amp;gt; 1h IN CNAME &amp;lt;instance&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;It remained the issue of the internal hostname resolution. Most provider&amp;rsquo;s internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server.&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;m addressing the DNS topic on my next post:
-&lt;em&gt;TODO Coming soon: Home DNS Configuration&lt;/em&gt;&lt;/p&gt;
-
 &lt;p&gt;TLS certificate issuance, wildcard certificates and reverse proxy are requirements which must be fullfilled by the K8s cluster (see next section).&lt;/p&gt;
+
+&lt;p&gt;It remained the issue of the internal hostname resolution. Most provider&amp;rsquo;s internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server, setting host overrides for cozy.example.com and *.cozy.example.com. Since the nginx controller on my cluster is deployed as a DaemonSet with HostNetwork, the internal IP is the worker&amp;rsquo;s node one.&lt;/p&gt;
+
+&lt;p&gt;To find out how did I set up the DNS configuration on the home network, see:
+&lt;a href=&#34;https://eramons.github.io/techblog/post/kubernetes_cluster/&#34; target=&#34;_blank&#34;&gt;DNS Configuration for K8s&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;1-2-k8s-cluster&#34;&gt;1.2. K8s Cluster&lt;/h3&gt;
 
@@ -308,8 +308,8 @@ secret/cozy-vault-secret created
 
 &lt;p&gt;I generated a secret for the couchdb username and password:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/kubernetes$ echo &amp;quot;admin&amp;quot; &amp;gt; dbusername
-eramon@caipirinha:~/dev/kubernetes$ pwgen -s -1 16 &amp;gt; dbpassphrase
+&lt;pre&gt;&lt;code&gt;eramon@caipirinha:~/dev/kubernetes$ echo -n &amp;quot;admin&amp;quot; &amp;gt; dbusername
+eramon@caipirinha:~/dev/kubernetes$ echo -n `pwgen -s -1 16` &amp;gt; dbpassphrase 
 eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic db-secret --from-file=dbusername --from-file=dbpassphrase
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -512,6 +512,171 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 &lt;p&gt;&lt;a href=&#34;https://docs.cozy.io/en/howTos/sync/linux&#34; target=&#34;_blank&#34;&gt;Desktop client&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://forum.cozy.io/t/unencrypted-connection-storage-limit-nearly-reached/7011&#34; target=&#34;_blank&#34;&gt;cozy.io forum thread&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>DNS Configuration for K8s</title>
+      <link>https://eramons.github.io/techblog/post/dns/</link>
+      <pubDate>Tue, 19 May 2020 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/dns/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Configure DNS, so applications running on the K8S cluster are reachable from the internet and TLS-protected&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, a home network with the standard provider&amp;rsquo;s internet box is way too limited.&lt;/p&gt;
+
+&lt;p&gt;In my case, I just wanted to deploy a web application (cozy) on my cluster. In order to have this working, I needed the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A FQDN &lt;em&gt;example.com&lt;/em&gt; resolvable from the internet&lt;/li&gt;
+&lt;li&gt;A wildcard SSL certificate covering both &lt;em&gt;example.com&lt;/em&gt; and &lt;em&gt;*.example.com&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;A port forwarding rule for the HTTP and HTTPS ports to the K8S cluster&lt;/li&gt;
+&lt;li&gt;A fix IP or a DynDNS service identifying the host IP where the application is running&lt;/li&gt;
+&lt;li&gt;An own DNS server with a static host or an entry pointing to the internal IP of the FQDN&lt;/li&gt;
+&lt;li&gt;For certmanager and Let&amp;rsquo;s Encrypt, a DNS provider supporting the DNS01 solver mechanism&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;1-ubiquiti-edgerouter-x-sfp-as-dns-server&#34;&gt;1. Ubiquiti EdgeRouter X (SFP) as DNS server&lt;/h2&gt;
+
+&lt;p&gt;The easiest solution for all this mess would have been to replace the provider&amp;rsquo;s internet box through a router of my own. I had a EdgeRouter X SFP I once bought, but never had time to set up, lying around. However short ago my internet provider replaced the internet box through a new one, featuring 10 GB internet. The EdgeRouter does not support the 10GB internet connection, so to replace the box wasn&amp;rsquo;t an option anymore.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://eramons.github.io/techblog/techblog/img/edgex.jpg&#34; alt=&#34;EdgeX&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So I decided to use the EdgeRouter just as a small internal DNS server.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: in this post I&amp;rsquo;m refering to the EdgeRouter as &amp;ldquo;the router&amp;rdquo; even if it&amp;rsquo;s not going to be used as one. The actual router for the host network is what I&amp;rsquo;m refering to as the &amp;ldquo;internet box&amp;rdquo;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;1-1-factory-reset&#34;&gt;1.1 Factory reset&lt;/h3&gt;
+
+&lt;p&gt;I followed the instructions in the quick start guide to do a factory reset of the router: press reset button, connect the power cable and wait until a moment until the lights stop blinking.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-2-connect-to-the-router&#34;&gt;1.2 Connect to the router&lt;/h3&gt;
+
+&lt;p&gt;To connect to the router, first I disconnected the wifi on my laptop.&lt;/p&gt;
+
+&lt;p&gt;Then I connected the eth0 port directly to my laptop with a network cable and configured a fix IP on the eth0 port of the laptop as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo ifconfig eth0 192.168.1.4 netmask 255.255.255.0 up
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After this I was able to access the router on the browser under 192.168.1.1.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-2-configure-switch-interface&#34;&gt;1.2 Configure switch interface&lt;/h3&gt;
+
+&lt;p&gt;First of all, I had to configure the &lt;em&gt;switch&lt;/em&gt; interface.&lt;/p&gt;
+
+&lt;p&gt;The router has following interfaces:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Two external interfaces: eth0 (normal ethernet port) and eth5 (the SFP port)&lt;/li&gt;
+&lt;li&gt;One internal interface &lt;em&gt;switch&lt;/em&gt; with bridged ports eth1, eth2, eth3 and eth3&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;On the &lt;em&gt;Dashboard&lt;/em&gt;, for each interface there is a drop-down button labeled &lt;em&gt;Actions&lt;/em&gt; located on the right. For &lt;em&gt;switch0&lt;/em&gt;, after selecting &lt;em&gt;Config&lt;/em&gt;, I chose to &lt;em&gt;manually define the IP address&lt;/em&gt; and set it to  192.168.1.140 / 24.&lt;/p&gt;
+
+&lt;p&gt;Next thing is to deactivate the DHCP server, so the router does not try to assign IP addresses to other devices in the network. We want the router to act just as a small server and not really as a router. The internet box keeps acting as the DHCP server and router for the home network.&lt;/p&gt;
+
+&lt;p&gt;Under &lt;em&gt;Wizards&lt;/em&gt;, I went to the &lt;em&gt;Basic Setup&lt;/em&gt;. There, under &lt;em&gt;LAN ports&lt;/em&gt;, I deactivated the DHCP Server, unchecking the box &lt;em&gt;Enable the DHCP server&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;On the same wizard, in the &lt;em&gt;User setup&lt;/em&gt; section, I changed the default user setting up a new user and password.&lt;/p&gt;
+
+&lt;p&gt;After this I pressed &lt;em&gt;Apply&lt;/em&gt; to apply the changes and restart the router.&lt;/p&gt;
+
+&lt;p&gt;Once the router has restarted, I disconnected the router from my laptop.&lt;/p&gt;
+
+&lt;p&gt;I connected the eth1 port to a switch serving my home network and rebooted (disconnecting the power cord and connecting it again). After this, the router was accessible on the browser under 192.168.1.140.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-3-dns-configuration&#34;&gt;1.3 DNS configuration&lt;/h3&gt;
+
+&lt;p&gt;Next step is the effective DNS configuration. The idea was to configure a public name server (as Google) and to manually override static some host mappings to have the right DNS resolution from inside the internal network for my applications on the K8s cluster.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In order for the router to find the default gateway, under &lt;em&gt;Routing&lt;/em&gt; I added a new static route with description &lt;em&gt;internetbox&lt;/em&gt;, destination 0.0.0.0 / 0, next hop 192.168.1.1 (which is the IP of the internet box) and interface &lt;em&gt;switch0&lt;/em&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;In the &lt;em&gt;Config Tree&lt;/em&gt; under &lt;em&gt;system&lt;/em&gt; there is a &lt;em&gt;System parameters&lt;/em&gt; section. There I set up the the &lt;em&gt;name-server&lt;/em&gt; to 127.0.0.1. With this the router will now act as the name server.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Under &lt;em&gt;service&lt;/em&gt;, &lt;em&gt;dns&lt;/em&gt; and &lt;em&gt;forwarding&lt;/em&gt;, I configured &lt;em&gt;listen-on&lt;/em&gt; as &lt;em&gt;switch0&lt;/em&gt; and as name-servers 8.8.8.8 and 8.8.8.4 (the Google ones).&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The EdgeOS was now ready to act as the DNS server for the home network.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: regarding step 1, another way to do the same is to configure the default gateway in the system configuration.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;1-4-add-static-host-mapping&#34;&gt;1.4 Add static host mapping&lt;/h3&gt;
+
+&lt;p&gt;The whole point of setting up the own DNS server is to be able to add some static host mappings for IP resolution inside of the network.&lt;/p&gt;
+
+&lt;p&gt;Under &lt;em&gt;Config Tree&lt;/em&gt; and &lt;em&gt;system&lt;/em&gt; I found the &lt;em&gt;static-host-mapping&lt;/em&gt; section. Under &lt;em&gt;host-name&lt;/em&gt; I configured the hostname and the aliases I needed for the application:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Hostname:&lt;/strong&gt; &lt;em&gt;cozy.example.com&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;IP:&lt;/strong&gt; 192.168.1.131&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Aliases:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;home.cozy.example.com&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;drive.cozy.example.com&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;photos.cozy.example.com&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;settings.cozy.example.com&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;store.cozy.example.com&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;mailhog.cozy.example.com&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The IP is the one of the worker&amp;rsquo;s node on the K8s cluster. The hostnames and aliases are the ones needed by the first application I was intending to deploy in K8s:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://eramons.github.io/techblog/post/kubernetes_cluster/&#34; target=&#34;_blank&#34;&gt;Home-made K8s cluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://eramons.github.io/techblog/post/cozy/&#34; target=&#34;_blank&#34;&gt;Self-Hosted cozy on K8s&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;2-internet-box&#34;&gt;2. Internet Box&lt;/h2&gt;
+
+&lt;h3 id=&#34;2-1-dns-server-configuration&#34;&gt;2.1. DNS Server Configuration&lt;/h3&gt;
+
+&lt;p&gt;After I had my DNS server up und running, the remaining thing to do was to change the DNS server configuration on the internet box to feature the DNS server I just set up on the EdgeRouter. In the network settings configuration, I just had to change from &lt;em&gt;automatic&lt;/em&gt; to &lt;em&gt;manual&lt;/em&gt; and configure the IP of the router, which was 192.168.1.140.&lt;/p&gt;
+
+&lt;p&gt;I also added a static lease so the router would always get the same IP address.&lt;/p&gt;
+
+&lt;h3 id=&#34;2-2-dyndns&#34;&gt;2.2. DynDNS&lt;/h3&gt;
+
+&lt;p&gt;I don&amp;rsquo;t have a fix IP. I still needed a FQDN.&lt;/p&gt;
+
+&lt;p&gt;The bright side of having to keep the provider&amp;rsquo;s box is that it comes with a DynDNS server working out of the box, so you don&amp;rsquo;t need to register a dedicated account for this. So I activated the feature and I got following hostname: &lt;em&gt;example.myproviderbox.country&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;3-cloudfare&#34;&gt;3. Cloudfare&lt;/h2&gt;
+
+&lt;p&gt;I have a Cloudfare account and a registered domain. In cloudfare, I set up an alias by adding a CNAME DNS entry, pointing to the internet name I got from the DynDNS:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CNAME	example.com	example.myproviderbox.country
+CNAME	*.example.com	example.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The other thing I needed from Cloudfare was an API token for DNS01 challenge resolution for Let&amp;rsquo;s Encrypt.&lt;/p&gt;
+
+&lt;p&gt;Tokens can be created under &lt;em&gt;User Profile&lt;/em&gt; &amp;gt; &lt;em&gt;API Tokens&lt;/em&gt; &amp;gt; &lt;em&gt;API Tokens&lt;/em&gt;. I used the recommended settings:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Permissions:
+        Zone - DNS - Edit
+        Zone - Zone - Read
+    Zone Resources:
+        Include - All Zones
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With these preparations, my home network was ready to host and route requests to applications deployed on the K8s cluster.&lt;/p&gt;
+
+&lt;h2 id=&#34;links&#34;&gt;Links:&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://dl.ubnt.com/guides/edgemax/EdgeRouter_ER-X-SFP_QSG.pdf&#34; target=&#34;_blank&#34;&gt;EdgeRouter X&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://cert-manager.io/docs/configuration/acme/dns01/cloudflare&#34; target=&#34;_blank&#34;&gt;Cloudflare&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

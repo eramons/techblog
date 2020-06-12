@@ -47,7 +47,10 @@ I used cloudflare for my DNS configuration, setting up my domain zone like this:
 
 TLS certificate issuance, wildcard certificates and reverse proxy are requirements which must be fullfilled by the K8s cluster (see next section).
 
-It remained the issue of the internal hostname resolution. Most provider's internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server, setting host overrides for cozy.example.com and *.cozy.example.com. Since the nginx controller on my cluster is deployed as a DaemonSet with HostNetwork, the internal IP is the worker's node one.
+It remained the issue of the internal hostname resolution. Most provider's internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server, setting host overrides for cozy.example.com and *.cozy.example.com. Since the nginx controller on my cluster is deployed as a DaemonSet with HostNetwork, the internal IP is the worker's node one. 
+
+To find out how did I set up the DNS configuration on the home network, see:
+[DNS Configuration for K8s]({{< ref "/post/kubernetes_cluster" >}})
 
 ### 1.2. K8s Cluster
 
