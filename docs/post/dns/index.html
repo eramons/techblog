@@ -191,9 +191,11 @@
 
 <p><em>Configure DNS, so applications running on the K8S cluster are reachable from the internet and TLS-protected</em></p>
 
-<p>Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, a home network with the standard provider&rsquo;s internet box is way too limited.</p>
+<p>Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, the configuration capabilities of the standard provider&rsquo;s internet boxes are usually too limited.</p>
 
-<p>In my case, I just wanted to deploy a web application (cozy) on my cluster. In order to have this working, I needed the following:</p>
+<p>In particular I had the issue of the internal host resolution. My internet box wasn&rsquo;t able to properly route requests to the own external IP address from inside the internal network. And not even in the <em>advanced configuration</em> was possible to configure static host mapping.</p>
+
+<p>I wanted to deploy a web application (cozy) on my cluster. In order to have this working, I needed the following:</p>
 
 <ul>
 <li>A FQDN <em>example.com</em> resolvable from the internet</li>
@@ -210,7 +212,7 @@
 
 <p><img src="/techblog/img/edgex.jpg" alt="EdgeX" /></p>
 
-<p>So I decided to use the EdgeRouter just as a small internal DNS server.</p>
+<p>So I decided to use the EdgeRouter to work only as a small internal DNS server.</p>
 
 <p><em>NOTE: in this post I&rsquo;m refering to the EdgeRouter as &ldquo;the router&rdquo; even if it&rsquo;s not going to be used as one. The actual router for the host network is what I&rsquo;m refering to as the &ldquo;internet box&rdquo;.</em></p>
 
@@ -228,6 +230,8 @@
 </code></pre>
 
 <p>After this I was able to access the router on the browser under 192.168.1.1.</p>
+
+<p>Before proceeding with any configuration, I performed a firmware upgrade on the device.</p>
 
 <h3 id="1-3-configure-switch-interface">1.3 Configure switch interface</h3>
 
@@ -314,6 +318,15 @@
 <p>I don&rsquo;t have a fix IP. I still needed a FQDN.</p>
 
 <p>The bright side of having to keep the provider&rsquo;s box is that it comes with a DynDNS server working out of the box, so you don&rsquo;t need to register a dedicated account for this. So I activated the feature and I got following hostname: <em>example.myproviderbox.country</em></p>
+
+<h3 id="2-3-port-forwarding-and-firewall">2.3. Port Forwarding and Firewall</h3>
+
+<p>To make the application accessible from the internet, I had to:</p>
+
+<ul>
+<li>Modify the default firewall configuration to allow inbound traffic to port 443</li>
+<li>Create a port forwarding rule to forward all requests to port 443 to the internal IP address 192.168.1.131 (which was the address of the worker node where nginx was running).</li>
+</ul>
 
 <h2 id="3-cloudfare">3. Cloudfare</h2>
 

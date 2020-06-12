@@ -39,18 +39,20 @@ Following pre-requisites must be fullfilled by the infrastructure:
 * Currently the list of apps is: home, settings, drive, photos, onboarding
 * A wildcard certificate covering _*.cozy.example.com_ (CN) and _cozy.example.com_ (SAN) is needed
 
-I used cloudflare for my DNS configuration, setting up my domain zone like this:
+According to the documentation, the domain zone should be configured like this:
 ``` 
    <instance> 1h IN A <my external IP> 
    *.<instance> 1h IN CNAME <instance>
 ```
 
+I use cloudflare for DNS configuration. 
+
 TLS certificate issuance, wildcard certificates and reverse proxy are requirements which must be fullfilled by the K8s cluster (see next section).
 
-It remained the issue of the internal hostname resolution. Most provider's internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server, setting host overrides for cozy.example.com and *.cozy.example.com. Since the nginx controller on my cluster is deployed as a DaemonSet with HostNetwork, the internal IP is the worker's node one. 
+It remained the issue of the internal hostname resolution. My internet box was not able to properly route requests to its own external IP address from inside the internal network. To fix this I needed to modify the internal DNS resolution: from inside the network, the IP for _cozy.example.com_ and _*.cozy.example.com_ must be the one of my worker's node (since my ingress controller is deployed as a DaemonSet). 
 
 To find out how did I set up the DNS configuration on the home network, see:
-[DNS Configuration for K8s]({{< ref "/post/kubernetes_cluster" >}})
+[DNS Configuration for K8s]({{< ref "/post/dns" >}})
 
 ### 1.2. K8s Cluster
 

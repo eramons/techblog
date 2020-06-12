@@ -52,18 +52,20 @@
 &lt;li&gt;A wildcard certificate covering &lt;em&gt;*.cozy.example.com&lt;/em&gt; (CN) and &lt;em&gt;cozy.example.com&lt;/em&gt; (SAN) is needed&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;I used cloudflare for my DNS configuration, setting up my domain zone like this:&lt;/p&gt;
+&lt;p&gt;According to the documentation, the domain zone should be configured like this:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;   &amp;lt;instance&amp;gt; 1h IN A &amp;lt;my external IP&amp;gt; 
    *.&amp;lt;instance&amp;gt; 1h IN CNAME &amp;lt;instance&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;I use cloudflare for DNS configuration.&lt;/p&gt;
+
 &lt;p&gt;TLS certificate issuance, wildcard certificates and reverse proxy are requirements which must be fullfilled by the K8s cluster (see next section).&lt;/p&gt;
 
-&lt;p&gt;It remained the issue of the internal hostname resolution. Most provider&amp;rsquo;s internet boxes are not able to properly route requests to the own external IP address from inside the internal network. In order to have proper DNS resolution inside of the home network, I set up my small own DNS server, setting host overrides for cozy.example.com and *.cozy.example.com. Since the nginx controller on my cluster is deployed as a DaemonSet with HostNetwork, the internal IP is the worker&amp;rsquo;s node one.&lt;/p&gt;
+&lt;p&gt;It remained the issue of the internal hostname resolution. My internet box was not able to properly route requests to its own external IP address from inside the internal network. To fix this I needed to modify the internal DNS resolution: from inside the network, the IP for &lt;em&gt;cozy.example.com&lt;/em&gt; and &lt;em&gt;*.cozy.example.com&lt;/em&gt; must be the one of my worker&amp;rsquo;s node (since my ingress controller is deployed as a DaemonSet).&lt;/p&gt;
 
 &lt;p&gt;To find out how did I set up the DNS configuration on the home network, see:
-&lt;a href=&#34;https://eramons.github.io/techblog/post/kubernetes_cluster/&#34; target=&#34;_blank&#34;&gt;DNS Configuration for K8s&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://eramons.github.io/techblog/post/dns/&#34; target=&#34;_blank&#34;&gt;DNS Configuration for K8s&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;1-2-k8s-cluster&#34;&gt;1.2. K8s Cluster&lt;/h3&gt;
 
@@ -531,9 +533,11 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 
 &lt;p&gt;&lt;em&gt;Configure DNS, so applications running on the K8S cluster are reachable from the internet and TLS-protected&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, a home network with the standard provider&amp;rsquo;s internet box is way too limited.&lt;/p&gt;
+&lt;p&gt;Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, the configuration capabilities of the standard provider&amp;rsquo;s internet boxes are usually too limited.&lt;/p&gt;
 
-&lt;p&gt;In my case, I just wanted to deploy a web application (cozy) on my cluster. In order to have this working, I needed the following:&lt;/p&gt;
+&lt;p&gt;In particular I had the issue of the internal host resolution. My internet box wasn&amp;rsquo;t able to properly route requests to the own external IP address from inside the internal network. And not even in the &lt;em&gt;advanced configuration&lt;/em&gt; was possible to configure static host mapping.&lt;/p&gt;
+
+&lt;p&gt;I wanted to deploy a web application (cozy) on my cluster. In order to have this working, I needed the following:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;A FQDN &lt;em&gt;example.com&lt;/em&gt; resolvable from the internet&lt;/li&gt;
@@ -550,7 +554,7 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 
 &lt;p&gt;&lt;img src=&#34;https://eramons.github.io/techblog/techblog/img/edgex.jpg&#34; alt=&#34;EdgeX&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;So I decided to use the EdgeRouter just as a small internal DNS server.&lt;/p&gt;
+&lt;p&gt;So I decided to use the EdgeRouter to work only as a small internal DNS server.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;NOTE: in this post I&amp;rsquo;m refering to the EdgeRouter as &amp;ldquo;the router&amp;rdquo; even if it&amp;rsquo;s not going to be used as one. The actual router for the host network is what I&amp;rsquo;m refering to as the &amp;ldquo;internet box&amp;rdquo;.&lt;/em&gt;&lt;/p&gt;
 
@@ -568,6 +572,8 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;After this I was able to access the router on the browser under 192.168.1.1.&lt;/p&gt;
+
+&lt;p&gt;Before proceeding with any configuration, I performed a firmware upgrade on the device.&lt;/p&gt;
 
 &lt;h3 id=&#34;1-3-configure-switch-interface&#34;&gt;1.3 Configure switch interface&lt;/h3&gt;
 
@@ -654,6 +660,15 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 &lt;p&gt;I don&amp;rsquo;t have a fix IP. I still needed a FQDN.&lt;/p&gt;
 
 &lt;p&gt;The bright side of having to keep the provider&amp;rsquo;s box is that it comes with a DynDNS server working out of the box, so you don&amp;rsquo;t need to register a dedicated account for this. So I activated the feature and I got following hostname: &lt;em&gt;example.myproviderbox.country&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-3-port-forwarding-and-firewall&#34;&gt;2.3. Port Forwarding and Firewall&lt;/h3&gt;
+
+&lt;p&gt;To make the application accessible from the internet, I had to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Modify the default firewall configuration to allow inbound traffic to port 443&lt;/li&gt;
+&lt;li&gt;Create a port forwarding rule to forward all requests to port 443 to the internal IP address 192.168.1.131 (which was the address of the worker node where nginx was running).&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h2 id=&#34;3-cloudfare&#34;&gt;3. Cloudfare&lt;/h2&gt;
 

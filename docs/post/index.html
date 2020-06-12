@@ -184,8 +184,8 @@ Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software:
       
       Goal:
 Configure DNS, so applications running on the K8S cluster are reachable from the internet and TLS-protected
-Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, a home network with the standard provider&rsquo;s internet box is way too limited.
-In my case, I just wanted to deploy a web application (cozy) on my cluster. In order to have this working, I needed the following:
+Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, the configuration capabilities of the standard provider&rsquo;s internet boxes are usually too limited.
+In particular I had the issue of the internal host resolution. My internet box wasn&rsquo;t able to properly route requests to the own external IP address from inside the internal network.
       
     </p></div>
   </div>
