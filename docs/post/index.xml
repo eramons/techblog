@@ -13,6 +13,17 @@
     
     
     <item>
+      <title>K3s on Raspberry Pi 4</title>
+      <link>https://eramons.github.io/techblog/post/k3s/</link>
+      <pubDate>Mon, 15 Jun 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/k3s/</guid>
+      <description>Goal:
+Set up a minimal Kubernetes cluster on Rapberry Pi 4.
+I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it&amp;rsquo;s pretty cool, but I actually wasn&amp;rsquo;t sure what I wanted it for. After giving it a thought, I decided to install Rancher&amp;rsquo;s K3S distribution on it, turning it to a convenient, low-power-consumption, single-node K8s distribution I can use as a playground.</description>
+    </item>
+    
+    <item>
       <title>Self-hosted cozy on K8s</title>
       <link>https://eramons.github.io/techblog/post/cozy/</link>
       <pubDate>Thu, 28 May 2020 17:00:00 +0200</pubDate>
