@@ -164,7 +164,7 @@ IP: mail.e
 TTL: Auto
 Proxy-Status: DNS only (reserved IP)
 ```
-_TODO: apparently Cloudflare is not the right place to put this entry. Then where?_
+_TODO: Cloudflare is not the right place to put this entry. The home setup won't work._
 
 Since I was using a VM with virtualbox and vagrant, the VM IP was not accessible from the home network.I needed a port forwarding rule from the host to the guest. To do this, I edited the _Vagrantfile_:
 ```
@@ -209,11 +209,11 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 
 I added the entries to my DNS configuration on Cloudflare.
 
-_BLOCKER: Home setup is not possible. The reverse DNS configuration must be provided by the entity owning the IP ranges, which in the case of a home setup is the internet provider _
+_BLOCKER: Home setup is not possible. The reverse DNS configuration must be provided by the entity owning the IP ranges, which in the case of a home setup is the internet provider._
 
-Options:
+Alternatives:
 
- 1. Set up a cloud host and try the /e self-hosting ther
+ 1. Install the software on a vm hosted by a cloud provider (for example _digitalocean_) 
  2. Try to install nextcloud directly, finding out how to use the /e usermanagement with nextcloud
  3. Ask the /e support if there is a way to install their software skipping Postfix
 
