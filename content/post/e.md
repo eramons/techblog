@@ -1,7 +1,7 @@
 +++
 math = true
 date = "2020-12-09T15:00:00+02:00"
-title = "/e self-hosting and /e OS on LG G3"
+title = "WIP /e self-hosting and /e OS on LG G3"
 tags = []
 highlight = true
 
@@ -209,7 +209,13 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 
 I added the entries to my DNS configuration on Cloudflare.
 
-_TODO: reverse DNS is not working. Where could I simulate a PTR record?_
+_BLOCKER: Home setup is not possible. The reverse DNS configuration must be provided by the entity owning the IP ranges, which in the case of a home setup is the internet provider _
+
+Options:
+
+ 1. Set up a cloud host and try the /e self-hosting ther
+ 2. Try to install nextcloud directly, finding out how to use the /e usermanagement with nextcloud
+ 3. Ask the /e support if there is a way to install their software skipping Postfix
 
 ## Links:
 
