@@ -21,7 +21,7 @@ defaultContentLanguageInSubdir = false
 
 [params]
   name = "E. Ramon"
-  role = "Solution Architect"
+  role = "Alles wird gut"
   gravatar = false  # Get your avatar from Gravatar.com? (true/false)
   avatar = "eve.png" 
   email = "blog@empanadilla.net"

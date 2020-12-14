@@ -13,13 +13,14 @@ weight = 10
 [interests]
   interests = [
     "Kubernetes",
-    "Blockchain",
     "Coreboot",
     "Debian",
-    "Android"
+    "Android",
+    "Blockchain"
   ]
 
 +++
 
-There are tons of technical posts available on the Internet, about everything you can imagine and beyond. This blog is probably more of the same. These posts are a collection of step-by-step guides summarizing my experiences when trying out new stuff at home - nothing job related. To be honest it's just a slightly better way to keep my notes organised than having bunches of text files randomly distributed through several devices :)
+IT is not only the way to earn my living, is also my favourite hobby.
+This blog is a collection of step-by-step guides summarizing some experimental projects during my free time - nothing professional. At the end it's just a slightly better way to keep my notes organised than having bunches of text files randomly distributed through several devices :)
 
