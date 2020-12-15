@@ -130,7 +130,7 @@ eramon@mail:~$
 Now I saw following PTR record under "Networking" -> "PTR records":
 ```
 IP Address: <Public IP Address> 
-PTR Record: mail.e.mydomain.com 
+PTR Record: mail.e.mydomain.com. 
 ```
 
 With this setup in place, it should be possible to run the installation script.
@@ -151,7 +151,7 @@ I was prompted to provide information:
  
  * As mailserver (management) domain I provided _e.mydomain.com_
  * As additional domain(s) I did not provide any
- * As alternative email I did not provide any
+ * I provided an alternative e-mail address _eramon@mydomain.com_ 
  * I said I did NOT need OnlyOffice
 
 The installation script then provided a list of additional DNS entries to be configured:
@@ -167,23 +167,26 @@ I added the entries to my DNS configuration on Cloudflare.
 
 _TODO: Current issue:_
 ```
-Plugins selected: Authenticator standalone, Installer None
-Unable to register an account with ACME server
-Verification of LE status failed. Some expected certificates are missing
+Tue Dec 15 10:26:46 UTC 2020: Waiting for Nextcloud to finish installation.............................................................................................................................................................................................................................................................................................................PHP Fatal error:  apc_mmap: Failed to mmap 33554432 bytes. Is your apc.shm_size too large? in Unknown on line 0
 ```
 
-I asked the /e community support for assistance.
+I asked the /e community support for assistance. Since everything runs on docker images and everything is scripted, I can't just change the apc configuration on the VM. 
 
 ## Other approaches and conclussion:
 
+Well, 
+
 For me this setup is fine as experimental, but a no go for a potential productive setup. Reasons:
 
+ * I don't want to host any data on the cloud. The idea is to keep private files on the home network.
  * I don't want to host an own mail server. I'm not interested in having an own e-mail address for this.
  * I'm just interested on files and pictures synchronization.
  * Basing on this premise, a setup with just NextCloud on the server side would be enough for me.
  * It remains the question - in case of installing just NextCloud myself - how account management is done.
 
-Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using _salt_. I found a really good blog post from someone with did everything manually (see links below), maybe it would be good to take a look.
+Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using _salt_. Then it uses docker-compose to run docker instances of the different applications.
+
+I found a really good blog post from someone with did everything manually (see links below), maybe it would be good to take a look.
 
 ## Links:
 
