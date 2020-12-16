@@ -174,9 +174,11 @@ I asked the /e community support for assistance. Since everything runs on docker
 
 ## Other approaches and conclussion:
 
-Well, 
+_TODO: did the installation script work at the end?_
 
-For me this setup is fine as experimental, but a no go for a potential productive setup. Reasons:
+On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it's uncomplicated. I liked it.
+
+On the server side, for me this setup is fine as experimental, but a no go for a potential productive setup. Reasons:
 
  * I don't want to host any data on the cloud. The idea is to keep private files on the home network.
  * I don't want to host an own mail server. I'm not interested in having an own e-mail address for this.
@@ -185,8 +187,6 @@ For me this setup is fine as experimental, but a no go for a potential productiv
  * It remains the question - in case of installing just NextCloud myself - how account management is done.
 
 Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using _salt_. Then it uses docker-compose to run docker instances of the different applications.
-
-I found a really good blog post from someone with did everything manually (see links below), maybe it would be good to take a look.
 
 ## Links:
 
@@ -199,5 +199,3 @@ I found a really good blog post from someone with did everything manually (see l
 [Self-hosting](https://gitlab.e.foundation/e/infra/ecloud-selfhosting)
 
 [Cloudflare](https://www.cloudflare.com)
-
-[Self-hosting - my journey] (https://community.e.foundation/t/self-hosting-my-journey/951)
