@@ -13,6 +13,19 @@
     
     
     <item>
+      <title>WIP /e self-hosting and /e OS on LG G3</title>
+      <link>https://eramons.github.io/techblog/post/e/</link>
+      <pubDate>Wed, 09 Dec 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/e/</guid>
+      <description>Goal:
+Rely on the /e platform for private cloud self-hosting and as android operating system
+/e is a mobile ecosystem that:
+ is open source is presented as an environment which values privacy is un-googled but still compatible with android apps  The /e/ ROM is a fork of Android (more precisely from LineageOS).
+The /e/ cloud includes several applications and it’s built upon NextCloud, Postfix, Dovecot and OnlyOffice. It’s been integrated to offer a single login identity in /e/OS as well as online, where users can retrieve their data from the ecloud global services.</description>
+    </item>
+    
+    <item>
       <title>K3s on Raspberry Pi 4</title>
       <link>https://eramons.github.io/techblog/post/k3s/</link>
       <pubDate>Mon, 15 Jun 2020 15:00:00 +0200</pubDate>
@@ -113,6 +126,17 @@ Available images
 The available images run with:
  A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel.  The goal is to get a pure Debian distribution up and running on the board:
  Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://eramons.github.io/techblog/post/drafts/vagrant_e/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/drafts/vagrant_e/</guid>
+      <description>2. Set up Vagrant Before having a server to install the /e self-hosting software on, I decided to try it out running it locally on a virtual machine. As virtualization environment I would use Vagrant, since I have been wanting to try it out for a while.
+Vagrant is a tool for building and managing virtual machine environments in a single workflow.
+First of all, install linux-headers and virtualbox:</description>
     </item>
     
   </channel>

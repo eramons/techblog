@@ -5,6 +5,15 @@
     
     <url>
     
+      <loc>https://eramons.github.io/techblog/post/e/</loc>
+      <lastmod>2020-12-09T15:00:00+02:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://eramons.github.io/techblog/post/k3s/</loc>
       <lastmod>2020-06-15T15:00:00+02:00</lastmod>
     </url>
@@ -97,6 +106,14 @@
     
       <loc>https://eramons.github.io/techblog/post/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/post/drafts/vagrant_e/</loc>
     </url>
     
   

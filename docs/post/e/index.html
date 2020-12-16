@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.53" />
+  <meta name="author" content="E. Ramon">
+  <meta name="description" content="Alles wird gut">
+
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/techblog/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.0/css/academicons.min.css" integrity="sha512-GGGNUPDhnG8LEAEDsjqYIQns+Gu8RBs4j5XGlxl7UfRaZBhCCm5jenJkeJL8uPuOXGqgl8/H1gjlWQDRjd3cUQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather%7CRoboto+Mono">
+  <link rel="stylesheet" href="/techblog/css/hugo-academic.css">
+  
+
+  
+
+  <link rel="alternate" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+  <link rel="feed" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+
+  <link rel="icon" type="image/png" href="/techblog/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/techblog/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://eramons.github.io/techblog/post/e/">
+
+  
+
+  <title>WIP /e self-hosting and /e OS on LG G3 | Small Technical Blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/techblog/">Small Technical Blog</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/techblog/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">WIP /e self-hosting and /e OS on LG G3</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2020-12-09 15:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Wed, Dec 9, 2020
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=WIP%20%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f&amp;title=WIP%20%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f&amp;title=WIP%20%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=WIP%20%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<p><strong>Goal:</strong></p>
+
+<p><em>Rely on the /e platform for private cloud self-hosting and as android operating system</em></p>
+
+<p>/e is a mobile ecosystem that:</p>
+
+<ul>
+<li>is open source</li>
+<li>is presented as an environment which values privacy</li>
+<li>is un-googled but still compatible with android apps</li>
+</ul>
+
+<p>The /e/ ROM is a fork of Android (more precisely from LineageOS).</p>
+
+<p>The /e/ cloud includes several applications and it’s built upon NextCloud, Postfix, Dovecot and OnlyOffice. It’s been integrated to offer a single login identity in /e/OS as well as online, where users can retrieve their data from the ecloud global services. It&rsquo;s also possible to self-host a private cloud on an own server.</p>
+
+<h2 id="pre-conditions">Pre-conditions</h2>
+
+<p>For this project, I needed a client and a server. Luckily my old LG G3 (year 2014) - which still worked perfectly - is supported by /e (last build was from 2020/10/01 - just two months old at the time of this writting). So as it looked, it was still maintained. I had rooted the device, installed TWRP and installed LineageOS on it a couple of years back.</p>
+
+<p>As a server I wasn&rsquo;t so sure. I would have liked to host /e on my K3s cluster on the Raspberry Pi 4, but unfortunately arm was not supported at the time, only x86 or x86-64. So I finished up setting up a hosted Ubuntu VM on the Digital Ocean Developer Cloud.</p>
+
+<p><em>NOTE: First I thought about running the /e software on a vm directly on my laptop, using Vagrant as virtualization enviornment.  Then I found out it&rsquo;s not possible to run the installation script on the home network, since the DNS configuration requires a reverse DNS record, which must be set up by the owner of the IP ranges, impossible to achieve with the home network.</em></p>
+
+<ul>
+<li>Client side: install /e operating system on LG G3 d855 (International)</li>
+<li>Server side: install /e self-hosting on a Ubuntu VM hosted by Digital Ocean</li>
+</ul>
+
+<p>For the self-hosting, I also needed:</p>
+
+<ul>
+<li>A hosted public domain (<em>mydomain.com</em>)</li>
+<li>A DNS provider to register the necessary DNS entries (<em>Cloudflare</em>)</li>
+</ul>
+
+<p>Assuming all the pre-conditions were met, following milestones had to be reached:</p>
+
+<ol>
+<li>Install /e on the mobile phone</li>
+<li>Create a Digital Ocean account and set up an Ubuntu VM</li>
+<li>Set up DNS</li>
+<li>Install /e self-hosting on the VM</li>
+</ol>
+
+<h2 id="1-install-e-on-lg-g3">1. Install /e on LG G3</h2>
+
+<p>Well, the installation was pretty straightforward, since I already had some things in place:</p>
+
+<ul>
+<li>The device was rooted</li>
+<li>The device had a custom recovery installed - TWRP</li>
+<li>The device had adb debugging enabled</li>
+<li>I had adb installed on my laptop</li>
+</ul>
+
+<p>First thing was to connect the device to my laptop. Then reboot to recovery through adb:</p>
+
+<pre><code>eramon@caipirinha:~/dev/e$ adb reboot recovery
+</code></pre>
+
+<p>I followed the instructions online to wipe the device from the TWRP recovery, completely wiping everything, including the swap and the cache.</p>
+
+<p>Then I downloaded the image from the dowloads website and installed the image using sideload:</p>
+
+<pre><code>eramon@caipirinha:~/dev/e$ adb sideload e-0.12-n-2020100176273-dev-d855.zip 
+Total xfer: 1.00x      
+</code></pre>
+
+<p>After restart the new operating system was running on the phone.</p>
+
+<p>Looking nice :)
+<img src="/techblog/img/lgg3_e.jpg" alt="LGG3" /></p>
+
+<h2 id="2-set-up-an-ubuntu-vm">2. Set up an Ubuntu VM</h2>
+
+<p>Before having a server to install the /e self-hosting software on, I decided to try it out running it locally on a virtual machine. As cloud service I would use <em>DigitalOcean</em>, since I have been wanting to try it out for a while.</p>
+
+<p>After registering, I chose &ldquo;Ubuntu Server&rdquo; as &ldquo;Starting Point&rdquo;. Servers in Digital Ocean are called <em>Droplets</em>, so I was about to create my first droplet:</p>
+
+<ul>
+<li>$5.00 Droplet - 1GB / 1 CPU 25 GB SSD Disk</li>
+</ul>
+
+<p><em>Droplets are virtual machines. A virtual machine acts just like a standalone computer, so it runs an operating system (ours are all Linux-based) which you can log into in order to install and run software.</em></p>
+
+<p>After setting up the VM, I accessed via &ldquo;Console&rdquo; as root and created a non-root user. SSH is enabled and running. The VM gets a public IPv4 IP address.</p>
+
+<h2 id="3-dns">3. DNS</h2>
+
+<p>For self-hosting /e you need to have at least a domain registered. I already own <em>mydomain.com</em> and I use Cloudflare for setting up DNS records for my projects.</p>
+
+<p>I configured an A record in Cloudflare in order for my registered domain to point to the VM:</p>
+
+<pre><code>Type: A 
+Name: e.mydomain.com
+Content: &lt;Public IP Address&gt;  
+Proxy-Status: DNS only
+</code></pre>
+
+<p>According to the /e self-hosting README on gitlab, I also needed:</p>
+
+<pre><code>Type: A 
+Name: mail.e.mydomain.com
+Content: &lt;Public IP Address&gt; 
+Proxy-Status: DNS only
+</code></pre>
+
+<p>Still following the instructions, a reverse DNS entry must be set on the <em>VPS settings on the hoster&rsquo;s website</em>:</p>
+
+<pre><code>Type: PTR
+&lt;Public IP Address&gt; -&gt; mail.e.mydomain.com.
+</code></pre>
+
+<p>Logged in to my DigitalOcean account, I found under <em>Networking</em> -&gt; <em>PTR records</em> the following:</p>
+
+<pre><code>You have no PTR records.
+DigitalOcean will automatically create a PTR record for a server when you rename the host Droplet to the fully qualified domain name of a domain you are managing on your account.
+</code></pre>
+
+<p>So I changed the hostname of the VM to <em>mail.e.mydomain.com</em>. I also changed the hostname on the VM itself:</p>
+
+<pre><code>root@ubuntu-s-1vcpu-1gb-fra1-01:/home/eramon# echo &quot;mail.e.mydomain.com&quot; &gt; /etc/hostname
+</code></pre>
+
+<p>Then I rebooted. After logging in, it looked like the change was effective:</p>
+
+<pre><code>eramon@mail:~$
+</code></pre>
+
+<p>Now I saw following PTR record under &ldquo;Networking&rdquo; -&gt; &ldquo;PTR records&rdquo;:</p>
+
+<pre><code>IP Address: &lt;Public IP Address&gt; 
+PTR Record: mail.e.mydomain.com. 
+</code></pre>
+
+<p>With this setup in place, it should be possible to run the installation script.</p>
+
+<h2 id="4-install-e-self-hosting-beta">4. Install /e self-hosting beta</h2>
+
+<p>Get installation script:</p>
+
+<pre><code>eramon@mail:~$ wget https://gitlab.e.foundation/e/infra/bootstrap/raw/master/bootstrap-generic.sh
+</code></pre>
+
+<p>Run installation script as root as described on the gitlab documentation:</p>
+
+<pre><code>eramon@mail:~$ sudo bash bootstrap-generic.sh https://gitlab.e.foundation/e/infra/ecloud-selfhosting master
+</code></pre>
+
+<p>I was prompted to provide information:</p>
+
+<ul>
+<li>As mailserver (management) domain I provided <em>e.mydomain.com</em></li>
+<li>As additional domain(s) I did not provide any</li>
+<li>I provided an alternative e-mail address <em>eramon@mydomain.com</em></li>
+<li>I said I did NOT need OnlyOffice</li>
+</ul>
+
+<p>The installation script then provided a list of additional DNS entries to be configured:</p>
+
+<pre><code>MX                    |  e.mydomain.com               |  mail.e.mydomain.com  |  10
+CNAME                 |  autoconfig.e.mydomain.com    |  mail.e.mydomain.com  |  -
+CNAME                 |  autodiscover.e.mydomain.com  |  mail.e.mydomain.com  |  -
+CNAME                 |  spam.e.mydomain.com          |  mail.e.mydomain.com  |  -
+CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  | 
+</code></pre>
+
+<p>I added the entries to my DNS configuration on Cloudflare.</p>
+
+<p><em>TODO: Current issue:</em></p>
+
+<pre><code>Tue Dec 15 10:26:46 UTC 2020: Waiting for Nextcloud to finish installation.............................................................................................................................................................................................................................................................................................................PHP Fatal error:  apc_mmap: Failed to mmap 33554432 bytes. Is your apc.shm_size too large? in Unknown on line 0
+</code></pre>
+
+<p>I asked the /e community support for assistance. Since everything runs on docker images and everything is scripted, I can&rsquo;t just change the apc configuration on the VM.</p>
+
+<h2 id="other-approaches-and-conclussion">Other approaches and conclussion:</h2>
+
+<p><em>TODO: did the installation script work at the end?</em></p>
+
+<p>On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it&rsquo;s uncomplicated. I liked it.</p>
+
+<p>On the server side, for me this setup is fine as experimental, but a no go for a potential productive setup. Reasons:</p>
+
+<ul>
+<li>I don&rsquo;t want to host any data on the cloud. The idea is to keep private files on the home network.</li>
+<li>I don&rsquo;t want to host an own mail server. I&rsquo;m not interested in having an own e-mail address for this.</li>
+<li>I&rsquo;m just interested on files and pictures synchronization.</li>
+<li>Basing on this premise, a setup with just NextCloud on the server side would be enough for me.</li>
+<li>It remains the question - in case of installing just NextCloud myself - how account management is done.</li>
+</ul>
+
+<p>Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using <em>salt</em>. Then it uses docker-compose to run docker instances of the different applications.</p>
+
+<h2 id="links">Links:</h2>
+
+<p><a href="https://doc.e.foundation/devices/d855/install" target="_blank">Install /e on LG G3</a></p>
+
+<p><a href="https://images.ecloud.global/dev/d855" target="_blank">Latest dev builds</a></p>
+
+<p><a href="https://www.digitalocean.com/" target="_blank">Digital Ocean</a></p>
+
+<p><a href="https://gitlab.e.foundation/e/infra/ecloud-selfhosting" target="_blank">Self-hosting</a></p>
+
+<p><a href="https://www.cloudflare.com" target="_blank">Cloudflare</a></p>
+
+    </div>
+  </div>
+
+</article>
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+    <li class="previous"><a href="https://eramons.github.io/techblog/post/k3s/"><span
+      aria-hidden="true">&larr;</span> K3s on Raspberry Pi 4</a></li>
+    
+
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017-2020 E. Ramon &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.2/imagesloaded.pkgd.min.js" integrity="sha512-iHzEu7GbSc705hE2skyH6/AlTpOfBmkx7nUqTLGzPYR+C1tRaItbRlJ7hT/D3YQ9SV0fqLKzp4XY9wKulTBGTw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js" integrity="sha512-Z5heTz36xTemt1TbtbfXtTq5lMfYnOkXM2/eWcTTiLU01+Sw4ku1i7vScDc8fWhrP2abz9GQzgKH5NGBLoYlAw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/plugins/ScrollToPlugin.min.js" integrity="sha512-CDeU7pRtkPX6XJtF/gcFWlEwyaX7mcAp5sO3VIu/ylsdR74wEw4wmBpD5yYTrmMAiAboi9thyBUr1vXRPA7t0Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/techblog/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
+    
+    
+
+  </body>
+</html>
+
