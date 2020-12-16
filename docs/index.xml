@@ -40,7 +40,7 @@
 
 &lt;p&gt;As a server I wasn&amp;rsquo;t so sure. I would have liked to host /e on my K3s cluster on the Raspberry Pi 4, but unfortunately arm was not supported at the time, only x86 or x86-64. So I finished up setting up a hosted Ubuntu VM on the Digital Ocean Developer Cloud.&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;NOTE: First I thought about running the /e software on a vm directly on my laptop, using Vagrant as virtualization enviornment.  Then I found out it&amp;rsquo;s not possible to run the installation script on the home network, since the DNS configuration requires a reverse DNS record, which must be set up by the owner of the IP ranges, impossible to achieve with the home network.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;NOTE: First I thought about running the /e software on a vm directly on my laptop, using Vagrant as virtualization environment.  Then I found out it&amp;rsquo;s not possible to run the installation script on the home network, since the DNS configuration requires a reverse DNS record, which must be set up by the owner of the IP ranges, impossible to achieve with the home network.&lt;/em&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Client side: install /e operating system on LG G3 d855 (International)&lt;/li&gt;
@@ -94,7 +94,7 @@ Total xfer: 1.00x
 
 &lt;h2 id=&#34;2-set-up-an-ubuntu-vm&#34;&gt;2. Set up an Ubuntu VM&lt;/h2&gt;
 
-&lt;p&gt;Before having a server to install the /e self-hosting software on, I decided to try it out running it locally on a virtual machine. As cloud service I would use &lt;em&gt;DigitalOcean&lt;/em&gt;, since I have been wanting to try it out for a while.&lt;/p&gt;
+&lt;p&gt;Before having a server to install the /e self-hosting software on, I decided to try it out running it on a hosted virtual machine. As cloud service I would use &lt;em&gt;DigitalOcean&lt;/em&gt;, since I have been wanting to try it out for a while.&lt;/p&gt;
 
 &lt;p&gt;After registering, I chose &amp;ldquo;Ubuntu Server&amp;rdquo; as &amp;ldquo;Starting Point&amp;rdquo;. Servers in Digital Ocean are called &lt;em&gt;Droplets&lt;/em&gt;, so I was about to create my first droplet:&lt;/p&gt;
 
@@ -194,6 +194,8 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;I asked the /e community support for assistance. Since everything runs on docker images and everything is scripted, I can&amp;rsquo;t just change the apc configuration on the VM.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon&#34; target=&#34;_blank&#34;&gt;PHP Fatal Error: apc_mmap&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;other-approaches-and-conclussion&#34;&gt;Other approaches and conclussion:&lt;/h2&gt;
 

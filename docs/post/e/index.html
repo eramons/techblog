@@ -209,7 +209,7 @@
 
 <p>As a server I wasn&rsquo;t so sure. I would have liked to host /e on my K3s cluster on the Raspberry Pi 4, but unfortunately arm was not supported at the time, only x86 or x86-64. So I finished up setting up a hosted Ubuntu VM on the Digital Ocean Developer Cloud.</p>
 
-<p><em>NOTE: First I thought about running the /e software on a vm directly on my laptop, using Vagrant as virtualization enviornment.  Then I found out it&rsquo;s not possible to run the installation script on the home network, since the DNS configuration requires a reverse DNS record, which must be set up by the owner of the IP ranges, impossible to achieve with the home network.</em></p>
+<p><em>NOTE: First I thought about running the /e software on a vm directly on my laptop, using Vagrant as virtualization environment.  Then I found out it&rsquo;s not possible to run the installation script on the home network, since the DNS configuration requires a reverse DNS record, which must be set up by the owner of the IP ranges, impossible to achieve with the home network.</em></p>
 
 <ul>
 <li>Client side: install /e operating system on LG G3 d855 (International)</li>
@@ -263,7 +263,7 @@ Total xfer: 1.00x
 
 <h2 id="2-set-up-an-ubuntu-vm">2. Set up an Ubuntu VM</h2>
 
-<p>Before having a server to install the /e self-hosting software on, I decided to try it out running it locally on a virtual machine. As cloud service I would use <em>DigitalOcean</em>, since I have been wanting to try it out for a while.</p>
+<p>Before having a server to install the /e self-hosting software on, I decided to try it out running it on a hosted virtual machine. As cloud service I would use <em>DigitalOcean</em>, since I have been wanting to try it out for a while.</p>
 
 <p>After registering, I chose &ldquo;Ubuntu Server&rdquo; as &ldquo;Starting Point&rdquo;. Servers in Digital Ocean are called <em>Droplets</em>, so I was about to create my first droplet:</p>
 
@@ -363,6 +363,8 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 </code></pre>
 
 <p>I asked the /e community support for assistance. Since everything runs on docker images and everything is scripted, I can&rsquo;t just change the apc configuration on the VM.</p>
+
+<p><a href="https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon" target="_blank">PHP Fatal Error: apc_mmap</a></p>
 
 <h2 id="other-approaches-and-conclussion">Other approaches and conclussion:</h2>
 

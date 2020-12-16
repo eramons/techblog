@@ -29,7 +29,7 @@ For this project, I needed a client and a server. Luckily my old LG G3 (year 201
 
 As a server I wasn't so sure. I would have liked to host /e on my K3s cluster on the Raspberry Pi 4, but unfortunately arm was not supported at the time, only x86 or x86-64. So I finished up setting up a hosted Ubuntu VM on the Digital Ocean Developer Cloud. 
 
-_NOTE: First I thought about running the /e software on a vm directly on my laptop, using Vagrant as virtualization enviornment.  Then I found out it's not possible to run the installation script on the home network, since the DNS configuration requires a reverse DNS record, which must be set up by the owner of the IP ranges, impossible to achieve with the home network._  
+_NOTE: First I thought about running the /e software on a vm directly on my laptop, using Vagrant as virtualization environment.  Then I found out it's not possible to run the installation script on the home network, since the DNS configuration requires a reverse DNS record, which must be set up by the owner of the IP ranges, impossible to achieve with the home network._  
 
  * Client side: install /e operating system on LG G3 d855 (International) 
  * Server side: install /e self-hosting on a Ubuntu VM hosted by Digital Ocean 
@@ -75,7 +75,7 @@ Looking nice :)
 
 ## 2. Set up an Ubuntu VM 
 
-Before having a server to install the /e self-hosting software on, I decided to try it out running it locally on a virtual machine. As cloud service I would use _DigitalOcean_, since I have been wanting to try it out for a while. 
+Before having a server to install the /e self-hosting software on, I decided to try it out running it on a hosted virtual machine. As cloud service I would use _DigitalOcean_, since I have been wanting to try it out for a while. 
 
 After registering, I chose "Ubuntu Server" as "Starting Point". Servers in Digital Ocean are called _Droplets_, so I was about to create my first droplet:
 
@@ -171,6 +171,8 @@ Tue Dec 15 10:26:46 UTC 2020: Waiting for Nextcloud to finish installation......
 ```
 
 I asked the /e community support for assistance. Since everything runs on docker images and everything is scripted, I can't just change the apc configuration on the VM. 
+
+[PHP Fatal Error: apc_mmap](https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon)
 
 ## Other approaches and conclussion:
 
