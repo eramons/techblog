@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>/E on Small Technical Blog</title>
+    <link>https://eramons.github.io/techblog/tags/e/</link>
+    <description>Recent content in /E on Small Technical Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
+    <lastBuildDate>Wed, 09 Dec 2020 15:00:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://eramons.github.io/techblog/tags/e/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>/e self-hosting and /e OS on LG G3</title>
+      <link>https://eramons.github.io/techblog/post/e/</link>
+      <pubDate>Wed, 09 Dec 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/e/</guid>
+      <description>Goal:
+Rely on the /e platform for private cloud self-hosting and as android operating system
+/e is a mobile ecosystem that:
+ is open source is presented as an environment which values privacy is un-googled but still compatible with android apps  The /e/ ROM is a fork of Android (more precisely from LineageOS).
+The /e/ cloud includes several applications and it’s built upon NextCloud, Postfix, Dovecot and OnlyOffice. It’s been integrated to offer a single login identity in /e/OS as well as online, where users can retrieve their data from the ecloud global services.</description>
+    </item>
+    
+  </channel>
+</rss>

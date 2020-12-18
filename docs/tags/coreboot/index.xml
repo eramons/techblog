@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Coreboot on Small Technical Blog</title>
+    <link>https://eramons.github.io/techblog/tags/coreboot/</link>
+    <description>Recent content in Coreboot on Small Technical Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
+    <lastBuildDate>Wed, 13 Mar 2019 10:00:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://eramons.github.io/techblog/tags/coreboot/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>EHCI Debug</title>
+      <link>https://eramons.github.io/techblog/post/debug_coreboot/</link>
+      <pubDate>Wed, 13 Mar 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/debug_coreboot/</guid>
+      <description>The EHCI Debug Port is an optional capability of EHCI controllers which can be used for early debugging for hardware which does not have a serial port. All USB2 host controllers are EHCI controllers.
+Since I installed Coreboot on my Librem, I experienced some issues. In order to investigate - and since the Librem has no serial port - I aimed to do some Coreboot and kernel debugging with a Raspberry Pi Zero.</description>
+    </item>
+    
+    <item>
+      <title>Build Coreboot</title>
+      <link>https://eramons.github.io/techblog/post/build_coreboot/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/build_coreboot/</guid>
+      <description>DISCLAIMER: try anything described here at your own risk! These are just my notes. That it did work for me then does not mean this would work for you now.
+After successfully installing coreboot on my librem 13 v1, I noticed that unfortunately the wifi wasn&amp;rsquo;t working anymore. Since the coreboot version I flashed previously wasn&amp;rsquo;t quite new, I decided to build a new rom image myself using the newest coreboot source code.</description>
+    </item>
+    
+    <item>
+      <title>Install Coreboot on the Librem 13 v.1</title>
+      <link>https://eramons.github.io/techblog/post/coreboot_librem/</link>
+      <pubDate>Mon, 18 Feb 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/coreboot_librem/</guid>
+      <description>DISCLAIMER: try this at your own risk! The information below it&amp;rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.
+I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.</description>
+    </item>
+    
+  </channel>
+</rss>

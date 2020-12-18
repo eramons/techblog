@@ -5,15 +5,6 @@
     
     <url>
     
-      <loc>https://eramons.github.io/techblog/post/thinkpadw500/</loc>
-      <lastmod>2020-12-17T09:00:00+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>https://eramons.github.io/techblog/post/e/</loc>
       <lastmod>2020-12-09T15:00:00+02:00</lastmod>
     </url>
@@ -130,7 +121,97 @@
     
     <url>
     
+      <loc>https://eramons.github.io/techblog/tags/e/</loc>
+      <lastmod>2020-12-09T15:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/tags/android/</loc>
+      <lastmod>2020-12-09T15:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/tags/arm/</loc>
+      <lastmod>2020-06-15T15:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://eramons.github.io/techblog/categories/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/tags/coreboot/</loc>
+      <lastmod>2019-03-13T10:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/tags/cozy/</loc>
+      <lastmod>2020-06-15T15:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/tags/debian/</loc>
+      <lastmod>2019-03-13T10:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/tags/kubernetes/</loc>
+      <lastmod>2020-06-15T15:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/tags/networking/</loc>
+      <lastmod>2020-05-19T10:00:00+02:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/tags/nextcloud/</loc>
+      <lastmod>2020-12-09T15:00:00+02:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -160,6 +241,16 @@
     
       <loc>https://eramons.github.io/techblog/tags/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>https://eramons.github.io/techblog/tags/u-boot/</loc>
+      <lastmod>2017-07-27T15:03:58+02:00</lastmod>
       <priority>0</priority>
     </url>
     

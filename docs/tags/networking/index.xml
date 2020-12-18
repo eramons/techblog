@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Networking on Small Technical Blog</title>
+    <link>https://eramons.github.io/techblog/tags/networking/</link>
+    <description>Recent content in Networking on Small Technical Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
+    <lastBuildDate>Tue, 19 May 2020 10:00:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://eramons.github.io/techblog/tags/networking/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>DNS Configuration for K8s</title>
+      <link>https://eramons.github.io/techblog/post/dns/</link>
+      <pubDate>Tue, 19 May 2020 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/dns/</guid>
+      <description>Goal:
+Configure DNS, so applications running on the K8S cluster are reachable from the internet and TLS-protected
+Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, the configuration capabilities of the standard provider&amp;rsquo;s internet boxes are usually too limited.
+In particular I had the issue of the internal host resolution. My internet box wasn&amp;rsquo;t able to properly route requests to the own external IP address from inside the internal network.</description>
+    </item>
+    
+  </channel>
+</rss>

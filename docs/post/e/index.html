@@ -43,7 +43,7 @@
 
   
 
-  <title>WIP /e self-hosting and /e OS on LG G3 | Small Technical Blog</title>
+  <title>/e self-hosting and /e OS on LG G3 | Small Technical Blog</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -120,7 +120,7 @@
 
 
   <div class="article-container">
-    <h1 itemprop="name">WIP /e self-hosting and /e OS on LG G3</h1>
+    <h1 itemprop="name">/e self-hosting and /e OS on LG G3</h1>
     
 
 <div class="article-metadata">
@@ -135,6 +135,20 @@
 
   
   
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/techblog/tags/nextcloud">nextcloud</a
+    >, 
+    
+    <a href="/techblog/tags//e">/e</a
+    >, 
+    
+    <a href="/techblog/tags/android">android</a
+    >
+    
+  </span>
   
   
 
@@ -151,28 +165,28 @@
     </li>
     <li>
       <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=WIP%20%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f"
+         href="https://twitter.com/intent/tweet?text=%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f"
          target="_blank">
         <i class="fa fa-twitter"></i>
       </a>
     </li>
     <li>
       <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f&amp;title=WIP%20%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f&amp;title=%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3"
          target="_blank">
         <i class="fa fa-linkedin"></i>
       </a>
     </li>
     <li>
       <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f&amp;title=WIP%20%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f&amp;title=%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3"
          target="_blank">
         <i class="fa fa-weibo"></i>
       </a>
     </li>
     <li>
       <a class="email"
-         href="mailto:?subject=WIP%20%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f">
+         href="mailto:?subject=%2fe%20self-hosting%20and%20%2fe%20OS%20on%20LG%20G3&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fe%2f">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -367,24 +381,31 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 
 <h2 id="other-approaches-and-conclussion">Other approaches and conclussion:</h2>
 
+<p>On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it&rsquo;s uncomplicated. I liked it.</p>
+
 <p>On the server side, as for the last update of this post, there is still an open issue which prevents the install script to finish succesfully.</p>
 
 <p>Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using <em>salt</em>. Then it uses docker-compose to run docker instances of the different applications.</p>
 
-<p>On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it&rsquo;s uncomplicated. I liked it.</p>
-
-<p>On the server side, for me this setup is fine as experimental, but a no go for a potential productive setup. Reasons:</p>
+<p>Even working, for me this setup only works for testing, but it is a no go for a potential productive setup. Reasons:</p>
 
 <ul>
-<li>I don&rsquo;t want to host any data on the cloud. The idea is to keep private files on the home network</li>
-<li>I don&rsquo;t want to host an own mail server. I&rsquo;m not interested in having an own e-mail address for this  * I&rsquo;m just interested on files and pictures synchronization.</li>
+<li>I don&rsquo;t want to host any data on the cloud. The idea is to keep private files on the home network.</li>
+<li>I don&rsquo;t want to host an own mail server. I&rsquo;m not interested in having an own e-mail address for this .</li>
+<li>I&rsquo;m just interested on files and pictures synchronization.</li>
 </ul>
 
-<h2 id="next-steps">Next steps:</h2>
+<h2 id="next-steps">Next steps</h2>
 
-<p>Basing on the premise that I don&rsquo;t need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I got the recommendation from the /e support to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do.</p>
+<p>Basing on the premise that I don&rsquo;t need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I got the recommendation from the /e developers to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do.</p>
 
 <p>New post - Nextcloud - coming soon :)</p>
+
+<h2 id="troubleshooting-and-e-community-support">Troubleshooting and /e community support</h2>
+
+<p><a href="https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon" target="_blank">PHP Fatal Error: apc_mmap</a></p>
+
+<p><a href="https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500" target="_blank">MariaDB issue</a></p>
 
 <h2 id="links">Links:</h2>
 
@@ -397,12 +418,6 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 <p><a href="https://gitlab.e.foundation/e/infra/ecloud-selfhosting" target="_blank">Self-hosting</a></p>
 
 <p><a href="https://www.cloudflare.com" target="_blank">Cloudflare</a></p>
-
-<h2 id="troubleshooting-and-e-community-support">Troubleshooting and /e community support</h2>
-
-<p><a href="https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon" target="_blank">PHP Fatal Error: apc_mmap</a></p>
-
-<p><a href="https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500" target="_blank">MariaDB issue</a></p>
 
     </div>
   </div>
@@ -417,9 +432,6 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
       aria-hidden="true">&larr;</span> K3s on Raspberry Pi 4</a></li>
     
 
-    
-    <li class="next"><a href="https://eramons.github.io/techblog/post/thinkpadw500/">WIP Coreboot on ThinkPad W500 <span
-      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>

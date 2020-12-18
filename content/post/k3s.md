@@ -2,7 +2,7 @@
 math = true
 date = "2020-06-15T15:00:00+02:00"
 title = "K3s on Raspberry Pi 4"
-tags = []
+tags = ["arm","kubernetes","cozy"]
 highlight = true
 
 [header]

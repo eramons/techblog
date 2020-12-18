@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>U Boot on Small Technical Blog</title>
+    <link>https://eramons.github.io/techblog/tags/u-boot/</link>
+    <description>Recent content in U Boot on Small Technical Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
+    <lastBuildDate>Thu, 27 Jul 2017 15:03:58 +0200</lastBuildDate>
+    
+	<atom:link href="https://eramons.github.io/techblog/tags/u-boot/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Debian on Radxa Rock Square</title>
+      <link>https://eramons.github.io/techblog/post/rock2_debian/</link>
+      <pubDate>Thu, 27 Jul 2017 15:03:58 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/rock2_debian/</guid>
+      <description>Radxa Rock 2 Square is a Rockchip RK3288 based solution.
+Available images
+The available images run with:
+ A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel.  The goal is to get a pure Debian distribution up and running on the board:
+ Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:</description>
+    </item>
+    
+  </channel>
+</rss>

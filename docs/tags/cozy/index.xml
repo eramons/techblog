@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cozy on Small Technical Blog</title>
+    <link>https://eramons.github.io/techblog/tags/cozy/</link>
+    <description>Recent content in Cozy on Small Technical Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
+    <lastBuildDate>Mon, 15 Jun 2020 15:00:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://eramons.github.io/techblog/tags/cozy/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>K3s on Raspberry Pi 4</title>
+      <link>https://eramons.github.io/techblog/post/k3s/</link>
+      <pubDate>Mon, 15 Jun 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/k3s/</guid>
+      <description>Goal:
+Set up a minimal Kubernetes cluster on Rapberry Pi 4.
+I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it&amp;rsquo;s pretty cool, but I actually wasn&amp;rsquo;t sure what I wanted it for. After giving it a thought, I decided to install Rancher&amp;rsquo;s K3S distribution on it, turning it to a convenient, low-power-consumption, single-node K8s distribution I can use as a playground.</description>
+    </item>
+    
+    <item>
+      <title>Self-hosted cozy on K8s</title>
+      <link>https://eramons.github.io/techblog/post/cozy/</link>
+      <pubDate>Thu, 28 May 2020 17:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/cozy/</guid>
+      <description>Goal:
+Deploy cozy on my homemade kubernetes cluster
+The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
+I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
+Cozy is a personal, free and self-hostable cloud platform, written in Go.
+Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -2,7 +2,7 @@
 math = true
 date = "2020-05-28T17:00:00+02:00"
 title = "Self-hosted cozy on K8s"
-tags = []
+tags = ["cozy","kubernetes"]
 highlight = true
 
 [header]

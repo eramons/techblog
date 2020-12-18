@@ -2,7 +2,7 @@
 math = true
 date = "2019-03-13T10:00:00+02:00"
 title = "EHCI Debug"
-tags = []
+tags = ["coreboot", "debian"]
 highlight = true
 
 [header]

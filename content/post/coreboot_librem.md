@@ -2,7 +2,7 @@
 math = true
 date = "2019-02-18T10:00:00+02:00"
 title = "Install Coreboot on the Librem 13 v.1"
-tags = []
+tags = ["coreboot"]
 highlight = true
 
 [header]

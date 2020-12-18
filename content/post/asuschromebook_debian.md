@@ -2,7 +2,7 @@
 math = true
 date = "2018-12-04T10:00:00+02:00"
 title = "Debian on Asus Chromebook Flip C101PA"
-tags = []
+tags = ["debian","arm"]
 highlight = true
 
 [header]

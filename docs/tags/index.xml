@@ -21,5 +21,95 @@
       <description>Here is a list of all the content that has been tagged as academic.</description>
     </item>
     
+    <item>
+      <title>/E</title>
+      <link>https://eramons.github.io/techblog/tags/e/</link>
+      <pubDate>Wed, 09 Dec 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/e/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Android</title>
+      <link>https://eramons.github.io/techblog/tags/android/</link>
+      <pubDate>Wed, 09 Dec 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/android/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Arm</title>
+      <link>https://eramons.github.io/techblog/tags/arm/</link>
+      <pubDate>Mon, 15 Jun 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/arm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Coreboot</title>
+      <link>https://eramons.github.io/techblog/tags/coreboot/</link>
+      <pubDate>Wed, 13 Mar 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/coreboot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cozy</title>
+      <link>https://eramons.github.io/techblog/tags/cozy/</link>
+      <pubDate>Mon, 15 Jun 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/cozy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Debian</title>
+      <link>https://eramons.github.io/techblog/tags/debian/</link>
+      <pubDate>Wed, 13 Mar 2019 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/debian/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://eramons.github.io/techblog/tags/kubernetes/</link>
+      <pubDate>Mon, 15 Jun 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Networking</title>
+      <link>https://eramons.github.io/techblog/tags/networking/</link>
+      <pubDate>Tue, 19 May 2020 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/networking/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Nextcloud</title>
+      <link>https://eramons.github.io/techblog/tags/nextcloud/</link>
+      <pubDate>Wed, 09 Dec 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/nextcloud/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>U Boot</title>
+      <link>https://eramons.github.io/techblog/tags/u-boot/</link>
+      <pubDate>Thu, 27 Jul 2017 15:03:58 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/u-boot/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

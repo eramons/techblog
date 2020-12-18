@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Arm on Small Technical Blog</title>
+    <link>https://eramons.github.io/techblog/tags/arm/</link>
+    <description>Recent content in Arm on Small Technical Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
+    <lastBuildDate>Mon, 15 Jun 2020 15:00:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://eramons.github.io/techblog/tags/arm/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>K3s on Raspberry Pi 4</title>
+      <link>https://eramons.github.io/techblog/post/k3s/</link>
+      <pubDate>Mon, 15 Jun 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/k3s/</guid>
+      <description>Goal:
+Set up a minimal Kubernetes cluster on Rapberry Pi 4.
+I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it&amp;rsquo;s pretty cool, but I actually wasn&amp;rsquo;t sure what I wanted it for. After giving it a thought, I decided to install Rancher&amp;rsquo;s K3S distribution on it, turning it to a convenient, low-power-consumption, single-node K8s distribution I can use as a playground.</description>
+    </item>
+    
+    <item>
+      <title>Debian on Asus Chromebook Flip C101PA</title>
+      <link>https://eramons.github.io/techblog/post/asuschromebook_debian/</link>
+      <pubDate>Tue, 04 Dec 2018 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/asuschromebook_debian/</guid>
+      <description>The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&amp;rdquo; x 7.2&amp;rdquo; x 0.6&amp;rdquo; and weighing 1 kg.
+Features:
+ Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor 4GB LPDDR3 RAM 10.1&amp;rdquo; 1280x800 LED display Mali T860MP4 GPU 16GB eMMC 38 Whrs battery 2x USB 3.1 Type-C ports 1x USB 2.0 Type-A port  ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.</description>
+    </item>
+    
+    <item>
+      <title>Debian on Radxa Rock Square</title>
+      <link>https://eramons.github.io/techblog/post/rock2_debian/</link>
+      <pubDate>Thu, 27 Jul 2017 15:03:58 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/rock2_debian/</guid>
+      <description>Radxa Rock 2 Square is a Rockchip RK3288 based solution.
+Available images
+The available images run with:
+ A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel.  The goal is to get a pure Debian distribution up and running on the board:
+ Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -2,7 +2,7 @@
 math = true
 date = "2020-05-19T10:00:00+02:00"
 title = "DNS Configuration for K8s"
-tags = []
+tags = ["kubernetes","networking"]
 highlight = true
 
 [header]

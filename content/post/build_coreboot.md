@@ -2,7 +2,7 @@
 math = true
 date = "2019-02-25T10:00:00+02:00"
 title = "Build Coreboot"
-tags = []
+tags = ["coreboot"]
 highlight = true
 
 [header]

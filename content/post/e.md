@@ -1,8 +1,8 @@
 +++
 math = true
 date = "2020-12-09T15:00:00+02:00"
-title = "WIP /e self-hosting and /e OS on LG G3"
-tags = []
+title = "/e self-hosting and /e OS on LG G3"
+tags = ["nextcloud", "/e", "android"]
 highlight = true
 
 [header]
@@ -175,23 +175,29 @@ I asked the /e community support for assistance. According to an older thread, t
 
 ## Other approaches and conclussion:
 
+On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it's uncomplicated. I liked it.
+
 On the server side, as for the last update of this post, there is still an open issue which prevents the install script to finish succesfully.
 
 Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using _salt_. Then it uses docker-compose to run docker instances of the different applications.
 
-On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it's uncomplicated. I liked it.
+Even working, for me this setup only works for testing, but it is a no go for a potential productive setup. Reasons:
 
-On the server side, for me this setup is fine as experimental, but a no go for a potential productive setup. Reasons:
+ * I don't want to host any data on the cloud. The idea is to keep private files on the home network.
+ * I don't want to host an own mail server. I'm not interested in having an own e-mail address for this .
+ * I'm just interested on files and pictures synchronization.
 
- * I don't want to host any data on the cloud. The idea is to keep private files on the home network
- * I don't want to host an own mail server. I'm not interested in having an own e-mail address for this  * I'm just interested on files and pictures synchronization.
+## Next steps
 
-## Next steps:
-
-Basing on the premise that I don't need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I got the recommendation from the /e support to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do. 
+Basing on the premise that I don't need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I got the recommendation from the /e developers to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do. 
 
 New post - Nextcloud - coming soon :)
 
+## Troubleshooting and /e community support
+
+[PHP Fatal Error: apc_mmap](https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon)
+
+[MariaDB issue](https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500)
 
 ## Links:
 
@@ -205,8 +211,3 @@ New post - Nextcloud - coming soon :)
 
 [Cloudflare](https://www.cloudflare.com)
 
-## Troubleshooting and /e community support
-
-[PHP Fatal Error: apc_mmap](https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon)
-
-[MariaDB issue](https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500)

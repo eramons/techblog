@@ -2,7 +2,7 @@
 math = true
 date = "2020-03-21T15:00:00+02:00"
 title = "Home-made K8s Cluster"
-tags = []
+tags = ["kubernetes"]
 highlight = true
 
 [header]
