@@ -273,7 +273,8 @@ Total xfer: 1.00x
 
 <p><em>Droplets are virtual machines. A virtual machine acts just like a standalone computer, so it runs an operating system (ours are all Linux-based) which you can log into in order to install and run software.</em></p>
 
-<p>After setting up the VM, I accessed via &ldquo;Console&rdquo; as root and created a non-root user. SSH is enabled and running. The VM gets a public IPv4 IP address.</p>
+<p>1 GB RAM is not enough according to the requirements on the documentation. I resized the VM to 2 GB RAM.
+After setting up the VM, I accessed via &ldquo;Console&rdquo; as root and created a non-root user. SSH is enabled and running. The VM gets a public IPv4 IP address.</p>
 
 <h2 id="3-dns">3. DNS</h2>
 
@@ -359,30 +360,31 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 
 <p><em>TODO: Current issue:</em></p>
 
-<pre><code>Tue Dec 15 10:26:46 UTC 2020: Waiting for Nextcloud to finish installation.............................................................................................................................................................................................................................................................................................................PHP Fatal error:  apc_mmap: Failed to mmap 33554432 bytes. Is your apc.shm_size too large? in Unknown on line 0
+<pre><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
 </code></pre>
 
-<p>I asked the /e community support for assistance. Since everything runs on docker images and everything is scripted, I can&rsquo;t just change the apc configuration on the VM.</p>
-
-<p><a href="https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon" target="_blank">PHP Fatal Error: apc_mmap</a></p>
+<p>I asked the /e community support for assistance. According to an older thread, the issue is related to the fact that in later builds MariaDB does not allow root access without password.</p>
 
 <h2 id="other-approaches-and-conclussion">Other approaches and conclussion:</h2>
 
-<p><em>TODO: did the installation script work at the end?</em></p>
+<p>On the server side, as for the last update of this post, there is still an open issue which prevents the install script to finish succesfully.</p>
+
+<p>Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using <em>salt</em>. Then it uses docker-compose to run docker instances of the different applications.</p>
 
 <p>On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it&rsquo;s uncomplicated. I liked it.</p>
 
 <p>On the server side, for me this setup is fine as experimental, but a no go for a potential productive setup. Reasons:</p>
 
 <ul>
-<li>I don&rsquo;t want to host any data on the cloud. The idea is to keep private files on the home network.</li>
-<li>I don&rsquo;t want to host an own mail server. I&rsquo;m not interested in having an own e-mail address for this.</li>
-<li>I&rsquo;m just interested on files and pictures synchronization.</li>
-<li>Basing on this premise, a setup with just NextCloud on the server side would be enough for me.</li>
-<li>It remains the question - in case of installing just NextCloud myself - how account management is done.</li>
+<li>I don&rsquo;t want to host any data on the cloud. The idea is to keep private files on the home network</li>
+<li>I don&rsquo;t want to host an own mail server. I&rsquo;m not interested in having an own e-mail address for this  * I&rsquo;m just interested on files and pictures synchronization.</li>
 </ul>
 
-<p>Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using <em>salt</em>. Then it uses docker-compose to run docker instances of the different applications.</p>
+<h2 id="next-steps">Next steps:</h2>
+
+<p>Basing on the premise that I don&rsquo;t need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I got the recommendation from the /e support to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do.</p>
+
+<p>New post - Nextcloud - coming soon :)</p>
 
 <h2 id="links">Links:</h2>
 
@@ -395,6 +397,12 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 <p><a href="https://gitlab.e.foundation/e/infra/ecloud-selfhosting" target="_blank">Self-hosting</a></p>
 
 <p><a href="https://www.cloudflare.com" target="_blank">Cloudflare</a></p>
+
+<h2 id="troubleshooting-and-e-community-support">Troubleshooting and /e community support</h2>
+
+<p><a href="https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon" target="_blank">PHP Fatal Error: apc_mmap</a></p>
+
+<p>[MariaDB issue]<a href="https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500" target="_blank">https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500</a></p>
 
     </div>
   </div>
@@ -409,6 +417,9 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
       aria-hidden="true">&larr;</span> K3s on Raspberry Pi 4</a></li>
     
 
+    
+    <li class="next"><a href="https://eramons.github.io/techblog/post/thinkpadw500/">WIP Coreboot on ThinkPad W500 <span
+      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>

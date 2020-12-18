@@ -13,6 +13,17 @@
     
     
     <item>
+      <title>WIP Coreboot on ThinkPad W500</title>
+      <link>https://eramons.github.io/techblog/post/thinkpadw500/</link>
+      <pubDate>Thu, 17 Dec 2020 09:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/thinkpadw500/</guid>
+      <description>Goal:
+Give an old Lenovo Thinkpad W500 a second life featuring Coreboot and Ubuntu
+My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn&amp;rsquo;t getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the battery was almost dead.</description>
+    </item>
+    
+    <item>
       <title>WIP /e self-hosting and /e OS on LG G3</title>
       <link>https://eramons.github.io/techblog/post/e/</link>
       <pubDate>Wed, 09 Dec 2020 15:00:00 +0200</pubDate>

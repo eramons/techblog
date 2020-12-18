@@ -11,6 +11,78 @@
     <atom:link href="/techblog/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>WIP Coreboot on ThinkPad W500</title>
+      <link>https://eramons.github.io/techblog/post/thinkpadw500/</link>
+      <pubDate>Thu, 17 Dec 2020 09:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/thinkpadw500/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;Goal:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Give an old Lenovo Thinkpad W500 a second life featuring Coreboot and Ubuntu&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn&amp;rsquo;t getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the battery was almost dead.&lt;/p&gt;
+
+&lt;p&gt;I got permission to play around with this old machine - even after pointing out the risks - and to try to give it a second life:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Replacing the propietary firmware with a self-built Coreboot, since Thinkpads are usually good supported&lt;/li&gt;
+&lt;li&gt;Replacing Windows through the latest Ubuntu LTS Desktop version&lt;/li&gt;
+&lt;li&gt;Taking the battery away and using it plugged in only&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: the risks are a) bricking the machine b) breaking something during disassembling&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;pre-conditions&#34;&gt;Pre-conditions&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The mainboard vendor and the mainboard model must be supported by Coreboot - luckily, googling a little around I found that this was indeed the case&lt;/li&gt;
+&lt;li&gt;To have a SPI flasher - I owned one (from the time I flashed Coreboot to my librem and I needed to have a brick-contingency plan)&lt;/li&gt;
+&lt;li&gt;To have a SPI 16 pin clip - the one I had had only 8 pin, so I ordered a new one&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;1-research&#34;&gt;1. Research&lt;/h2&gt;
+
+&lt;p&gt;Getting a SPI 16 pin clip was going to take a couple of week, with Christmas vacations in between, so I had some time to prepare and do a little reading to better understand what it needed to bedone and to learn a couple of facts about Coreboot and about firmware flashing.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;TODO: Read, learn and summarize what needs to be done&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;2-backup-existing-firmware&#34;&gt;2. Backup existing firmware&lt;/h2&gt;
+
+&lt;p&gt;This part was the scariest one, at least for me. Even if I had a SPI flasher, I had never used it before. My Librem allows read to and write from flash without having to disassemble the machine. I had never bricked my machine (fingers crossed), so I never needed it.&lt;/p&gt;
+
+&lt;p&gt;Apparently most chips don&amp;rsquo;t allow this, so I had to disassemble. I found online detailed information about the wiring and about how to do this. Luckily I wasn&amp;rsquo;t the first one flashing firmware to the same mainboard :)&lt;/p&gt;
+
+&lt;h2 id=&#34;3-download-and-build-coreboot&#34;&gt;3. Download and build coreboot&lt;/h2&gt;
+
+&lt;h3 id=&#34;3-1-binary-blobs&#34;&gt;3.1. Binary blobs&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;TODO: Do I need them at all? How to find out?&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;4-flash-coreboot&#34;&gt;4. Flash coreboot&lt;/h2&gt;
+
+&lt;h2 id=&#34;5-install-ubuntu&#34;&gt;5. Install Ubuntu&lt;/h2&gt;
+
+&lt;p&gt;Not much to report here. I had already downloaded the latest Ubuntu LTS and made a bootable USB stick from it - I used it for extracting the blobs (?). I booted from USB to start the Live distribution I installed Ubuntu following the installer instructions. &lt;em&gt;How to install Ubuntu is kind of out of scope here.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I also connected a display and a keyboard. At the end we had a new working and quite powerful PC at home, featuring open-source firmware and software :)&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: yes, I used the propietary binary blobs&amp;hellip; but still!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;TODO: Foto&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;links&#34;&gt;Links:&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.coreboot.org/Build_HOWTO&#34; target=&#34;_blank&#34;&gt;Coreboot Build HowTo&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://stafwag.github.io/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/&#34; target=&#34;_blank&#34;&gt;How to install libreboot on a ThinkPad W500&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://p1trson.blogspot.com/2017/01/journey-to-freedom-part-ii.html&#34; target=&#34;_blank&#34;&gt;Journey to freedom part 2&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>WIP /e self-hosting and /e OS on LG G3</title>
       <link>https://eramons.github.io/techblog/post/e/</link>
       <pubDate>Wed, 09 Dec 2020 15:00:00 +0200</pubDate>
@@ -104,7 +176,8 @@ Total xfer: 1.00x
 
 &lt;p&gt;&lt;em&gt;Droplets are virtual machines. A virtual machine acts just like a standalone computer, so it runs an operating system (ours are all Linux-based) which you can log into in order to install and run software.&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;After setting up the VM, I accessed via &amp;ldquo;Console&amp;rdquo; as root and created a non-root user. SSH is enabled and running. The VM gets a public IPv4 IP address.&lt;/p&gt;
+&lt;p&gt;1 GB RAM is not enough according to the requirements on the documentation. I resized the VM to 2 GB RAM.
+After setting up the VM, I accessed via &amp;ldquo;Console&amp;rdquo; as root and created a non-root user. SSH is enabled and running. The VM gets a public IPv4 IP address.&lt;/p&gt;
 
 &lt;h2 id=&#34;3-dns&#34;&gt;3. DNS&lt;/h2&gt;
 
@@ -190,30 +263,31 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 
 &lt;p&gt;&lt;em&gt;TODO: Current issue:&lt;/em&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;Tue Dec 15 10:26:46 UTC 2020: Waiting for Nextcloud to finish installation.............................................................................................................................................................................................................................................................................................................PHP Fatal error:  apc_mmap: Failed to mmap 33554432 bytes. Is your apc.shm_size too large? in Unknown on line 0
+&lt;pre&gt;&lt;code&gt;ERROR 1045 (28000): Access denied for user &#39;root&#39;@&#39;localhost&#39; (using password: YES)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;I asked the /e community support for assistance. Since everything runs on docker images and everything is scripted, I can&amp;rsquo;t just change the apc configuration on the VM.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon&#34; target=&#34;_blank&#34;&gt;PHP Fatal Error: apc_mmap&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I asked the /e community support for assistance. According to an older thread, the issue is related to the fact that in later builds MariaDB does not allow root access without password.&lt;/p&gt;
 
 &lt;h2 id=&#34;other-approaches-and-conclussion&#34;&gt;Other approaches and conclussion:&lt;/h2&gt;
 
-&lt;p&gt;&lt;em&gt;TODO: did the installation script work at the end?&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;On the server side, as for the last update of this post, there is still an open issue which prevents the install script to finish succesfully.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using &lt;em&gt;salt&lt;/em&gt;. Then it uses docker-compose to run docker instances of the different applications.&lt;/p&gt;
 
 &lt;p&gt;On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it&amp;rsquo;s uncomplicated. I liked it.&lt;/p&gt;
 
 &lt;p&gt;On the server side, for me this setup is fine as experimental, but a no go for a potential productive setup. Reasons:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;I don&amp;rsquo;t want to host any data on the cloud. The idea is to keep private files on the home network.&lt;/li&gt;
-&lt;li&gt;I don&amp;rsquo;t want to host an own mail server. I&amp;rsquo;m not interested in having an own e-mail address for this.&lt;/li&gt;
-&lt;li&gt;I&amp;rsquo;m just interested on files and pictures synchronization.&lt;/li&gt;
-&lt;li&gt;Basing on this premise, a setup with just NextCloud on the server side would be enough for me.&lt;/li&gt;
-&lt;li&gt;It remains the question - in case of installing just NextCloud myself - how account management is done.&lt;/li&gt;
+&lt;li&gt;I don&amp;rsquo;t want to host any data on the cloud. The idea is to keep private files on the home network&lt;/li&gt;
+&lt;li&gt;I don&amp;rsquo;t want to host an own mail server. I&amp;rsquo;m not interested in having an own e-mail address for this  * I&amp;rsquo;m just interested on files and pictures synchronization.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using &lt;em&gt;salt&lt;/em&gt;. Then it uses docker-compose to run docker instances of the different applications.&lt;/p&gt;
+&lt;h2 id=&#34;next-steps&#34;&gt;Next steps:&lt;/h2&gt;
+
+&lt;p&gt;Basing on the premise that I don&amp;rsquo;t need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I got the recommendation from the /e support to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do.&lt;/p&gt;
+
+&lt;p&gt;New post - Nextcloud - coming soon :)&lt;/p&gt;
 
 &lt;h2 id=&#34;links&#34;&gt;Links:&lt;/h2&gt;
 
@@ -226,6 +300,12 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 &lt;p&gt;&lt;a href=&#34;https://gitlab.e.foundation/e/infra/ecloud-selfhosting&#34; target=&#34;_blank&#34;&gt;Self-hosting&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://www.cloudflare.com&#34; target=&#34;_blank&#34;&gt;Cloudflare&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;troubleshooting-and-e-community-support&#34;&gt;Troubleshooting and /e community support&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon&#34; target=&#34;_blank&#34;&gt;PHP Fatal Error: apc_mmap&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[MariaDB issue]&lt;a href=&#34;https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500&#34; target=&#34;_blank&#34;&gt;https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

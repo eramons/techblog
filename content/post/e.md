@@ -83,6 +83,7 @@ After registering, I chose "Ubuntu Server" as "Starting Point". Servers in Digit
 
 _Droplets are virtual machines. A virtual machine acts just like a standalone computer, so it runs an operating system (ours are all Linux-based) which you can log into in order to install and run software._
 
+1 GB RAM is not enough according to the requirements on the documentation. I resized the VM to 2 GB RAM. 
 After setting up the VM, I accessed via "Console" as root and created a non-root user. SSH is enabled and running. The VM gets a public IPv4 IP address. 
 
 ## 3. DNS
@@ -167,28 +168,30 @@ I added the entries to my DNS configuration on Cloudflare.
 
 _TODO: Current issue:_
 ```
-Tue Dec 15 10:26:46 UTC 2020: Waiting for Nextcloud to finish installation.............................................................................................................................................................................................................................................................................................................PHP Fatal error:  apc_mmap: Failed to mmap 33554432 bytes. Is your apc.shm_size too large? in Unknown on line 0
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
 ```
 
-I asked the /e community support for assistance. Since everything runs on docker images and everything is scripted, I can't just change the apc configuration on the VM. 
-
-[PHP Fatal Error: apc_mmap](https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon)
+I asked the /e community support for assistance. According to an older thread, the issue is related to the fact that in later builds MariaDB does not allow root access without password. 
 
 ## Other approaches and conclussion:
 
-_TODO: did the installation script work at the end?_
+On the server side, as for the last update of this post, there is still an open issue which prevents the install script to finish succesfully.
+
+Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using _salt_. Then it uses docker-compose to run docker instances of the different applications.
 
 On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it's uncomplicated. I liked it.
 
 On the server side, for me this setup is fine as experimental, but a no go for a potential productive setup. Reasons:
 
- * I don't want to host any data on the cloud. The idea is to keep private files on the home network.
- * I don't want to host an own mail server. I'm not interested in having an own e-mail address for this.
- * I'm just interested on files and pictures synchronization.
- * Basing on this premise, a setup with just NextCloud on the server side would be enough for me.
- * It remains the question - in case of installing just NextCloud myself - how account management is done.
+ * I don't want to host any data on the cloud. The idea is to keep private files on the home network
+ * I don't want to host an own mail server. I'm not interested in having an own e-mail address for this  * I'm just interested on files and pictures synchronization.
 
-Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using _salt_. Then it uses docker-compose to run docker instances of the different applications.
+## Next steps:
+
+Basing on the premise that I don't need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I got the recommendation from the /e support to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do. 
+
+New post - Nextcloud - coming soon :)
+
 
 ## Links:
 
@@ -201,3 +204,9 @@ Unfortunately, the instructions and code for the self-hosting installation do no
 [Self-hosting](https://gitlab.e.foundation/e/infra/ecloud-selfhosting)
 
 [Cloudflare](https://www.cloudflare.com)
+
+## Troubleshooting and /e community support
+
+[PHP Fatal Error: apc_mmap](https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon)
+
+[MariaDB issue]https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500
