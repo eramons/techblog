@@ -209,4 +209,4 @@ New post - Nextcloud - coming soon :)
 
 [PHP Fatal Error: apc_mmap](https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon)
 
-[MariaDB issue]https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500
+[MariaDB issue](https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500)
