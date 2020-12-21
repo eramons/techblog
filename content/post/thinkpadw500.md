@@ -50,6 +50,62 @@ ubuntu@ubuntu:~$ dmidecode | grep ROM\ Size
         ROM Size: 4096 kB
 ```
 
+### 1.3 
+
+Boot with Live Ubuntu USB stick.
+
+Install flashrom. Flashrom is not available for ubuntu as a package, so I had to build it from code.
+
+First install git and build dependencies>
+```
+ubuntu@ubuntu:~/flashrom$ sudo apt-get install git make gcc build-essential libcpi-dev libusb-1.0.0
+```
+
+Clone flashrom repository:
+```
+ubuntu@ubuntu:~/ git clone https://review.coreboot.org/flashrom.git
+ubuntu@ubuntu:~/ cd flashrom
+ubuntu@ubuntu:~/flashrom$ make
+```
+
+The generated flashrom binary can be found in the same directory, after succesfully build.
+```
+ubuntu@ubuntu:~/flashrom$ sudo cp flashrom /usr/local/bin/
+ubuntu@ubuntu:~/flashrom$ sudo chmod +x /usr/local/bin/flashrom
+```
+
+Try to read something internally:
+```
+ubuntu@ubuntu:~/thinkpad500$ sudo flashrom -r w500_firmware_orig.rom -p internal
+```
+
+```
+Found chipset "Intel ICH9M".
+Enabling flash write... SPI Configuration is locked down.
+FREG0: Flash Descriptor region (0x00000000-0x00000fff) is read-only.
+FREG2: Management Engine region (0x00001000-0x001f5fff) is locked.
+PR0: Warning: 0x003e0000-0x01ffffff is read-only.
+At least some flash regions are read protected. You have to use a flash
+layout and include only accessible regions. For write operations, you'll
+additionally need the --noverify-all switch. See manpage for more details.
+OK.
+Found Programmer flash chip "Opaque flash chip" (4096 kB, Programmer-specific) mapped at physical address 0x0000000000000000.
+Reading flash... Transaction error between offset 0x00001000 and 0x0000103f (= 0x00001000 + 63)!
+Read operation failed!
+FAILED.
+```
+
+I tried creating a layout.txt file:
+```
+ubuntu@ubuntu:~/thinkpad500$ cat layout.txt 
+0x00000000:0x00000fff FREG0
+```
+
+And then:
+```
+ubuntu@ubuntu:~/thinkpad500$ sudo flashrom -p internal -l layout.txt -i FREG0 -r output.txt
+```
+
 ## 2. Coreboot
 
 Getting a SPI 16 pin clip was going to take a couple of weeks, so I started preparing the coreboot build. 
@@ -241,6 +297,8 @@ _TODO: what is working and what not?_
 [Board:lenovo T400](https://www.coreboot.org/Board:lenovo/t400)
 
 [Introducing CBFS](https://lennartb.home.xs4all.nl/coreboot/col5.html)
+
+[Flashrom](https://dev.chromium.org/chromium-os/packages/cros-flashrom)
 
 [Coreboot Build HowTo](https://www.coreboot.org/Build_HOWTO)
 
