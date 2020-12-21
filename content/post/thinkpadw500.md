@@ -41,7 +41,6 @@ I own a SPI flasher (from the time I flashed Coreboot to my librem and I needed 
 
 The flash chip on the mainboard of the W500 has 16 pins. I had a SPI pin clip, however it was a 8-pin only, so I had to order a new one.
 
-Getting a SPI 16 pin clip was going to take a couple of weeks, with Christmas vacations in between, so I had some time to prepare and do a little reading to better understand what it needed to be done and to learn a couple of facts about Coreboot and about firmware flashing. I could also start preparing the coreboot build.
 
 ### 1.2. ROM Size
 
@@ -51,23 +50,9 @@ ubuntu@ubuntu:~$ dmidecode | grep ROM\ Size
         ROM Size: 4096 kB
 ```
 
-### 1.3. Propietary firmware 
-
-Trying to learn something about the current firmware, I booted Ubuntu on the W500 with the live USB stick.
-
-Install git and build dependencies:
-```
-sudo apt-get install -y bison build-essential curl flex git gnat libncurses5-dev m4 zlib1g-dev
-```
-
-Install flashrom:
-```
-
-```
-
-_TODO: No flashrom package in ubuntu?_
-
 ## 2. Coreboot
+
+Getting a SPI 16 pin clip was going to take a couple of weeks, so I started preparing the coreboot build. 
 
 ### 2.1. Payload
 
@@ -86,11 +71,11 @@ According to the documentation, for Intel boards following files must be provide
  * Intel Gigabit Ethernet firmware
  * Intel Management Engine
 
-_TODO Do I really need them or not?_
+_First try: try not to use any binary blobs. The generated image won't be a complete image, however it should work after flashing, since ME and descriptor should stay as they are_
 
 ### 2.3. Check out and configure 
 
-Follow the instructions on the coreboot documentation - adapting the configuration as necessary.
+I followed the instructions on the coreboot documentation.
 
 Pull the latest version of coreboot and update submodules:
 ```
@@ -109,19 +94,18 @@ eramon@caipirinha:~/dev/thinkpadw500$ make menuconfig
  * On the _Mainboard_ menu, as _vendor_ select _Lenovo_
  * On the _Mainboard_ menu, as _model_ select _Thinkpad W500_
  * On the _Mainboard_ menu, as ROM chip size, select _4096 KB (4 MB))_
- * On the _Chipset_ menu, check _Add Intel descriptor.bin file_
  * On the _Chipset_ menu, verify that _Unlock flash regions_ is selected
- * _TODO_ On the _Chipset_ menu, _Add Intel descriptor.bin file_ YES or NO?
- * _TODO_ On the _Chipset_ menu, _Add Intel ME/TXE Firmware_ YES or NO?
- * _TODO_ On the _Chipset_ menu, _Add gigabit ethernet configuration_ YES or NO?
-
+ * On the _Chipset_ menu, _Add Intel descriptor.bin file_: __NO__ 
+ * On the _Chipset_ menu, _Add Intel ME/TXE Firmware_: __NO__ 
+ * On the _Chipset_ menu, _Add gigabit ethernet configuration_: __NO__ 
  * On the _Payload_ menu, make sure that _SeaBIOS_ is selected
 
 Save and exit. The configuration is saved to _.config_
 
-_TODO Some explanations about the configuration here_
+The reason we chose NO for the descriptor, ME and GBE files is that we are NOT aiming to have a complete image but to have one image with coreboot only. The bits which are not covered by the coreboot built should not be overwritten on the flash chip and therefore stay as they are.
 
-### 2.3 Build
+
+### 2.4. Build
 
 _NOTE: I already had the build dependencies installed on my laptop_
 
@@ -133,17 +117,59 @@ Building toolchain using 4 thread(s).
 Target architecture is i386-elf
 ```
 
-_TODO Does it make sense to build the cross-compiler like this? Why is the target architecture i386?_
+Build cbfstool:
+```
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ cd util/cbfstool/
+eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/cbfstool$ make
+```
 
-_TODO Do I really need a cross-compiler? If the architecture is the same on my laptop?_
+CBFS stands for the Coreboot File System. 
 
-## 4. Disassemble and connect
+_As far as Coreboot is concerned, the ROM image is a read-only file system. A special tool (cbfstool) can add extra components to a ROM image file. File deletion is not supported at all. The ROM image is composed (as a file on disk) by cbfstool and then the whole image is flashed into the actual flash chip._
 
-This part was the scariest one, at least for me. Even if I had a SPI flasher, I had never used it before. My Librem allows read to and write from flash without having to disassemble the machine. I had never bricked my machine (fingers crossed), so I never needed it.
+Build ifdtool:
+```
+eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/cbfstool$ cd ../ifdtool/
+eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/ifdtool$ make
+```
 
-Apparently most chips don't allow this, so I had to disassemble. 
+idftool is a program to extract and dump Intel Firmware Descriptor information.
 
-I found useful information about the wiring on the post about installing libreboot on W500. The chip has 16 pins, from them 5 which must be connected:
+
+Build coreboot:
+```
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ make
+```
+
+At the end of the build process, following output is displayed:
+```
+Built lenovo/t400 (ThinkPad W500)
+
+** WARNING **
+coreboot has been built without an Intel Firmware Descriptor.
+Never write a complete coreboot.rom without an IFD to your
+board's flash chip! You can use flashrom's IFD or layout
+parameters to flash only to the BIOS region.
+```
+
+This was expected. We did not override the flash descriptor bit on the chip, so the build process complains about the file descriptor missing on the image. 
+
+After successfully build we had the image ready to be flashed:
+```
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ ls -la build/coreboot.rom 
+-rw-r--r-- 1 eramon eramon 4194304 Dec 19 11:59 build/coreboot.rom
+```
+
+Since the descriptor is missing, inspect built rom with ifdtool does not work because the image does not have a flash descriptor.
+
+
+## 5. Disassemble and connect
+
+This part was the scariest one, at least for me. Even if I had a SPI flasher, I had never used it before. Reading the rom and flashing coreboot on the Librem is possible without having to disassemble the machine. And I had never bricked it (fingers crossed), so I have never needed the flasher.
+
+However most chips don't allow this, so I had to disassemble to read the existing rom and to flash coreboot (the first time).
+
+I found useful information about the wiring on the posts about installing libreboot on W500 (see links below). The chip has 16 pins, from them 5 which must be connected:
 
  * Pin number 2: 3.3 V
  * Pin number 7: CS#
@@ -151,32 +177,62 @@ I found useful information about the wiring on the post about installing librebo
  * Pin number 15: S1/SIO0
  * Pin number 16: SCLK
 
-## 5. Backup existing firmware
+_TODO: photo wiring_
 
-With my laptop connected to the chip, run flashrom to backup the existing firmware:
+## 6. Backup existing firmware
+
+With the laptop connected to the chip, test the connection:
+```
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ flashrom -p linux_spi:dev=/dev/spidev0.0,spispeed=512
 ```
 
+Run flashrom to backup the existing firmware (bios):
+```
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo flashrom -c "MX25L6405D" -p linux_spi:dev=/dev/spidev0.0,spispeed=512 -r firmware-orig.rom 
 ```
 
-_TODO_
+_Optional: use idftool to examine the original rom file_
 
-## 6. Flash coreboot 
+## 7. Flash coreboot 
 
-_TODO_
+Flash coreboot:
+```
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo flashrom -p linux_spi:dev=/dev/spidev0.0 -w build/coreboot.rom
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo flashrom -p linux_spi:dev=/dev/spidev0.0 -w build/coreboot.rom
+```
 
-## 5. Re-partition
+The second command should return VERIFIED - if so, coreboot has been successfully flashed to the device.
 
-_TODO Dual boot_
+_NOTE: Once coreboot has been flashed initially, it can later be flashed internally, without neeed of the flashing device:_
+```
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo flashrom -p internal:laptop=force_I_want_a_brick -w coreboot.rom
+```
 
-## 6. Install Ubuntu
+Reboot and cross your fingers!
 
-Boot from USB and install Ubuntu LTS following the installer instructions. 
+_TODO: Screenshot_
+
+## 8. Ubuntu 
+
+### 8.1. Re-partition
+
+The Lenovo 500 had 150GB disk space, more than enough to keep the Windows installation - just in case, but specially because the laptop wasn't mine - and to install Ubuntu alongside it.
+
+_TODO Repartition info_
+
+### 8.2. Install
+
+Boot from USB and install Ubuntu LTS on the new partition, following the installer instructions. 
 
 _NOTE: How to install Ubuntu out of scope of this post._ 
 
-At the end we had an up-to-date Ubuntu PC at home, much faster as it was before, featuring open-source firmware and software :) 
+_At the end: new, fast and up-to-date Ubuntu PC featuring open-source firmware and software :)_
 
-_TODO: Foto_
+_TODO: photo/screenshot_
+
+## 9. Troubleshooting and Next Steps
+
+_TODO: what is working and what not?_
 
 ## Links:
 
@@ -184,7 +240,11 @@ _TODO: Foto_
 
 [Board:lenovo T400](https://www.coreboot.org/Board:lenovo/t400)
 
+[Introducing CBFS](https://lennartb.home.xs4all.nl/coreboot/col5.html)
+
 [Coreboot Build HowTo](https://www.coreboot.org/Build_HOWTO)
+
+[Gentoo: Coreboot](https://wiki.gentoo.org/wiki/Coreboot)
 
 [How to install libreboot on a ThinkPad W500](https://stafwag.github.io/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/)
 

@@ -2,7 +2,7 @@
 math = true
 date = "2017-07-27T15:03:58+02:00"
 title = "Debian on Radxa Rock Square"
-tags = ["arm","debian","u-boot"]
+tags = ["arm","debian","u-boot", "android"]
 highlight = true
 
 [header]
