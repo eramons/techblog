@@ -50,60 +50,65 @@ ubuntu@ubuntu:~$ dmidecode | grep ROM\ Size
         ROM Size: 4096 kB
 ```
 
-### 1.3 
+### 1.3 Use flashrom internally 
 
-Boot with Live Ubuntu USB stick.
+Before dissasembling the machine, I wanted to find out what could I do accessing the chip internally. 
 
-Install flashrom. Flashrom is not available for ubuntu as a package, so I had to build it from code.
+Boot with Live Ubuntu USB stick. When the live CD is starting, press TAB. Modify the boot options to add _nopat_ and _iomem=relaxed_.
 
-First install git and build dependencies>
+Verify boot option was correctly set:
 ```
-ubuntu@ubuntu:~/flashrom$ sudo apt-get install git make gcc build-essential libcpi-dev libusb-1.0.0
+ubuntu@ubuntu:~/ cat /proc/cmdline
+... iomem=relaxed nopat ...
 ```
 
-Clone flashrom repository:
+Install flashrom. Flashrom is not available for ubuntu as a package, so I had to build it from code. First install git and build dependencies:
+```
+ubuntu@ubuntu:~/flashrom$ sudo apt-get install git build-essential libpci-dev libusb-1.0
+```
+
+Clone flashrom repository, compile and make executable:
 ```
 ubuntu@ubuntu:~/ git clone https://review.coreboot.org/flashrom.git
 ubuntu@ubuntu:~/ cd flashrom
 ubuntu@ubuntu:~/flashrom$ make
-```
-
-The generated flashrom binary can be found in the same directory, after succesfully build.
-```
 ubuntu@ubuntu:~/flashrom$ sudo cp flashrom /usr/local/bin/
 ubuntu@ubuntu:~/flashrom$ sudo chmod +x /usr/local/bin/flashrom
 ```
 
-Try to read something internally:
+Try to read the flash descriptor region internally: 
 ```
-ubuntu@ubuntu:~/thinkpad500$ sudo flashrom -r w500_firmware_orig.rom -p internal
+ubuntu@ubuntu:~/ sudo ./flashrom --ifd -c "MX25L3205D/MX25L3208D" -p internal -i bios -r old.rom
 ```
 
+ * The parameter --ifd allows using the flash descriptor on the chip to read or write regions on the chip
+ * The parameter -c indicates the chip to be used (_TODO: how to find out which chip to use?_) 
+ * The parameter -p says to access the chip on the machine internally
+ * The parameter -i says which region to access - in this example is the bios (i.e. the region where coreboot must be flashed)
+ * The parameter -r says to read the desired region to the given file
+
+The output looked like this:
 ```
 Found chipset "Intel ICH9M".
 Enabling flash write... SPI Configuration is locked down.
-FREG0: Flash Descriptor region (0x00000000-0x00000fff) is read-only.
+FREG0: Flash Descriptor region (0x00000000-x00000fff) is read-only.
 FREG2: Management Engine region (0x00001000-0x001f5fff) is locked.
-PR0: Warning: 0x003e0000-0x01ffffff is read-only.
-At least some flash regions are read protected. You have to use a flash
-layout and include only accessible regions. For write operations, you'll
-additionally need the --noverify-all switch. See manpage for more details.
-OK.
-Found Programmer flash chip "Opaque flash chip" (4096 kB, Programmer-specific) mapped at physical address 0x0000000000000000.
-Reading flash... Transaction error between offset 0x00001000 and 0x0000103f (= 0x00001000 + 63)!
-Read operation failed!
-FAILED.
+...
+
+Basing on the output: 
+
+ * The descriptor region is read-only
+ * The management engine region is locked
+ * Since the contrary is not stated, the bios is enabled for reading and writting
+ * There are different chips found 
+
+So there was an approach for flashing coreboot without disassembling the machine: to flash a compiled _coreboot.rom_ (see next section) in the bios region directly, without touching the other regions. Theoretically, this should work. 
+
+_NOTE: in case of a brick the SPI programmer and the clip would be necessary to re-flash the original firmware._ 
+
+Before deciding if doing so or not, I read the bios region and stored it safelly in other place, since it would be necessary for a recovery action with the flasher, in case of brick:
 ```
 
-I tried creating a layout.txt file:
-```
-ubuntu@ubuntu:~/thinkpad500$ cat layout.txt 
-0x00000000:0x00000fff FREG0
-```
-
-And then:
-```
-ubuntu@ubuntu:~/thinkpad500$ sudo flashrom -p internal -l layout.txt -i FREG0 -r output.txt
 ```
 
 ## 2. Coreboot
@@ -127,7 +132,9 @@ According to the documentation, for Intel boards following files must be provide
  * Intel Gigabit Ethernet firmware
  * Intel Management Engine
 
-_First try: try not to use any binary blobs. The generated image won't be a complete image, however it should work after flashing, since ME and descriptor should stay as they are_
+_Get Flash Descriptor Region from existing firmware - internally - no disassembling needed._
+_Get ME and GbE from original firmware file, once the laptop is dissasembled and the firmware backed up._
+
 
 ### 2.3. Check out and configure 
 
@@ -299,6 +306,8 @@ _TODO: what is working and what not?_
 [Introducing CBFS](https://lennartb.home.xs4all.nl/coreboot/col5.html)
 
 [Flashrom](https://dev.chromium.org/chromium-os/packages/cros-flashrom)
+
+[Flash tutorial](https://doc.coreboot.org/flash_tutorial/index.html)
 
 [Coreboot Build HowTo](https://www.coreboot.org/Build_HOWTO)
 
