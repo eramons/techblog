@@ -44,7 +44,7 @@ The flash chip on the mainboard of the W500 has 16 pins. I had a SPI pin clip, h
 
 ### 1.2. ROM Size
 
-To find out the ROM size, I booted the PC from a Ubuntu Live CD stick and ran the following:
+After booting from the Live Ubuntu USB drive, run the following to find out the ROM size:
 ```
 ubuntu@ubuntu:~$ dmidecode | grep ROM\ Size
         ROM Size: 4096 kB
@@ -52,17 +52,17 @@ ubuntu@ubuntu:~$ dmidecode | grep ROM\ Size
 
 ### 1.3 Use flashrom internally 
 
-Before dissasembling the machine, I wanted to find out what could I do accessing the chip internally. 
+Before dissasembling the machine, find out what can be done accessing the chip internally i.e. which read/write permissions the different regions have.
 
-Boot with Live Ubuntu USB stick. When the live CD is starting, press TAB. Modify the boot options to add _nopat_ and _iomem=relaxed_.
+Re-boot with the Live Ubuntu USB stick. __Important: when the live CD is starting, press TAB. Modify the boot options to add _nopat_ and _iomem=relaxed_.__
 
-Verify boot option was correctly set:
+After booting, verify that both options were correctly set:
 ```
 ubuntu@ubuntu:~/ cat /proc/cmdline
 ... iomem=relaxed nopat ...
 ```
 
-Install flashrom. Flashrom is not available for ubuntu as a package, so I had to build it from code. First install git and build dependencies:
+Install flashrom. Flashrom is not available for ubuntu as a package - it must be built first. Install git and build dependencies:
 ```
 ubuntu@ubuntu:~/flashrom$ sudo apt-get install git build-essential libpci-dev libusb-1.0
 ```
@@ -76,10 +76,71 @@ ubuntu@ubuntu:~/flashrom$ sudo cp flashrom /usr/local/bin/
 ubuntu@ubuntu:~/flashrom$ sudo chmod +x /usr/local/bin/flashrom
 ```
 
-Try to read the flash descriptor region internally: 
+Try to access the chip internally using flashrom: 
 ```
-ubuntu@ubuntu:~/ sudo ./flashrom --ifd -c "MX25L3205D/MX25L3208D" -p internal -i bios -r old.rom
+ubuntu@ubuntu:~/w500$ sudo ./flashrom -p internal
+flashrom v1.2-167-g6cdde54 on Linux 5.4.0-26-generic (x86_64)
+flashrom is free software, get the source code at https://flashrom.org
+
+Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
+Found chipset "Intel ICH9M".
+Enabling flash write... SPI Configuration is locked down.
+FREG0: Flash Descriptor region (0x00000000-0x00000fff) is read-only.
+FREG2: Management Engine region (0x00001000-0x001f5fff) is locked.
+Not all flash regions are freely accessible by flashrom. This is most likely
+due to an active ME. Please see https://flashrom.org/ME for details.
+PR0: Warning: 0x003e0000-0x01ffffff is read-only.
+At least some flash regions are read protected. You have to use a flash
+layout and include only accessible regions. For write operations, you'll
+additionally need the --noverify-all switch. See manpage for more details.
+OK.
+Found Macronix flash chip "MX25L3205(A)" (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip "MX25L3205D/MX25L3208D" (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip "MX25L3206E/MX25L3208E" (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip "MX25L3273E" (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Multiple flash chip definitions match the detected chip(s): "MX25L3205(A)", "MX25L3205D/MX25L3208D", "MX25L3206E/MX25L3208E", "MX25L3273E"
+Please specify which chip definition to use with the -c <chipname> option.
 ```
+
+Basing on the output: 
+
+ * There are different chips found 
+ * The descriptor region is read-only
+ * The management engine region is locked
+ * The bios should be enabled for reading and writting - since the contrary was not stated
+
+Two conclussions:
+
+ * There is an approach for flashing coreboot without disassembling the machine: to flash a compiled _coreboot.rom_ in the bios region directly leaving along other regions 
+ * It is possible to make a backup of the original bios region - again without diassembling
+
+_NOTE: in case of a brick after flashing the bios, the SPI programmer and the clip would be necessary to re-flash the backup_ 
+
+Before deciding if I dared to try the bios flashing - without having the contingency plan in place yet - I read the bios region: 
+```
+ubuntu@ubuntu:~/w500$ sudo ./flashrom --ifd -c "MX25L3205D/MX25L3208D" -p internal -i bios -r bios_orig.rom
+flashrom v1.2-167-g6cdde54 on Linux 5.4.0-26-generic (x86_64)
+flashrom is free software, get the source code at https://flashrom.org
+
+Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
+Found chipset "Intel ICH9M".
+Enabling flash write... SPI Configuration is locked down.
+FREG0: Flash Descriptor region (0x00000000-0x00000fff) is read-only.
+FREG2: Management Engine region (0x00001000-0x001f5fff) is locked.
+Not all flash regions are freely accessible by flashrom. This is most likely
+due to an active ME. Please see https://flashrom.org/ME for details.
+PR0: Warning: 0x003e0000-0x01ffffff is read-only.
+At least some flash regions are read protected. You have to use a flash
+layout and include only accessible regions. For write operations, you'll
+additionally need the --noverify-all switch. See manpage for more details.
+OK.
+Found Macronix flash chip "MX25L3205D/MX25L3208D" (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Reading ich descriptor... done.
+Using region: "bios".
+Reading flash... done.
+```
+
+A couple of clarifications about this command:
 
  * The parameter --ifd allows using the flash descriptor on the chip to read or write regions on the chip
  * The parameter -c indicates the chip to be used (_TODO: how to find out which chip to use?_) 
@@ -87,29 +148,9 @@ ubuntu@ubuntu:~/ sudo ./flashrom --ifd -c "MX25L3205D/MX25L3208D" -p internal -i
  * The parameter -i says which region to access - in this example is the bios (i.e. the region where coreboot must be flashed)
  * The parameter -r says to read the desired region to the given file
 
-The output looked like this:
-```
-Found chipset "Intel ICH9M".
-Enabling flash write... SPI Configuration is locked down.
-FREG0: Flash Descriptor region (0x00000000-x00000fff) is read-only.
-FREG2: Management Engine region (0x00001000-0x001f5fff) is locked.
-...
+Now we had a backup of the original bios on the binary file bios_orig.rom. 
 
-Basing on the output: 
-
- * The descriptor region is read-only
- * The management engine region is locked
- * Since the contrary is not stated, the bios is enabled for reading and writting
- * There are different chips found 
-
-So there was an approach for flashing coreboot without disassembling the machine: to flash a compiled _coreboot.rom_ (see next section) in the bios region directly, without touching the other regions. Theoretically, this should work. 
-
-_NOTE: in case of a brick the SPI programmer and the clip would be necessary to re-flash the original firmware._ 
-
-Before deciding if doing so or not, I read the bios region and stored it safelly in other place, since it would be necessary for a recovery action with the flasher, in case of brick:
-```
-
-```
+I stored it safelly away (GoogleDocs), since it would be necessary for a recovery action with the flasher, in case of brick.
 
 ## 2. Coreboot
 
@@ -136,7 +177,7 @@ _Get Flash Descriptor Region from existing firmware - internally - no disassembl
 _Get ME and GbE from original firmware file, once the laptop is dissasembled and the firmware backed up._
 
 
-### 2.3. Check out and configure 
+### 2.3. Check out and build the tools
 
 I followed the instructions on the coreboot documentation.
 
@@ -148,29 +189,6 @@ eramon@caipirinha:~/dev/thinkpadw500$ git submodule update --init --checkout
 ```
 
 The last step checks out a subrepository on the _3rdparty_ directory.
-
-Generate config:
-```
-eramon@caipirinha:~/dev/thinkpadw500$ make menuconfig
-```
-
- * On the _Mainboard_ menu, as _vendor_ select _Lenovo_
- * On the _Mainboard_ menu, as _model_ select _Thinkpad W500_
- * On the _Mainboard_ menu, as ROM chip size, select _4096 KB (4 MB))_
- * On the _Chipset_ menu, verify that _Unlock flash regions_ is selected
- * On the _Chipset_ menu, _Add Intel descriptor.bin file_: __NO__ 
- * On the _Chipset_ menu, _Add Intel ME/TXE Firmware_: __NO__ 
- * On the _Chipset_ menu, _Add gigabit ethernet configuration_: __NO__ 
- * On the _Payload_ menu, make sure that _SeaBIOS_ is selected
-
-Save and exit. The configuration is saved to _.config_
-
-The reason we chose NO for the descriptor, ME and GBE files is that we are NOT aiming to have a complete image but to have one image with coreboot only. The bits which are not covered by the coreboot built should not be overwritten on the flash chip and therefore stay as they are.
-
-
-### 2.4. Build
-
-_NOTE: I already had the build dependencies installed on my laptop_
 
 Build the cross-compiler for all architectures:
 ```
@@ -198,11 +216,39 @@ eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/ifdtool$ make
 
 idftool is a program to extract and dump Intel Firmware Descriptor information.
 
+## 2.4. Menuconfig and build coreboot
 
-Build coreboot:
+For the configuration and build, we have two different options depending on the strategy to follow:
+
+ 1. Build only the bios region, omitting the region descriptor, ME and GbE during building. Flash only the bios region, without disassembling the machine. 
+ 2. Build a complete image, after extracting the binary blobs from the original firmware. Flash the complete image, disassembling the machine and using the SPI flasher.
+
+### 2.4.1 Build coreboot image - bios only:
+
+For building a partial image containing the bios only, we need to tell the compiler to omit the binary blobs:
+```
+eramon@caipirinha:~/dev/thinkpadw500$ make menuconfig
+```
+
+ * On the _Mainboard_ menu, as _vendor_ select _Lenovo_
+ * On the _Mainboard_ menu, as _model_ select _Thinkpad W500_
+ * On the _Mainboard_ menu, as ROM chip size, select _4096 KB (4 MB))_
+ * On the _Chipset_ menu, verify that _Unlock flash regions_ is selected
+ * On the _Chipset_ menu, _Add Intel descriptor.bin file_: __NO__ 
+ * On the _Chipset_ menu, _Add Intel ME/TXE Firmware_: __NO__ 
+ * On the _Chipset_ menu, _Add gigabit ethernet configuration_: __NO__ 
+ * On the _Payload_ menu, make sure that _SeaBIOS_ is selected
+
+Save and exit. The configuration is saved to _.config_
+
+The reason we chose NO for the descriptor, ME and GBE files is that we are NOT aiming to have a complete image but to have one image with coreboot only. The bits which are not covered by the coreboot built should not be overwritten on the flash chip and therefore stay as they are.
+
+Now build coreboot:
+
 ```
 eramon@caipirinha:~/dev/thinkpadw500/coreboot$ make
 ```
+_NOTE: I already had the build dependencies installed on my laptop. See older blog post "Build Coreboot"_
 
 At the end of the build process, following output is displayed:
 ```
@@ -223,10 +269,19 @@ eramon@caipirinha:~/dev/thinkpadw500/coreboot$ ls -la build/coreboot.rom
 -rw-r--r-- 1 eramon eramon 4194304 Dec 19 11:59 build/coreboot.rom
 ```
 
-Since the descriptor is missing, inspect built rom with ifdtool does not work because the image does not have a flash descriptor.
+_NOTE: since the descriptor is missing, inspect built rom with ifdtool does not work_ 
 
+_TODO: rename the file to corebootbios.rom, to distinguish it from the second one we are building in 2.4.2_
 
-## 5. Disassemble and connect
+### 2.4.2 Build coreboot - full ROM image
+
+_TODO Coming soon_
+
+## 3. Flash internally: coreboot bios
+
+_TODO Coming soon_
+
+## 4. Disassemble and connect
 
 This part was the scariest one, at least for me. Even if I had a SPI flasher, I had never used it before. Reading the rom and flashing coreboot on the Librem is possible without having to disassemble the machine. And I had never bricked it (fingers crossed), so I have never needed the flasher.
 
@@ -242,7 +297,7 @@ I found useful information about the wiring on the posts about installing libreb
 
 _TODO: photo wiring_
 
-## 6. Backup existing firmware
+## 5. Full backup of the existing firmware
 
 With the laptop connected to the chip, test the connection:
 ```
@@ -256,7 +311,7 @@ eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo flashrom -c "MX25L6405D" -p 
 
 _Optional: use idftool to examine the original rom file_
 
-## 7. Flash coreboot 
+## 6. Flash with SPI programmer: full coreboot image
 
 Flash coreboot:
 ```
@@ -275,15 +330,15 @@ Reboot and cross your fingers!
 
 _TODO: Screenshot_
 
-## 8. Ubuntu 
+## 9. Ubuntu 
 
-### 8.1. Re-partition
+### 9.1. Re-partition
 
 The Lenovo 500 had 150GB disk space, more than enough to keep the Windows installation - just in case, but specially because the laptop wasn't mine - and to install Ubuntu alongside it.
 
 _TODO Repartition info_
 
-### 8.2. Install
+### 9.2. Install
 
 Boot from USB and install Ubuntu LTS on the new partition, following the installer instructions. 
 
@@ -293,7 +348,7 @@ _At the end: new, fast and up-to-date Ubuntu PC featuring open-source firmware a
 
 _TODO: photo/screenshot_
 
-## 9. Troubleshooting and Next Steps
+## 10. Troubleshooting and Next Steps
 
 _TODO: what is working and what not?_
 
