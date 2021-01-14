@@ -79,11 +79,12 @@ Before having a server to install the /e self-hosting software on, I decided to 
 
 After registering, I chose "Ubuntu Server" as "Starting Point". Servers in Digital Ocean are called _Droplets_, so I was about to create my first droplet:
 
- * $5.00 Droplet - 1GB / 1 CPU 25 GB SSD Disk 
+ * $20.00 Droplet - 4GB / 2 vCPU 50 GB SSD Disk 
 
 _Droplets are virtual machines. A virtual machine acts just like a standalone computer, so it runs an operating system (ours are all Linux-based) which you can log into in order to install and run software._
 
-1 GB RAM is not enough according to the requirements on the documentation. I resized the VM to 2 GB RAM. 
+According to the requirements on the documentation, at least 2GB RAM are necessary. 
+
 After setting up the VM, I accessed via "Console" as root and created a non-root user. SSH is enabled and running. The VM gets a public IPv4 IP address. 
 
 ## 3. DNS
@@ -140,13 +141,15 @@ With this setup in place, it should be possible to run the installation script.
 
 Get installation script:
 ```
-eramon@mail:~$ wget https://gitlab.e.foundation/e/infra/bootstrap/raw/master/bootstrap-generic.sh
+root@mail:/home/eramon# wget https://gitlab.e.foundation/e/infra/bootstrap/raw/master/bootstrap-generic.sh
 ```
 
 Run installation script as root as described on the gitlab documentation:
 ```
-eramon@mail:~$ sudo bash bootstrap-generic.sh https://gitlab.e.foundation/e/infra/ecloud-selfhosting master
+root@mail:/home/eramon# wget https://gitlab.e.foundation/e/infra/bootstrap/raw/master/bootstrap-generic.sh master
 ```
+
+_NOTE: Since the script is kind of carefully balanced, I ran the script directly as root to make sure everythink works as foreseen by the developers._
 
 I was prompted to provide information:
  
@@ -166,38 +169,42 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
 
 I added the entries to my DNS configuration on Cloudflare.
 
-_TODO: Current issue:_
-```
-ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
-```
+I would like to say everything ran smoothly on the first try, unfortunately this was not the case. I got several errors. I asked the /e community assistance. Finally I was able to finish the installation thanks to a workaround provided by a really nice member of the /e community, who helped me with the issues.
 
-I asked the /e community support for assistance. According to an older thread, the issue is related to the fact that in later builds MariaDB does not allow root access without password. 
+Anyway, at the end of the installation script I was prompted to restart the server, and everything ran smoothly after that :) I logged in with the admin credentials shown as output of the installation script and created an user with username _me_ and e-mail _my@e.mydomain.com_. 
+
+_NOTE: the workaround was to manually remove two lines from the postinstall.sh script after being prompted by the installer the first time and before resuming the installation. See links at the end for more information._
+
+Then I went to the _account manager_ on the LG G3 and added a new /e account:
+ * As username and e-mail I used the ones of the just created account
+ * As server URL I wrote _https://e.mydomain.com_
 
 ## Other approaches and conclussion:
 
 On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it's uncomplicated. I liked it.
 
-On the server side, as for the last update of this post, there is still an open issue which prevents the install script to finish succesfully.
+On the server side, as mentioned above, it was kind of cumbersome. However, once running, the synchronization with the mobile client and the synchronization of filew worked perfectly. The /e dashboard and interface looked really nice :)
 
 Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using _salt_. Then it uses docker-compose to run docker instances of the different applications.
 
 Even working, for me this setup only works for testing, but it is a no go for a potential productive setup. Reasons:
 
+ * Maintenance and updates are quite difficult if the installation script must be used.
  * I don't want to host any data on the cloud. The idea is to keep private files on the home network.
  * I don't want to host an own mail server. I'm not interested in having an own e-mail address for this .
  * I'm just interested on files and pictures synchronization.
 
 ## Next steps
 
-Basing on the premise that I don't need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I got the recommendation from the /e developers to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do. 
+Basing on the premise that I don't need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I also got the recommendation from the /e developers to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do. 
 
 New post - Nextcloud - coming soon :)
 
 ## Troubleshooting and /e community support
 
-[PHP Fatal Error: apc_mmap](https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon)
-
 [MariaDB issue](https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500)
+
+[PHP Fatal Error: apc_mmap](https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon)
 
 ## Links:
 
