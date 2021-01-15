@@ -27,7 +27,7 @@ However, the /e server-side is in fact just a composition of services and their 
  * Postfix, to host the own mail server
  * OnlyOffice, to allow editing of documents 
 
-I was actually only intereeted in photos and files syncrhonization. Basing on this premise, I deciced to try to install Nextcloud directly and see if I could use it as the server side for the /e operating system on the phone. The nice guys in charge of /e development told me that this should be possible and advise me to do so.
+I was actually only intereeted in photos and files synchronization. Basing on this premise, I deciced to try to install Nextcloud directly and see if I could use it as the server side for the /e operating system on the phone. The nice guys in charge of /e development told me that this should be possible and advise me to do so.
 
 As a hosting environment I wanted to use Kubernetes - as usual. This time - instead of deploying directly on either my K8s or my K3s cluster on premises - I wanted to try the Digital Ocean K8s services. If the experiment was succesfull, I would move the setup to my home network afterwards, to use nextcloud to sync my files and photos. 
 
@@ -236,7 +236,22 @@ _A service is an abstract way to expose an application running on a set of pods 
 
 Add the deployment and service manifest files to _kustomization.yaml_.
 
-### 2.4 Nextcloud
+### 2.4 Redis
+
+The performance of nextcloud server can be improved using memory caching. Redis provides local and distributed caching as well as transactional file locking. 
+
+Create the manifest file for the redis deployment:
+
+[redis-deployment.yaml](https://github.com/eramons/kubenextcloud/blob/master/redis-deployment.yaml)
+
+Create the manifest file for the redis service:
+
+[redis-service.yaml](https://github.com/eramons/kubenextcloud/blob/master/redis-service.yaml)
+
+For nextcloud to use redis, we'll need to set the environment variable _REDIS_HOST_ on the nextcloud container.
+
+
+### 2.5 Nextcloud
 
 Create the manifest file for the nextcloud deployment:
 
@@ -267,6 +282,8 @@ spec:
           ports:
             - containerPort: 80
           env:
+            - name: REDIS_HOST
+              value: redis
             - name: MYSQL_HOST
               value: mariadb 
             - name: MYSQL_DATABASE
@@ -292,7 +309,7 @@ spec:
             - name: NEXTCLOUD_ADMIN_USER
               value: "admin"
             - name: NEXTCLOUD_TRUSTED_DOMAINS 
-              value: <public IP of the load balancer>
+              value: mydomain.com 
           volumeMounts:
             - mountPath: /var/www/html
               name: nextcloud-storage
@@ -312,9 +329,10 @@ With a complete configuration by using all variables for your database type, you
 
 One or more trusted domains can be set through environment variable too:
 
- * NEXTCLOUD_TRUSTED_DOMAINS: optional space-separated list of IPs or domains. The IP of the loadbalancer must be configured here.
+ * NEXTCLOUD_TRUSTED_DOMAINS: optional space-separated list of IPs or domains. The IP of the loadbalancer or the domain _mydomain.com_ must be configured here.
 
-_NOTE: actually, I did not get this last environment variable to work, for some reason. I ended up editing the config/config.php file inside the container and adding the load balancer IP to the trusted domains manually._
+In order for nextcloud to see and use the redis service, we need to include an additional environment variable:
+ * REDIS_HOST: name of the redis service which in this case is _redis_.
 
 Create manifest file for the nextcloud service:
 
@@ -352,6 +370,7 @@ spec:
   - host: nextcloud.mydomain.com 
     http: 
       paths: 
+      - path: /
         backend:
           serviceName: nextcloud
           servicePort: 80
@@ -400,7 +419,6 @@ apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
-  namespace: cert-manager
 spec:
   acme:
     # The ACME server URL
@@ -474,3 +492,5 @@ It worked. My /e phone was now connected to my own nextcloud installation runnin
 [Ingress and Certmanager on DO K8s](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes)
 
 [K8s Documentation](https://kubernetes.io/docs)
+
+[Nextcloud Documentation](https://docs.nextcloud.com/server/15/admin_manual)
