@@ -1,17 +1,13 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>U Boot on Small Technical Blog</title>
+    <title>u-boot on Small Technical Blog</title>
     <link>https://eramons.github.io/techblog/tags/u-boot/</link>
-    <description>Recent content in U Boot on Small Technical Blog</description>
+    <description>Recent content in u-boot on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
-    <lastBuildDate>Thu, 27 Jul 2017 15:03:58 +0200</lastBuildDate>
-    
-	<atom:link href="https://eramons.github.io/techblog/tags/u-boot/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 27 Jul 2017 15:03:58 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/u-boot/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Debian on Radxa Rock Square</title>
       <link>https://eramons.github.io/techblog/post/rock2_debian/</link>

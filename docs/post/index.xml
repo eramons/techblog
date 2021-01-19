@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Small Technical Blog</title>
@@ -7,10 +7,31 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
-    <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://eramons.github.io/techblog/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nextcloud self-hosting on K8s</title>
+      <link>https://eramons.github.io/techblog/post/nextcloud/</link>
+      <pubDate>Thu, 07 Jan 2021 09:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/nextcloud/</guid>
+      <description>Goal:
+Self-host Nextcloud on Kubernetes and use it as server-side for the /e operating system
+Nextcloud offers an on-premises content collaboration platform, which is open-source and free. The Nextcloud server is written in the PHP and JavaScript scripting languages.
+The /e/ ROM is a fork of Android (more precisely from LineageOS).
+See previous post to see how to install the OS on a LG G3 and my efforts to self-host the /e server beta version.</description>
+    </item>
     
-	<atom:link href="https://eramons.github.io/techblog/post/index.xml" rel="self" type="application/rss+xml" />
-    
+    <item>
+      <title>WIP Coreboot on ThinkPad W500</title>
+      <link>https://eramons.github.io/techblog/post/thinkpadw500/</link>
+      <pubDate>Thu, 17 Dec 2020 09:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/thinkpadw500/</guid>
+      <description>Goal:
+Give an old Lenovo Thinkpad W500 a second life featuring Coreboot and Ubuntu
+My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn&amp;rsquo;t getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the battery was almost dead.
+I got permission to play around with this old machine - even after pointing out the risks - and to try to give it a second life:</description>
+    </item>
     
     <item>
       <title>/e self-hosting and /e OS on LG G3</title>
@@ -110,9 +131,9 @@ I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all
       <pubDate>Tue, 04 Dec 2018 10:00:00 +0200</pubDate>
       
       <guid>https://eramons.github.io/techblog/post/asuschromebook_debian/</guid>
-      <description>The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&amp;rdquo; x 7.2&amp;rdquo; x 0.6&amp;rdquo; and weighing 1 kg.
+      <description>The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&amp;quot; x 7.2&amp;quot; x 0.6&amp;quot; and weighing 1 kg.
 Features:
- Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor 4GB LPDDR3 RAM 10.1&amp;rdquo; 1280x800 LED display Mali T860MP4 GPU 16GB eMMC 38 Whrs battery 2x USB 3.1 Type-C ports 1x USB 2.0 Type-A port  ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.</description>
+ Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor 4GB LPDDR3 RAM 10.1&amp;quot; 1280x800 LED display Mali T860MP4 GPU 16GB eMMC 38 Whrs battery 2x USB 3.1 Type-C ports 1x USB 2.0 Type-A port  ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.</description>
     </item>
     
     <item>
@@ -126,17 +147,6 @@ Available images
 The available images run with:
  A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel.  The goal is to get a pure Debian distribution up and running on the board:
  Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://eramons.github.io/techblog/post/drafts/vagrant_e/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://eramons.github.io/techblog/post/drafts/vagrant_e/</guid>
-      <description>2. Set up Vagrant Before having a server to install the /e self-hosting software on, I decided to try it out running it locally on a virtual machine. As virtualization environment I would use Vagrant, since I have been wanting to try it out for a while.
-Vagrant is a tool for building and managing virtual machine environments in a single workflow.
-First of all, install linux-headers and virtualbox:</description>
     </item>
     
   </channel>
