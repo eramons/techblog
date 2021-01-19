@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta name="author" content="E. Ramon">
   <meta name="description" content="Alles wird gut">
 
@@ -146,6 +146,9 @@
     >, 
     
     <a href="/techblog/tags/u-boot">u-boot</a
+    >, 
+    
+    <a href="/techblog/tags/android">android</a
     >
     
   </span>
@@ -199,366 +202,233 @@
 </div>
 
     <div class="article-style" itemprop="articleBody">
-      
-
-<p><em>Radxa Rock 2 Square is a Rockchip RK3288 based solution.</em></p>
-
-<p><a href="http://dl.radxa.com/rock2/images/e" target="_blank">Available images</a></p>
-
+      <p><em>Radxa Rock 2 Square is a Rockchip RK3288 based solution.</em></p>
+<p><a href="http://dl.radxa.com/rock2/images/e">Available images</a></p>
 <p>The available images run with:</p>
-
 <ul>
 <li>A modified version of u-boot</li>
 <li>The Rabian operating system (which is based on Debian 8)</li>
 <li>A custom radxa kernel.</li>
 </ul>
-
 <p>The goal is to get a pure Debian distribution up and running on the board:</p>
-
 <ol>
 <li>Debian u-boot</li>
 <li>Debian armhf linux-image kernel</li>
 <li>Pure Debian root file system</li>
 </ol>
-
 <p>For this small project, we have two Radxa Rock 2 Square boards:</p>
-
 <ol>
 <li>The first one used for development, on which we aim to run Debian, booting the Radxa kernel with the Radxa u-boot. We&rsquo;ll run using the internal flash storage of the board. This will be the <em>Development Board</em>.</li>
 <li>The second one used as testing platform. The goal is to be able to boot an official Debian kernel on this one using the official Debian u-boot and run an unmodified Debian sid on it. We&rsquo;ll boot from a SD card. This will be the <em>Integration Board</em>.</li>
 </ol>
-
 <p>We also need a SD card with a capacity of 8 gigabytes at least.</p>
-
 <h2 id="try-out-a-debian-based-distribution">Try out a debian-based distribution</h2>
-
 <p><em>Development Board</em></p>
-
 <p>Connect the board to a keyboard and a monitor or use the serial port of the board and minicom from your laptop to see the output of the board.</p>
-
 <p>First of all, we will try an existing image to see how it works. The image we are using is a Debian-based one which will be flashed to the board internal storage. Flashing an existing image to the board with the instructions and flash tool provided by Radxa is straightforward, just follow the instructions on the website:</p>
-
-<p><a href="http://wiki.radxa.com/Rock/flash_the_image" target="_blank"><em>Flash the image</em></a></p>
-
+<p><a href="http://wiki.radxa.com/Rock/flash_the_image"><em>Flash the image</em></a></p>
 <p>In a nutshell:</p>
-
 <ol>
-<li><p>Download the Image:</p>
-
-<p><a href="http://dl.radxa.com/rock2/images/rabian/emmc/rock2_square_rabian_150720_5d53487_emmc.img.xz" target="_blank"><em>Rabian SD Image</em></a></p></li>
-
-<li><p>Download and unzip the Radxa flashing tool:</p>
-
-<p><a href="http://dl.radxa.com/rock/tools/linux/Linux_Upgrade_Tool_v1.21.zip" target="_blank"><em>Radxa Flashing Tool</em></a></p></li>
-
-<li><p>Boot the board in bootloader mode and flash the image:</p>
-
-<pre><code class="language-bash">sudo radxa/Linux_Upgrade_Tool_v1.21/upgrade_tool uf radxa/rock2_square_rabian_150720_5d53487_emmc.img
-</code></pre></li>
+<li>
+<p>Download the Image:</p>
+<p><a href="http://dl.radxa.com/rock2/images/rabian/emmc/rock2_square_rabian_150720_5d53487_emmc.img.xz"><em>Rabian SD Image</em></a></p>
+</li>
+<li>
+<p>Download and unzip the Radxa flashing tool:</p>
+<p><a href="http://dl.radxa.com/rock/tools/linux/Linux_Upgrade_Tool_v1.21.zip"><em>Radxa Flashing Tool</em></a></p>
+</li>
+<li>
+<p>Boot the board in bootloader mode and flash the image:</p>
+</li>
 </ol>
-
-<p>A better alternative is to use the rkflashtool which is available as a Debian package:</p>
-
-<pre><code class="language-bash">sudo apt-get install rkflashtool
-</code></pre>
-
-<p>The board will reboot automatically after the image flash is completed. Attaching a HDMI monitor and a keyboard to the board you should be able to log in to the Rabian system. Both the username and the password are &ldquo;rock2&rdquo;.</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo radxa/Linux_Upgrade_Tool_v1.21/upgrade_tool uf radxa/rock2_square_rabian_150720_5d53487_emmc.img
+</code></pre></div><p>A better alternative is to use the rkflashtool which is available as a Debian package:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo apt-get install rkflashtool
+</code></pre></div><p>The board will reboot automatically after the image flash is completed. Attaching a HDMI monitor and a keyboard to the board you should be able to log in to the Rabian system. Both the username and the password are &ldquo;rock2&rdquo;.</p>
 <h2 id="create-debian-rootfs">Create Debian rootfs</h2>
-
 <p><em>Development Board</em></p>
-
 <p>After having tried out Rabian on the Rock2, we aim to run a newer, unmodified version of Debian on the board. In order to go there, we need to replace the root filesystem through a self-built one.</p>
-
 <p>We&rsquo;ll use the Debian utility debootstrap for building the rootfs. The easiest and safest way is to use the available Rabian system - before replacing the rootfs - for setting up a custom rootfs with debootstrap.</p>
-
 <p>NOTE: it is also possible to generate the rootfs on other platform, using debootstrap &ndash;first-stage on the host architecture and &ndash;second-state using qemu. However, trying to do so lead to an EXT3 journal during the booting process. The reason is that the mkfs version used for creating the file system was much newer than the radxa kernel, which at the time of this writting was already quite old.</p>
-
 <ol>
-<li><p>Boot the board and log in to the system:</p>
-
+<li>
+<p>Boot the board and log in to the system:</p>
 <pre><code>username: rock2
 password:
 </code></pre></li>
-
-<li><p>Create the file which will host the root file system:</p>
-
+<li>
+<p>Create the file which will host the root file system:</p>
 <pre><code>dd if=/dev/zero of=debian.ext4 bs=1M count=4096
 </code></pre></li>
-
-<li><p>Create an ext4 filesystem on the file:</p>
-
+<li>
+<p>Create an ext4 filesystem on the file:</p>
 <pre><code>sudo mkfs.ext4 debian.ext4
-</code></pre>
-
-<p>The execution of the mkfs command is actually the reason for creating the rootfs file on the Rock2 directly. Creating the file system on another host which a newer kernel can lead to a journal error when trying to boot the system afterwards.</p></li>
-
-<li><p>Mount the file as a loop device:</p>
-
+</code></pre><p>The execution of the mkfs command is actually the reason for creating the rootfs file on the Rock2 directly. Creating the file system on another host which a newer kernel can lead to a journal error when trying to boot the system afterwards.</p>
+</li>
+<li>
+<p>Mount the file as a loop device:</p>
 <pre><code>sudo mount -o loop rootfs.ext4 /mnt
 </code></pre></li>
-
-<li><p>Use Debootstrap to download a Debian sid to the mount point:</p>
-
+<li>
+<p>Use Debootstrap to download a Debian sid to the mount point:</p>
 <pre><code>debootstrap sid /mnt
 </code></pre></li>
-
-<li><p>Copy the kernel modules from the running Rabian system:</p>
-
+<li>
+<p>Copy the kernel modules from the running Rabian system:</p>
 <pre><code>sudo mkdir -p /mnt/lib/modules
 sudo cp -r /lib/modules/* /mnt/lib/modules
 
 </code></pre></li>
-
-<li><p>Change root to the new filesystem:</p>
-
+<li>
+<p>Change root to the new filesystem:</p>
 <pre><code>sudo chroot /mnt
-</code></pre>
-
-<p>Using sudo, allow root rights to the new created user:</p>
-
+</code></pre><p>Using sudo, allow root rights to the new created user:</p>
 <pre><code>visudo
 </code></pre></li>
-
-<li><p>Add root mount point to fstab:</p>
-
-<pre><code class="language-shell">sudo echo &quot;/dev/mmcblk0p2 / ext4 relatime,errors=remount-ro 0 1&quot; &gt; /etc/fstab
-</code></pre></li>
-
-<li><p>Do some fine tuning on the new filesystem.</p>
-
+<li>
+<p>Add root mount point to fstab:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">sudo echo <span style="color:#e6db74">&#34;/dev/mmcblk0p2 / ext4 relatime,errors=remount-ro 0 1&#34;</span> &gt; /etc/fstab
+</code></pre></div></li>
+<li>
+<p>Do some fine tuning on the new filesystem.</p>
 <ul>
-<li><p>Create a non-root user (and set his password):</p>
-
+<li>Create a non-root user (and set his password):</li>
+</ul>
 <pre><code>adduser eramon
-</code></pre></li>
-
-<li><p>Install some packages:</p>
-
+</code></pre><ul>
+<li>Install some packages:</li>
+</ul>
 <pre><code>apt-get install sudo, openssh-server, locales
-</code></pre>
-
-<p>Of course further installation of packages can follow later after we finally boot the system.j</p></li>
-
-<li><p>Modify /etc/network/interfaces in order for the new system to get connectivity automatically</p></li>
-
-<li><p>Set the hostname:</p>
-
+</code></pre><p>Of course further installation of packages can follow later after we finally boot the system.j</p>
+<ul>
+<li>
+<p>Modify /etc/network/interfaces in order for the new system to get connectivity automatically</p>
+</li>
+<li>
+<p>Set the hostname:</p>
+</li>
+</ul>
 <pre><code>echo absinthe &gt; /etc/hostname
+</code></pre><ul>
+<li>Add the following line to  /etc/hosts:</li>
+</ul>
+<pre><code>127.0.0.1	absinthe
 </code></pre></li>
-
-<li><p>Add the following line to  /etc/hosts:</p>
-
-<pre><code>127.0.0.1   absinthe
-</code></pre></li>
-</ul></li>
 </ol>
-
 <p>The Debian filesystem is now ready. Umount the file:</p>
-
 <pre><code>sudo umount /mnt
-</code></pre>
-
-<p>Copy the file to your laptop or computer. We&rsquo;ll use it twice afterwards:</p>
-
+</code></pre><p>Copy the file to your laptop or computer. We&rsquo;ll use it twice afterwards:</p>
 <ol>
 <li>Flash the filesystem on the development board</li>
 <li>Copy the rootfs to the second partition of the sdcard</li>
 </ol>
-
 <h2 id="flash-the-filesystem">Flash the filesystem</h2>
-
 <p><em>Development Board</em></p>
-
 <p>The default rootfs (Rabian) provided with the complete image we flashed at the beginning will be now replaced by our own Debian rootfs. In order to do that:</p>
-
 <ol>
-<li>Put the board into bootloader mode (same as you did before when flashing the complete image)</li>
-
-<li><p>Use the radxa flashtool for flashing the rootfs into the correct place in the internal memory of the board:</p>
-
+<li>
+<p>Put the board into bootloader mode (same as you did before when flashing the complete image)</p>
+</li>
+<li>
+<p>Use the radxa flashtool for flashing the rootfs into the correct place in the internal memory of the board:</p>
 <pre><code>sudo radxa/Linux_Upgrade_Tool_v1.21/upgrade_tool di linuxroot debian.ext4
-</code></pre>
-
-<p>Reboot the board and log in with the credentials you set before.</p></li>
+</code></pre></li>
 </ol>
-
+<p>Reboot the board and log in with the credentials you set before.</p>
 <h2 id="prepare-the-sd-card">Prepare the SD Card</h2>
-
 <p><em>On your laptop</em></p>
-
 <h3 id="partitions">Partitions</h3>
-
 <p>The SD card partition scheme must be as follows:</p>
-
 <ul>
 <li>One 1G partition for /boot</li>
 <li>One 5G partition for rootfs</li>
 </ul>
-
 <p>Insert the SD card and check the device name using:</p>
-
 <pre><code>dmesg
-</code></pre>
-
-<p>or</p>
-
+</code></pre><p>or</p>
 <pre><code>cat /proc/partitions
-</code></pre>
-
-<p>In these examples we asume /dev/mmcblk1 to be the SD card.</p>
-
+</code></pre><p>In these examples we asume /dev/mmcblk1 to be the SD card.</p>
 <p>Use fdisk to create the partitions as explained above:</p>
-
 <pre><code>sudo fdisk /dev/sdb
-</code></pre>
-
-<p>After partitioning the SD, create an EXT2 filesystem on the boot partition:</p>
-
+</code></pre><p>After partitioning the SD, create an EXT2 filesystem on the boot partition:</p>
 <pre><code>mkfs.ext2 /dev/sdb2
 sudo sync
-</code></pre>
-
-<h3 id="rootfs-partition">Rootfs Partition</h3>
-
+</code></pre><h3 id="rootfs-partition">Rootfs Partition</h3>
 <p>Using dd, copy the rootfs partition created before to the sdcard:</p>
-
 <pre><code>dd if=rootfs.ext4 of=/dev/sdb2
 sudo sync
-</code></pre>
-
-<h3 id="boot-partition">Boot Partition</h3>
-
+</code></pre><h3 id="boot-partition">Boot Partition</h3>
 <p><em>Development Board</em></p>
-
 <p>Insert the sdcard in the development board. Mount the first (boot) partition at /boot:</p>
-
 <pre><code>sudo mount /dev/mmcblk1p1 /boot
-</code></pre>
-
-<p>For the generation of the boot files, we will use flash-kernel. flash-kernel is a script which will put the kernel and initramfs in the boot location of embedded devices that don&rsquo;t load the kernel and initramfs directly from /boot.</p>
-
+</code></pre><p>For the generation of the boot files, we will use flash-kernel. flash-kernel is a script which will put the kernel and initramfs in the boot location of embedded devices that don&rsquo;t load the kernel and initramfs directly from /boot.</p>
 <p>The Radxa Rock2 was not supported by flash-kernel. I submited a patch within a bug report:
-<a href="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=868166" target="_blank">flash-kernel bug report</a></p>
-
+<a href="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=868166">flash-kernel bug report</a></p>
 <p>Since the linux kernel did support the board, fixing this was quite straightforward. The patch consisted on adding an entry for the Rock2 to /usr/share/flash-kernel/db/all/db:</p>
-
 <pre><code>Machine: Radxa Rock 2 Square
 Kernel-Flavors: armmp armmp-lpae
 DTB-Id: rk3288-rock2-square.dtb
 Boot-Script-Path: /boot/boot.scr
 U-Boot-Script-Name: bootscr.uboot-generic
 Required-Packages: u-boot-tools
-</code></pre>
-
-<p>Install flash-kernel:</p>
-
+</code></pre><p>Install flash-kernel:</p>
 <pre><code>sudo apt-get install flash-kernel
-</code></pre>
-
-<p>Install the debian kernel:</p>
-
+</code></pre><p>Install the debian kernel:</p>
 <pre><code>apt-cache search linux-image
 sudo apt-get install linux-image-4.11.0-2-armmp
-</code></pre>
-
-<p>The installation of the kernel will copy the kernel image and the initramfs on /boot. In addition to this, the installation process will invoke flash-kernel which will install the boot script and the device tree binary on the same location:</p>
-
+</code></pre><p>The installation of the kernel will copy the kernel image and the initramfs on /boot. In addition to this, the installation process will invoke flash-kernel which will install the boot script and the device tree binary on the same location:</p>
 <pre><code>eramon@absinthe:/boot$ ls
 boot.scr               dtb-4.11.0-2-armmp         System.map-4.11.0-2-armmp
 config-4.11.0-2-armmp  dtbs                       vmlinuz-4.11.0-2-armmp
 dtb                    initrd.img-4.11.0-2-armmp
-</code></pre>
-
-<p>Umount the sdcard partition:</p>
-
+</code></pre><p>Umount the sdcard partition:</p>
 <pre><code>sudo umount /boot
 sudo sync
-</code></pre>
-
-<h3 id="debian-s-u-boot">Debian&rsquo;s U-Boot</h3>
-
+</code></pre><h3 id="debians-u-boot">Debian&rsquo;s U-Boot</h3>
 <p>Download Debian u-boot from GitHub:</p>
-
 <pre><code>git clone git://anonscm.debian.org/git/collab-maint/u-boot.git
-</code></pre>
-
-<p>Configure and build:</p>
-
+</code></pre><p>Configure and build:</p>
 <pre><code>make rock2_defconfig
 make
-</code></pre>
-
-<p>After succesfully building the source, two binaries were generated:</p>
-
+</code></pre><p>After succesfully building the source, two binaries were generated:</p>
 <ul>
 <li>u-boot.bin</li>
 <li>spl/u-boot-spl.bin</li>
 </ul>
-
 <p>The Rockchip SoCs bootrom needs u-boot to be flashed to the SD card:</p>
-
 <ul>
 <li>In a special format called IDB</li>
 <li>With offset 0x40 block</li>
 </ul>
-
 <p>In order to generate the IDB image, use the mkimage tool provided by u-boot:</p>
-
 <pre><code>tools/mkimage -n rk3288 -T rksd -d spl/u-boot-spl.bin rk3288_idb.img
-</code></pre>
-
-<p>For the rock2 board, the kernel setting CONFIG_ROCKCHIP_SPL_BACK_TO_BROM is by default set to 1. This means that the u-boot binary must be appended to the IDB image:</p>
-
+</code></pre><p>For the rock2 board, the kernel setting CONFIG_ROCKCHIP_SPL_BACK_TO_BROM is by default set to 1. This means that the u-boot binary must be appended to the IDB image:</p>
 <pre><code>cat u-boot.bin &gt;&gt; rk3288_idb.img
-</code></pre>
-
-<p>The complete image must be now flashed to offset 0x40 on the SD card (e.g. seek=64 as dd parameter):</p>
-
+</code></pre><p>The complete image must be now flashed to offset 0x40 on the SD card (e.g. seek=64 as dd parameter):</p>
 <pre><code>dd if=rk3288_idb.img of=/dev/mmcblk1 seek=64
-</code></pre>
-
-<p>Although this way worked, the right approach is to have a debian package supporting the board.</p>
-
+</code></pre><p>Although this way worked, the right approach is to have a debian package supporting the board.</p>
 <p><em>TODO u-boot patch for Rock2 support</em></p>
-
 <h2 id="boot-from-the-sd-card">Boot from the SD Card</h2>
-
 <p>The sdcard is now ready. In a nutshell, we did the following:</p>
-
 <ol>
 <li>Generating and installing all necessary boot files on the development board, with the first sdcard partition mounted on /boot</li>
 <li>Creating a debian file system and copying it to the second sdcard partition</li>
 <li>Building u-boot and copying the files to offset 0x40 on the sdcard.</li>
 </ol>
-
 <p><em>Integration Board</em></p>
-
 <p>The board is able to boot both from internal memory and from a SD card: if a SD card is inserted, it will check first there for a bootable system. However, this is not true for u-boot: even if the SD card is equiped with a running u-boot, the board will always boot from the u-boot stored on the internal memory. In order to solve this, allowing the rock2 to use the u-boot on the SD card, we need to &ldquo;brick&rdquo; the board, zeroing the memory position where u-boot is located.</p>
-
-<p>I found some useful information <a href="http://git.denx.de/?p=u-boot.git;a=blob;f=doc/README.rockchip;h=e0572c80b9c7d6e22bfc695d0d73fde74f6789d5;hb=df61a74e6845ec9bdcdd48d2aff5e9c2c6debeaa" target="_blank">here.</a></p>
-
+<p>I found some useful information <a href="http://git.denx.de/?p=u-boot.git;a=blob;f=doc/README.rockchip;h=e0572c80b9c7d6e22bfc695d0d73fde74f6789d5;hb=df61a74e6845ec9bdcdd48d2aff5e9c2c6debeaa">here.</a></p>
 <p>The firefly board refered to this README has the same architecture as the Rock2. Among other things, on this README is described how to remove the existing u-boot from the board, thus allowing to boot from a custom u-boot on the SD card:</p>
-
 <pre><code>dd if=/dev/zero of=/dev/mmcblk0 bs=1M
-</code></pre>
-
-<p>After the location where u-boot is stored in the internal flash of the board is zeroised, the board won&rsquo;t be able to boot from there anymore, trying to find a suitable u-boot on the sdcard.</p>
-
+</code></pre><p>After the location where u-boot is stored in the internal flash of the board is zeroised, the board won&rsquo;t be able to boot from there anymore, trying to find a suitable u-boot on the sdcard.</p>
 <p>Connect your laptop to the serial port of the board and use minicom to see the output:</p>
-
 <pre><code>sudo minicom /dev/ttyUSB0
-</code></pre>
-
-<p>Insert the sdcard and reboot the integration board. Debian u-boot will boot the debian kernel and the debian system will start.</p>
-
+</code></pre><p>Insert the sdcard and reboot the integration board. Debian u-boot will boot the debian kernel and the debian system will start.</p>
 <pre><code>Debian GNU/Linux buster/sid absinthe ttyS2
 
 absinthe login: 
 
-</code></pre>
-
-<p>Done :)</p>
+</code></pre><p>Done :)</p>
 
     </div>
   </div>
@@ -568,9 +438,6 @@ absinthe login:
 <div class="container">
   <nav>
   <ul class="pager">
-    
-    <li class="previous"><a href="https://eramons.github.io/techblog/post/drafts/vagrant_e/"><span
-      aria-hidden="true">&larr;</span> </a></li>
     
 
     
@@ -591,7 +458,7 @@ absinthe login:
   <div class="container">
     <p class="powered-by">
 
-      &copy; 2017-2020 E. Ramon &middot; 
+      © 2017-2020 E. Ramon &middot; 
 
       Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
       theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.

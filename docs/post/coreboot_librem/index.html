@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta name="author" content="E. Ramon">
   <meta name="description" content="Alles wird gut">
 
@@ -193,30 +193,19 @@
 </div>
 
     <div class="article-style" itemprop="articleBody">
-      
-
-<p><strong>DISCLAIMER: try this at your own risk! The information below it&rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.</strong></p>
-
+      <p><strong>DISCLAIMER: try this at your own risk! The information below it&rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.</strong></p>
 <p>I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.</p>
-
 <p><strong>Goal:</strong></p>
-
 <p><em>Replace the propietary bootloader firmware shipped with the Librem 13 v.1 with coreboot</em></p>
-
 <p>Tasks:</p>
-
 <ol>
 <li>Switch from an UEFI install to a BIOS one</li>
 <li>Backup the firmware</li>
 <li>Flash coreboot</li>
 </ol>
-
 <h2 id="1-migrate-to-a-non-uefi-installation">1. Migrate to a non-UEFI installation</h2>
-
 <p>The librem supports Coreboot with SeaBios as payload. Tianocore is not supported, so an UEFI installation won&rsquo;t boot after replacing the bootloader.</p>
-
 <p>Tasks:</p>
-
 <ul>
 <li>Check if the debian system installed on the laptop is a UEFI or a BIOS install</li>
 <li>Check if the partition layout is MBR or GPT</li>
@@ -224,32 +213,22 @@
 <li>Create a new 100 MB partition</li>
 <li>Re-install grub</li>
 </ul>
-
 <p>When I got my librem 13 on September 2016, I replaced the shipped OS (PureOS) through an UEFI-booted debian system. In order to make sure the OS is indeed installed on UEFI mode, I quickly checked:</p>
-
 <ul>
 <li>There is a /sys/firmware/efi on the rootfs</li>
 <li>There is a fat32 partition (called &ldquo;efi&rdquo;) mounted on /boot/efi</li>
 </ul>
-
 <p>Two possible partition schemes exist:</p>
-
 <ul>
 <li>MBR (Master Boot Record): older</li>
 <li>GPT (GUID Partition Table): newer - required to boot operating systems in UEFI mode</li>
 </ul>
-
 <p>It&rsquo;s important to know which one is being used. Since the OS installation was an UEFI-mode debian, it was for sure that the disk scheme had to be GPT.</p>
-
 <p>Anyway, it&rsquo;s possible to check this for example looking at the output of fdisk:</p>
-
 <pre><code>sudo fdisk /dev/sda
 	...
 Disklabel type: gpt
-</code></pre>
-
-<p>Or even better gdisk:</p>
-
+</code></pre><p>Or even better gdisk:</p>
 <pre><code>sudo gdisk /dev/sda
 	...
 Partition table scan:
@@ -257,36 +236,21 @@ Partition table scan:
 	BSD: not present
 	APM: not present
 	GPT: present
-</code></pre>
-
-<p>I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 100 MB partition at the start of the disk.</p>
-
+</code></pre><p>I use grub as 2nd stage bootloader. In non-EFI mode, grub is able to boot from a partitioned GPT disk if using a compatible boot scheme, which consists on having a special 100 MB partition at the start of the disk.</p>
 <p>I looked at the partitions on my librem (you can use either gparted or gdisk):</p>
-
 <ol>
-<li>/dev/sda1 - boot:  ext4 partition mounted on /boot with size=500 MB (113 MB used)<br /></li>
+<li>/dev/sda1 - boot:  ext4 partition mounted on /boot with size=500 MB (113 MB used)</li>
 <li>/dev/sda2 - efi: fat32 partition mounted on /boot/efi with size=500 MB and flags &ldquo;boot&rdquo; and &ldquo;esp&rdquo; set</li>
 <li>/dev/sda3 - system: crypt-luks (encrypted) partition</li>
 </ol>
-
 <p>The boot partition must be resized and moved in order to have a new 100 MB partition at the beginning of the disk. Since the partitions must be unmounted to do that, I created a live debian stretch usb drive:</p>
-
 <pre><code>sudo dd if=/home/eramon/Downloads/debian-live-9.8.0-amd64-gnome.iso of=/dev/sdb bs=1M
-</code></pre>
-
-<p><em>Reboot to the live system on the usb.</em></p>
-
+</code></pre><p><em>Reboot to the live system on the usb.</em></p>
 <p>Boot from the USB drive (pressing F2 to enter setup and selecting boot override).</p>
-
 <p>On the live CD, I used gparted to resize the boot partition, freing 100 MB at the beginning of the disk.</p>
-
 <pre><code>sudo gparted
-</code></pre>
-
-<p><em>Reboot to the debian system.</em></p>
-
+</code></pre><p><em>Reboot to the debian system.</em></p>
 <p>I used gdisk to create the new 100 MB partition for grub:</p>
-
 <pre><code>Command (? for help): n
 Partition number (4-128, default 4):
 First sector (34-976773134, default = 2048) or {+-}size{KMGTP}:
@@ -304,82 +268,45 @@ Number  Start (sector)    End (sector)  Size       Code  Name
    4            2048          206847   100.0 MiB   EF02  BIOS boot partition
 
 Command (? for help): wq
-</code></pre>
-
-<p>Modify /etc/fstab and comment out the mount of the /boot/efi partition:</p>
-
+</code></pre><p>Modify /etc/fstab and comment out the mount of the /boot/efi partition:</p>
 <pre><code># Removed on 2019 February 18th to switch to a non-EFI system to be able to install coreboot:
 # UUID=559D-9E15  /boot/efi       vfat    umask=0077      0       1
-</code></pre>
-
-<p>Finally, I removed grub-efi and installed grub2:</p>
-
+</code></pre><p>Finally, I removed grub-efi and installed grub2:</p>
 <pre><code>sudo dpkg --purge grub-efi
 sudo apt-get -f autoremove
 sudo apt-get update
 sudo apt-get grub2
 sudo grub install --target=i386-pc /dev/sda
-</code></pre>
-
-<p>Notes:</p>
-
+</code></pre><p>Notes:</p>
 <ul>
 <li>The target parameter must be specified, otherwise grub tries to install grub on efi mode.</li>
 <li>Grub must be installed to the disk (/dev/sda) an not to the partition (/dev/sda2 - e.g. the boot partition) as it would be for grub-efi.</li>
 </ul>
-
 <p>Reboot to see if it worked. To be sure, I went into the bios and tried a boot override. There were two different boot options, both for the same disk. One of them is the UEFI boot and the other is the non-UEFI one. Both worked.</p>
-
 <h2 id="2-backup-the-existing-firmware">2. Backup the existing firmware</h2>
-
 <p>First install flashrom:</p>
-
 <pre><code>sudo apt-get install flashrom 
-</code></pre>
-
-<p>Flashrom dependencies:</p>
-
+</code></pre><p>Flashrom dependencies:</p>
 <pre><code>sudo apt-get install libftdi1 libftdi1-dev
-</code></pre>
-
-<p><em>Note: the dependencies are installed by the flashrom package. However I used first another flashrom binary, so I had to install the dependencies manually, that&rsquo;s why I&rsquo;m mentioning them here.</em></p>
-
+</code></pre><p><em>Note: the dependencies are installed by the flashrom package. However I used first another flashrom binary, so I had to install the dependencies manually, that&rsquo;s why I&rsquo;m mentioning them here.</em></p>
 <p>Use flashrom to make a backup of the exiting firmware:</p>
-
 <pre><code>sudo apt-get install flashrom
 sudo flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r libremfw_orig.rom  
-</code></pre>
-
-<h2 id="3-install-coreboot">3. Install Coreboot</h2>
-
+</code></pre><h2 id="3-install-coreboot">3. Install Coreboot</h2>
 <p>Purism provides on their website instructions and one script to configure, build and install coreboot on the librem with flashrom (see references). Although I found the information on the site useful, the script didn&rsquo;t work for me. The problem seemed to be that the script needs some binary blobs which should be extracted from the laptop itself, unfortunately this only works if coreboot is already installed on the machine.</p>
-
 <p>I wrote the purism support, who kindly informed me that the available script was not mantained anymore and who provided me with an image file containing both all necessary binary blobs and coreboot built with the configuration needed by my board:</p>
-
 <pre><code>file coreboot-l13v1.rom 
 coreboot-l13v1.rom: Intel serial flash for PCH ROM
 
-</code></pre>
-
-<p>In order to avoid getting an error during flashing and following the instructions of the flashrom FAQ, I overrided the kernel command line to include iomem=relaxed. In order to do that, press &ldquo;e&rdquo; when the grub menu appears during boot and modify the cmdline manually. Resume boot with F10.</p>
-
+</code></pre><p>In order to avoid getting an error during flashing and following the instructions of the flashrom FAQ, I overrided the kernel command line to include iomem=relaxed. In order to do that, press &ldquo;e&rdquo; when the grub menu appears during boot and modify the cmdline manually. Resume boot with F10.</p>
 <p>This is the error:</p>
-
 <pre><code>Enabling flash write... Error accessing ICH RCRB, 0x4000 bytes at 0x00000000fed1c000
 /dev/mem mmap failed: Operation not permitted
-</code></pre>
-
-<p>After having booted with a relaxed iomem, I was ready to flash:</p>
-
+</code></pre><p>After having booted with a relaxed iomem, I was ready to flash:</p>
 <pre><code>sudo flashrom -p internal:laptop=force_I_want_a_brick -w coreboot-l12v1.rom
-</code></pre>
-
-<p>Done :) I rebooted and was greeted by the Purism logo and SeeBios.</p>
-
+</code></pre><p>Done :) I rebooted and was greeted by the Purism logo and SeeBios.</p>
 <p><em>NOTE: The &ldquo;want a brick&rdquo; option seemed pretty scary to me. Apparently flashrom says the board is not officially supported and enforces the use of this flag to proceed.</em></p>
-
 <p>I include here the flashrom output:</p>
-
 <pre><code>eramon@caipirinha:~/dev/coreboot-l13v1-oem$ sudo ./flashrom -p internal:laptop=force_I_want_a_brick -w coreboot-l13v1.rom
 flashrom v1.0 on Linux 4.19.0-2-amd64 (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
@@ -411,19 +338,12 @@ Found Programmer flash chip &quot;Opaque flash chip&quot; (8192 kB, Programmer-s
 Reading old flash chip contents... done.
 Erasing and writing flash chip... Erase/write done.
 Verifying flash... VERIFIED.
-</code></pre>
-
-<p>References and useful or interesting links:</p>
-
-<p><a href="https://puri.sm" target="_blank">Purism</a></p>
-
-<p><a href="https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions" target="_blank">ArchLinux Grub Documentation</a></p>
-
-<p><a href="https://puri.sm/coreboot" target="_blank">https://puri.sm/coreboot</a></p>
-
-<p><a href="https://www.debian.org/CD/live" target="_blank">https://www.debian.org/CD/live</a></p>
-
-<p><a href="https://www.flashrom.org/FAQ" target="_blank">Flashrom FAQ</a></p>
+</code></pre><p>References and useful or interesting links:</p>
+<p><a href="https://puri.sm">Purism</a></p>
+<p><a href="https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions">ArchLinux Grub Documentation</a></p>
+<p><a href="https://puri.sm/coreboot">https://puri.sm/coreboot</a></p>
+<p><a href="https://www.debian.org/CD/live">https://www.debian.org/CD/live</a></p>
+<p><a href="https://www.flashrom.org/FAQ">Flashrom FAQ</a></p>
 
     </div>
   </div>
@@ -456,7 +376,7 @@ Verifying flash... VERIFIED.
   <div class="container">
     <p class="powered-by">
 
-      &copy; 2017-2020 E. Ramon &middot; 
+      © 2017-2020 E. Ramon &middot; 
 
       Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
       theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.

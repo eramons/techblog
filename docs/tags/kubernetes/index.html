@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta name="author" content="E. Ramon">
   <meta name="description" content="Alles wird gut">
 
@@ -43,7 +43,7 @@
 
   
 
-  <title>Kubernetes | Small Technical Blog</title>
+  <title>kubernetes | Small Technical Blog</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -119,11 +119,24 @@
 
 <div class="universal-wrapper">
 
-  <h1>Kubernetes</h1>
+  <h1>kubernetes</h1>
 
   
 
   
+  
+  <div>
+    <h2><a href="https://eramons.github.io/techblog/post/nextcloud/">Nextcloud self-hosting on K8s</a></h2>
+    <div class="article-style">
+      
+      Goal:
+Self-host Nextcloud on Kubernetes and use it as server-side for the /e operating system
+Nextcloud offers an on-premises content collaboration platform, which is open-source and free. The Nextcloud server is written in the PHP and JavaScript scripting languages.
+The /e/ ROM is a fork of Android (more precisely from LineageOS).
+See previous post to see how to install the OS on a LG G3 and my efforts to self-host the /e server beta version.
+      
+    </div>
+  </div>
   
   <div>
     <h2><a href="https://eramons.github.io/techblog/post/k3s/">K3s on Raspberry Pi 4</a></h2>
@@ -131,7 +144,7 @@
       
       Goal:
 Set up a minimal Kubernetes cluster on Rapberry Pi 4.
-I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it&rsquo;s pretty cool, but I actually wasn&rsquo;t sure what I wanted it for. After giving it a thought, I decided to install Rancher&rsquo;s K3S distribution on it, turning it to a convenient, low-power-consumption, single-node K8s distribution I can use as a playground.
+I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it’s pretty cool, but I actually wasn’t sure what I wanted it for. After giving it a thought, I decided to install Rancher’s K3S distribution on it, turning it to a convenient, low-power-consumption, single-node K8s distribution I can use as a playground.
       
     </div>
   </div>
@@ -156,8 +169,8 @@ Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software:
       
       Goal:
 Configure DNS, so applications running on the K8S cluster are reachable from the internet and TLS-protected
-Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, the configuration capabilities of the standard provider&rsquo;s internet boxes are usually too limited.
-In particular I had the issue of the internal host resolution. My internet box wasn&rsquo;t able to properly route requests to the own external IP address from inside the internal network.
+Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, the configuration capabilities of the standard provider’s internet boxes are usually too limited.
+In particular I had the issue of the internal host resolution. My internet box wasn’t able to properly route requests to the own external IP address from inside the internal network.
       
     </div>
   </div>
@@ -169,7 +182,7 @@ In particular I had the issue of the internal host resolution. My internet box w
       Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
+Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let’s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
       
     </div>
   </div>
@@ -183,7 +196,7 @@ Tasks:
   <div class="container">
     <p class="powered-by">
 
-      &copy; 2017-2020 E. Ramon &middot; 
+      © 2017-2020 E. Ramon &middot; 
 
       Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
       theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.

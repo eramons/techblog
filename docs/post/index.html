@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta name="author" content="E. Ramon">
   <meta name="description" content="Alles wird gut">
 
@@ -122,6 +122,97 @@
   
   <div>
     
+    <h2><a href="https://eramons.github.io/techblog/post/nextcloud/">Nextcloud self-hosting on K8s</a></h2>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2021-01-07 09:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Thu, Jan 7, 2021
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/techblog/tags/nextcloud">nextcloud</a
+    >, 
+    
+    <a href="/techblog/tags//e">/e</a
+    >, 
+    
+    <a href="/techblog/tags/kubernetes">kubernetes</a
+    >
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+    <div class="article-style"><p>
+      
+      Goal:
+Self-host Nextcloud on Kubernetes and use it as server-side for the /e operating system
+Nextcloud offers an on-premises content collaboration platform, which is open-source and free. The Nextcloud server is written in the PHP and JavaScript scripting languages.
+The /e/ ROM is a fork of Android (more precisely from LineageOS).
+See previous post to see how to install the OS on a LG G3 and my efforts to self-host the /e server beta version.
+      
+    </p></div>
+  </div>
+  
+  <div>
+    
+    <h2><a href="https://eramons.github.io/techblog/post/thinkpadw500/">WIP Coreboot on ThinkPad W500</a></h2>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="2020-12-17 09:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
+      Thu, Dec 17, 2020
+    </time>
+  </span>
+
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/techblog/tags/coreboot">coreboot</a
+    >
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+    <div class="article-style"><p>
+      
+      Goal:
+Give an old Lenovo Thinkpad W500 a second life featuring Coreboot and Ubuntu
+My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn’t getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the battery was almost dead.
+I got permission to play around with this old machine - even after pointing out the risks - and to try to give it a second life:
+      
+    </p></div>
+  </div>
+  
+  <div>
+    
     <h2><a href="https://eramons.github.io/techblog/post/e/">/e self-hosting and /e OS on LG G3</a></h2>
     
 
@@ -163,7 +254,7 @@
       Goal:
 Rely on the /e platform for private cloud self-hosting and as android operating system
 /e is a mobile ecosystem that:
- is open source is presented as an environment which values privacy is un-googled but still compatible with android apps  The /e/ ROM is a fork of Android (more precisely from LineageOS).
+is open source is presented as an environment which values privacy is un-googled but still compatible with android apps  The /e/ ROM is a fork of Android (more precisely from LineageOS).
 The /e/ cloud includes several applications and it’s built upon NextCloud, Postfix, Dovecot and OnlyOffice. It’s been integrated to offer a single login identity in /e/OS as well as online, where users can retrieve their data from the ecloud global services.
       
     </p></div>
@@ -211,7 +302,7 @@ The /e/ cloud includes several applications and it’s built upon NextCloud, Pos
       
       Goal:
 Set up a minimal Kubernetes cluster on Rapberry Pi 4.
-I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it&rsquo;s pretty cool, but I actually wasn&rsquo;t sure what I wanted it for. After giving it a thought, I decided to install Rancher&rsquo;s K3S distribution on it, turning it to a convenient, low-power-consumption, single-node K8s distribution I can use as a playground.
+I ordered a new Raspberry Pi 4 a couple of days ago. I already use one at work for automated testing and I think it’s pretty cool, but I actually wasn’t sure what I wanted it for. After giving it a thought, I decided to install Rancher’s K3S distribution on it, turning it to a convenient, low-power-consumption, single-node K8s distribution I can use as a playground.
       
     </p></div>
   </div>
@@ -302,8 +393,8 @@ Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software:
       
       Goal:
 Configure DNS, so applications running on the K8S cluster are reachable from the internet and TLS-protected
-Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, the configuration capabilities of the standard provider&rsquo;s internet boxes are usually too limited.
-In particular I had the issue of the internal host resolution. My internet box wasn&rsquo;t able to properly route requests to the own external IP address from inside the internal network.
+Setting up a home made kubernetes cluster is quite straightforward. However, for deploying applications or services accessible from the internet, the configuration capabilities of the standard provider’s internet boxes are usually too limited.
+In particular I had the issue of the internal host resolution. My internet box wasn’t able to properly route requests to the own external IP address from inside the internal network.
       
     </p></div>
   </div>
@@ -345,7 +436,7 @@ In particular I had the issue of the internal host resolution. My internet box w
       Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
+Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let’s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
       
     </p></div>
   </div>
@@ -428,7 +519,7 @@ Since I installed Coreboot on my Librem, I experienced some issues. In order to 
     <div class="article-style"><p>
       
       DISCLAIMER: try anything described here at your own risk! These are just my notes. That it did work for me then does not mean this would work for you now.
-After successfully installing coreboot on my librem 13 v1, I noticed that unfortunately the wifi wasn&rsquo;t working anymore. Since the coreboot version I flashed previously wasn&rsquo;t quite new, I decided to build a new rom image myself using the newest coreboot source code.
+After successfully installing coreboot on my librem 13 v1, I noticed that unfortunately the wifi wasn’t working anymore. Since the coreboot version I flashed previously wasn’t quite new, I decided to build a new rom image myself using the newest coreboot source code.
       
     </p></div>
   </div>
@@ -467,101 +558,8 @@ After successfully installing coreboot on my librem 13 v1, I noticed that unfort
 
     <div class="article-style"><p>
       
-      DISCLAIMER: try this at your own risk! The information below it&rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.
+      DISCLAIMER: try this at your own risk! The information below it’s just a summary of my notes and experiences during the installation of coreboot on my notebook.
 I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.
-      
-    </p></div>
-  </div>
-  
-  <div>
-    
-    <h2><a href="https://eramons.github.io/techblog/post/asuschromebook_debian/">Debian on Asus Chromebook Flip C101PA</a></h2>
-    
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2018-12-04 10:00:00 &#43;0200 &#43;0200" itemprop="datePublished">
-      Tue, Dec 4, 2018
-    </time>
-  </span>
-
-  
-
-  
-  
-  
-  <span class="article-tags">
-    <i class="fa fa-tags"></i>
-    
-    <a href="/techblog/tags/debian">debian</a
-    >, 
-    
-    <a href="/techblog/tags/arm">arm</a
-    >
-    
-  </span>
-  
-  
-
-  
-
-</div>
-
-    <div class="article-style"><p>
-      
-      The Asus Chromebook Flip C101PA (bob) is a convertible touchscreen laptop powered by an ARMv8 Rockchip RK3399 hexa-core processor and 4GB RAM, measuring 10.4&rdquo; x 7.2&rdquo; x 0.6&rdquo; and weighing 1 kg.
-Features:
- Rockchip RK3399 (OP1) dual-core 2.0GHz Cortex-A72 and quad-core 1.4GHz Cortex-A53 processor 4GB LPDDR3 RAM 10.1&rdquo; 1280x800 LED display Mali T860MP4 GPU 16GB eMMC 38 Whrs battery 2x USB 3.1 Type-C ports 1x USB 2.0 Type-A port  ARM Chromebooks ship with the Coreboot bootloader and use Depthcharge as the payload.
-      
-    </p></div>
-  </div>
-  
-  <div>
-    
-    <h2><a href="https://eramons.github.io/techblog/post/rock2_debian/">Debian on Radxa Rock Square</a></h2>
-    
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2017-07-27 15:03:58 &#43;0200 CEST" itemprop="datePublished">
-      Thu, Jul 27, 2017
-    </time>
-  </span>
-
-  
-
-  
-  
-  
-  <span class="article-tags">
-    <i class="fa fa-tags"></i>
-    
-    <a href="/techblog/tags/arm">arm</a
-    >, 
-    
-    <a href="/techblog/tags/debian">debian</a
-    >, 
-    
-    <a href="/techblog/tags/u-boot">u-boot</a
-    >
-    
-  </span>
-  
-  
-
-  
-
-</div>
-
-    <div class="article-style"><p>
-      
-      Radxa Rock 2 Square is a Rockchip RK3288 based solution.
-Available images
-The available images run with:
- A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel.  The goal is to get a pure Debian distribution up and running on the board:
- Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:
       
     </p></div>
   </div>
@@ -584,7 +582,7 @@ The available images run with:
   <div class="container">
     <p class="powered-by">
 
-      &copy; 2017-2020 E. Ramon &middot; 
+      © 2017-2020 E. Ramon &middot; 
 
       Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
       theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.

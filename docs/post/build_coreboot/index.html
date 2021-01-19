@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta name="author" content="E. Ramon">
   <meta name="description" content="Alles wird gut">
 
@@ -193,177 +193,93 @@
 </div>
 
     <div class="article-style" itemprop="articleBody">
-      
-
-<p><strong>DISCLAIMER: try anything described here at your own risk! These are just my notes. That it did work for me then does not mean this would work for you now.</strong></p>
-
+      <p><strong>DISCLAIMER: try anything described here at your own risk! These are just my notes. That it did work for me then does not mean this would work for you now.</strong></p>
 <p>After successfully installing coreboot on my librem 13 v1, I noticed that unfortunately the wifi wasn&rsquo;t working anymore. Since the coreboot version I flashed previously wasn&rsquo;t quite new, I decided to build a new rom image myself using the newest coreboot source code.</p>
-
 <p><strong>Goal:</strong></p>
-
 <p><em>Replace coreboot with an up-to-date, self-built coreboot version</em></p>
-
 <p>Tasks:</p>
-
 <ol>
 <li>Get required files: coreboot source code, purism config and librem binary blobs</li>
 <li>Configure and build coreboot</li>
 <li>Install coreboot</li>
 </ol>
-
 <h2 id="1-get-the-files">1. Get the files</h2>
-
 <p>Get coreboot source code:</p>
-
 <pre><code>git clone https://review.coreboot.org/coreboot
-</code></pre>
-
-<p>Install build dependencies:</p>
-
+</code></pre><p>Install build dependencies:</p>
 <pre><code>sudo apt-get install -y bison build-essential curl flex git gnat libncurses5-dev m4 zlib1g-dev
-</code></pre>
-
-<p>Install flashrom:</p>
-
+</code></pre><p>Install flashrom:</p>
 <pre><code>sudo apt-get install flashrom
-</code></pre>
-
-<p>Build coreboot toolchain:</p>
-
+</code></pre><p>Build coreboot toolchain:</p>
 <pre><code>cd coreboot
 make crossgcc-i386 CPUS=4
-</code></pre>
-
-<p>Pull coreboot submodules, since some are needed in order to build cbfstool:</p>
-
+</code></pre><p>Pull coreboot submodules, since some are needed in order to build cbfstool:</p>
 <pre><code>git submodule update --init
-</code></pre>
-
-<p>Build cbfstool and ifdtool:</p>
-
+</code></pre><p>Build cbfstool and ifdtool:</p>
 <pre><code>cd util/cbfstool
 make
 cd ../util/ifdtool
 make
 cd ..
-</code></pre>
-
-<p>Since coreboot was already on my laptop, I was able to extract the binary blobs from the machine itself.</p>
-
+</code></pre><p>Since coreboot was already on my laptop, I was able to extract the binary blobs from the machine itself.</p>
 <p>I analyzed purism&rsquo;s coreboot installation script (see references below) in order to find out how to get the binary blobs.</p>
-
 <p>Create blob directory, following coreboot file structure:</p>
-
 <pre><code>mkdir -p 3rdparty/blobs/mainboard/purism/librem_bdw
-</code></pre>
-
-<p>Get the currently installed coreboot image with <em>flashrom</em>:</p>
-
+</code></pre><p>Get the currently installed coreboot image with <em>flashrom</em>:</p>
 <pre><code>sudo flashrom -p internal:laptop=force_I_want_a_brick,ich_spi_mode=hwseq -r coreboot-orig.rom
-</code></pre>
-
-<p>Use <em>ifdtool</em> to extract the flash regions from the rom image:</p>
-
+</code></pre><p>Use <em>ifdtool</em> to extract the flash regions from the rom image:</p>
 <pre><code>sudo ./util/ifdtool/ifdtool -x coreboot-orig.rom 
-</code></pre>
-
-<p>Output of <em>idftool</em>:</p>
-
+</code></pre><p>Output of <em>idftool</em>:</p>
 <pre><code>File coreboot-orig.rom is 8388608 bytes
   Flash Region 0 (Flash Descriptor): 00000000 - 00000fff 
   Flash Region 1 (BIOS): 00200000 - 007fffff 
   Flash Region 2 (Intel ME): 00001000 - 001fffff 
   Flash Region 3 (GbE): 00fff000 - 00000fff (unused)
   Flash Region 4 (Platform Data): 00fff000 - 00000fff (unused)
-</code></pre>
-
-<p>Copy the file containing the second flash region to <em>me.bin</em>:</p>
-
+</code></pre><p>Copy the file containing the second flash region to <em>me.bin</em>:</p>
 <pre><code>cp flashregion_2_intel_me.bin 3rdparty/blobs/mainboard/purism/librem_bdw/me.bin
-</code></pre>
-
-<p>Download <em>cpu_microcode_blob.bin</em>:</p>
-
+</code></pre><p>Download <em>cpu_microcode_blob.bin</em>:</p>
 <pre><code>wget -O 3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin &quot;https://github.com/platomav/CPUMicrocodes/raw/18a85ffed180447aa16c2796146ff2698691eddf/Intel/cpu306D4_platC0_ver0000002A_2018-01-18_PRD_CC79BBDA.bin&quot; 
-</code></pre>
-
-<p>Extract <em>mrc.bin</em> from the rom image:</p>
-
+</code></pre><p>Extract <em>mrc.bin</em> from the rom image:</p>
 <pre><code>util/cbfstool/cbfstool coreboot-orig.rom extract -n mrc.bin -f 3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin
-</code></pre>
-
-<p>Extract <em>refcode.elf</em> from the rom image:</p>
-
+</code></pre><p>Extract <em>refcode.elf</em> from the rom image:</p>
 <pre><code>util/cbfstool/cbfstool coreboot-orig.rom extract -n fallback/refcode -f 3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf -m x86
-</code></pre>
-
-<p>Extract <em>vgabios.bin</em> from the rom image:</p>
-
+</code></pre><p>Extract <em>vgabios.bin</em> from the rom image:</p>
 <pre><code>util/cbfstool/cbfstool coreboot-orig.rom extract -n pci8086,1616.rom -f 3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin
-</code></pre>
-
-<p>Clone the <em>coreboot-files</em> from purism&rsquo;s github repository to get <em>descriptor.bin</em>:</p>
-
+</code></pre><p>Clone the <em>coreboot-files</em> from purism&rsquo;s github repository to get <em>descriptor.bin</em>:</p>
 <pre><code>git clone https://source.puri.sm/coreboot/coreboot-files.git
 cp coreboot-files/descriptor-bdl.bin 3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin
-</code></pre>
-
-<p>I&rsquo;m including the output of <em>sha256sum</em> on all six binaries - which I compared with the ones provided by purism on their script as a security check:</p>
-
+</code></pre><p>I&rsquo;m including the output of <em>sha256sum</em> on all six binaries - which I compared with the ones provided by purism on their script as a security check:</p>
 <pre><code>69537c27d152ada7dce9e35bfa16e3cede81a18428d1011bd3c33ecae7afb467  3rdparty/blobs/mainboard/purism/librem_bdw/cpu_microcode_blob.bin
 be34b19b4de387a07d4fc859d2e4ee44723756f5f54552f236136679b4e52c46  3rdparty/blobs/mainboard/purism/librem_bdw/descriptor.bin
 1e8f08c3eb31a0fdb91ec0222d4398b9192141502941a5262e9155915ffb6991  3rdparty/blobs/mainboard/purism/librem_bdw/me.bin
 dd05ab481e1fe0ce20ade164cf3dbef3c479592801470e6e79faa17624751343  3rdparty/blobs/mainboard/purism/librem_bdw/mrc.bin
 8a919ffece61ba21664b1028b0ebbfabcd727d90c1ae2f72b48152b8774323a4  3rdparty/blobs/mainboard/purism/librem_bdw/refcode.elf
 e1cd1b4f2bd21e036145856e2d092eb47c27cdb4b717c3b182a18d8c0b1d0f01  3rdparty/blobs/mainboard/purism/librem_bdw/vgabios.bin
-</code></pre>
-
-<h2 id="2-configure-and-build-coreboot">2. Configure and build coreboot</h2>
-
+</code></pre><h2 id="2-configure-and-build-coreboot">2. Configure and build coreboot</h2>
 <p>Copy the <em>.config</em> file from purism&rsquo;s <em>coreboot-files</em> downloaded before. Then run <em>make menuconfig</em> and select <em>save</em> in order to update the configuration including all settings not yet included:</p>
-
 <pre><code>cp coreboot-files/configs/config.librem13v1 .config
 make menuconfig
-</code></pre>
-
-<p>Following file paths must be corrected:</p>
-
+</code></pre><p>Following file paths must be corrected:</p>
 <pre><code>-CONFIG_BOOTSPLASH_FILE=&quot;bootsplash.jpg&quot;
 +CONFIG_BOOTSPLASH_FILE=&quot;coreboot-files/bootsplash.jpg&quot;
 
 -CONFIG_SEABIOS_BOOTORDER_FILE=&quot;bootorder.txt&quot;
 +CONFIG_SEABIOS_BOOTORDER_FILE=&quot;coreboot-files/bootorder-l13v1.txt&quot;
-</code></pre>
-
-<p>Now .config is ready and we can build coreboot:</p>
-
+</code></pre><p>Now .config is ready and we can build coreboot:</p>
 <pre><code>make -j4
-</code></pre>
-
-<h2 id="3-install-coreboot">3. Install coreboot</h2>
-
+</code></pre><h2 id="3-install-coreboot">3. Install coreboot</h2>
 <p>Before flashing, reboot including the kernel parameter <em>iomem=relaxed</em>, otherwise flashrom will fail. For this, press &ldquo;e&rdquo; when the grub menu is shown and edit the kernel command line manually.</p>
-
 <p>After reboot, I flashed the new image I had just built:</p>
-
 <pre><code>sudo flashrom -p internal:laptop=force_I_want_a_brick -c MX25L6405D -w build/coreboot.rom 
-</code></pre>
-
-<p>And then a cool reboot - luckily the computer still booted :D</p>
-
+</code></pre><p>And then a cool reboot - luckily the computer still booted :D</p>
 <p>I saw first the SeeBios message, then the Purism Logo and then the Grub boot menu.</p>
-
 <p>The wifi wasn&rsquo;t working yet. However, that is another story and shall be told another time ;)</p>
-
 <p>References and sources:</p>
-
-<p><a href="https://doc.coreboot.org/lessons/lesson1.html" target="_blank">Coreboot Rookie Guide</a></p>
-
-<p><a href="https://puri.sm/coreboot" target="_blank">https://puri.sm/coreboot</a></p>
-
-<p><a href="https://www.flashrom.org/FAQ" target="_blank">Flashrom FAQ</a></p>
-
-<p><a href="http://localhost:1313/techblog/post/coreboot_librem" target="_blank">Coreboot on Librem</a></p>
+<p><a href="https://doc.coreboot.org/lessons/lesson1.html">Coreboot Rookie Guide</a></p>
+<p><a href="https://puri.sm/coreboot">https://puri.sm/coreboot</a></p>
+<p><a href="https://www.flashrom.org/FAQ">Flashrom FAQ</a></p>
+<p><a href="http://localhost:1313/techblog/post/coreboot_librem">Coreboot on Librem</a></p>
 
     </div>
   </div>
@@ -396,7 +312,7 @@ make menuconfig
   <div class="container">
     <p class="powered-by">
 
-      &copy; 2017-2020 E. Ramon &middot; 
+      © 2017-2020 E. Ramon &middot; 
 
       Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
       theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.

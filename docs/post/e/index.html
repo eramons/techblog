@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta name="author" content="E. Ramon">
   <meta name="description" content="Alles wird gut">
 
@@ -199,225 +199,139 @@
 </div>
 
     <div class="article-style" itemprop="articleBody">
-      
-
-<p><strong>Goal:</strong></p>
-
+      <p><strong>Goal:</strong></p>
 <p><em>Rely on the /e platform for private cloud self-hosting and as android operating system</em></p>
-
 <p>/e is a mobile ecosystem that:</p>
-
 <ul>
 <li>is open source</li>
 <li>is presented as an environment which values privacy</li>
 <li>is un-googled but still compatible with android apps</li>
 </ul>
-
 <p>The /e/ ROM is a fork of Android (more precisely from LineageOS).</p>
-
 <p>The /e/ cloud includes several applications and it’s built upon NextCloud, Postfix, Dovecot and OnlyOffice. It’s been integrated to offer a single login identity in /e/OS as well as online, where users can retrieve their data from the ecloud global services. It&rsquo;s also possible to self-host a private cloud on an own server.</p>
-
 <h2 id="pre-conditions">Pre-conditions</h2>
-
 <p>For this project, I needed a client and a server. Luckily my old LG G3 (year 2014) - which still worked perfectly - is supported by /e (last build was from 2020/10/01 - just two months old at the time of this writting). So as it looked, it was still maintained. I had rooted the device, installed TWRP and installed LineageOS on it a couple of years back.</p>
-
 <p>As a server I wasn&rsquo;t so sure. I would have liked to host /e on my K3s cluster on the Raspberry Pi 4, but unfortunately arm was not supported at the time, only x86 or x86-64. So I finished up setting up a hosted Ubuntu VM on the Digital Ocean Developer Cloud.</p>
-
 <p><em>NOTE: First I thought about running the /e software on a vm directly on my laptop, using Vagrant as virtualization environment.  Then I found out it&rsquo;s not possible to run the installation script on the home network, since the DNS configuration requires a reverse DNS record, which must be set up by the owner of the IP ranges, impossible to achieve with the home network.</em></p>
-
 <ul>
 <li>Client side: install /e operating system on LG G3 d855 (International)</li>
 <li>Server side: install /e self-hosting on a Ubuntu VM hosted by Digital Ocean</li>
 </ul>
-
 <p>For the self-hosting, I also needed:</p>
-
 <ul>
 <li>A hosted public domain (<em>mydomain.com</em>)</li>
 <li>A DNS provider to register the necessary DNS entries (<em>Cloudflare</em>)</li>
 </ul>
-
 <p>Assuming all the pre-conditions were met, following milestones had to be reached:</p>
-
 <ol>
 <li>Install /e on the mobile phone</li>
 <li>Create a Digital Ocean account and set up an Ubuntu VM</li>
 <li>Set up DNS</li>
 <li>Install /e self-hosting on the VM</li>
 </ol>
-
 <h2 id="1-install-e-on-lg-g3">1. Install /e on LG G3</h2>
-
 <p>Well, the installation was pretty straightforward, since I already had some things in place:</p>
-
 <ul>
 <li>The device was rooted</li>
 <li>The device had a custom recovery installed - TWRP</li>
 <li>The device had adb debugging enabled</li>
 <li>I had adb installed on my laptop</li>
 </ul>
-
 <p>First thing was to connect the device to my laptop. Then reboot to recovery through adb:</p>
-
 <pre><code>eramon@caipirinha:~/dev/e$ adb reboot recovery
-</code></pre>
-
-<p>I followed the instructions online to wipe the device from the TWRP recovery, completely wiping everything, including the swap and the cache.</p>
-
+</code></pre><p>I followed the instructions online to wipe the device from the TWRP recovery, completely wiping everything, including the swap and the cache.</p>
 <p>Then I downloaded the image from the dowloads website and installed the image using sideload:</p>
-
 <pre><code>eramon@caipirinha:~/dev/e$ adb sideload e-0.12-n-2020100176273-dev-d855.zip 
 Total xfer: 1.00x      
-</code></pre>
-
-<p>After restart the new operating system was running on the phone.</p>
-
+</code></pre><p>After restart the new operating system was running on the phone.</p>
 <p>Looking nice :)
-<img src="/techblog/img/lgg3_e.jpg" alt="LGG3" /></p>
-
+<img src="/techblog/img/lgg3_e.jpg" alt="LGG3"></p>
 <h2 id="2-set-up-an-ubuntu-vm">2. Set up an Ubuntu VM</h2>
-
 <p>Before having a server to install the /e self-hosting software on, I decided to try it out running it on a hosted virtual machine. As cloud service I would use <em>DigitalOcean</em>, since I have been wanting to try it out for a while.</p>
-
 <p>After registering, I chose &ldquo;Ubuntu Server&rdquo; as &ldquo;Starting Point&rdquo;. Servers in Digital Ocean are called <em>Droplets</em>, so I was about to create my first droplet:</p>
-
 <ul>
-<li>$5.00 Droplet - 1GB / 1 CPU 25 GB SSD Disk</li>
+<li>$20.00 Droplet - 4GB / 2 vCPU 50 GB SSD Disk</li>
 </ul>
-
 <p><em>Droplets are virtual machines. A virtual machine acts just like a standalone computer, so it runs an operating system (ours are all Linux-based) which you can log into in order to install and run software.</em></p>
-
-<p>1 GB RAM is not enough according to the requirements on the documentation. I resized the VM to 2 GB RAM.
-After setting up the VM, I accessed via &ldquo;Console&rdquo; as root and created a non-root user. SSH is enabled and running. The VM gets a public IPv4 IP address.</p>
-
+<p>According to the requirements on the documentation, at least 2GB RAM are necessary.</p>
+<p>After setting up the VM, I accessed via &ldquo;Console&rdquo; as root and created a non-root user. SSH is enabled and running. The VM gets a public IPv4 IP address.</p>
 <h2 id="3-dns">3. DNS</h2>
-
 <p>For self-hosting /e you need to have at least a domain registered. I already own <em>mydomain.com</em> and I use Cloudflare for setting up DNS records for my projects.</p>
-
 <p>I configured an A record in Cloudflare in order for my registered domain to point to the VM:</p>
-
 <pre><code>Type: A 
 Name: e.mydomain.com
 Content: &lt;Public IP Address&gt;  
 Proxy-Status: DNS only
-</code></pre>
-
-<p>According to the /e self-hosting README on gitlab, I also needed:</p>
-
+</code></pre><p>According to the /e self-hosting README on gitlab, I also needed:</p>
 <pre><code>Type: A 
 Name: mail.e.mydomain.com
 Content: &lt;Public IP Address&gt; 
 Proxy-Status: DNS only
-</code></pre>
-
-<p>Still following the instructions, a reverse DNS entry must be set on the <em>VPS settings on the hoster&rsquo;s website</em>:</p>
-
+</code></pre><p>Still following the instructions, a reverse DNS entry must be set on the <em>VPS settings on the hoster&rsquo;s website</em>:</p>
 <pre><code>Type: PTR
 &lt;Public IP Address&gt; -&gt; mail.e.mydomain.com.
-</code></pre>
-
-<p>Logged in to my DigitalOcean account, I found under <em>Networking</em> -&gt; <em>PTR records</em> the following:</p>
-
+</code></pre><p>Logged in to my DigitalOcean account, I found under <em>Networking</em> -&gt; <em>PTR records</em> the following:</p>
 <pre><code>You have no PTR records.
 DigitalOcean will automatically create a PTR record for a server when you rename the host Droplet to the fully qualified domain name of a domain you are managing on your account.
-</code></pre>
-
-<p>So I changed the hostname of the VM to <em>mail.e.mydomain.com</em>. I also changed the hostname on the VM itself:</p>
-
+</code></pre><p>So I changed the hostname of the VM to <em>mail.e.mydomain.com</em>. I also changed the hostname on the VM itself:</p>
 <pre><code>root@ubuntu-s-1vcpu-1gb-fra1-01:/home/eramon# echo &quot;mail.e.mydomain.com&quot; &gt; /etc/hostname
-</code></pre>
-
-<p>Then I rebooted. After logging in, it looked like the change was effective:</p>
-
+</code></pre><p>Then I rebooted. After logging in, it looked like the change was effective:</p>
 <pre><code>eramon@mail:~$
-</code></pre>
-
-<p>Now I saw following PTR record under &ldquo;Networking&rdquo; -&gt; &ldquo;PTR records&rdquo;:</p>
-
+</code></pre><p>Now I saw following PTR record under &ldquo;Networking&rdquo; -&gt; &ldquo;PTR records&rdquo;:</p>
 <pre><code>IP Address: &lt;Public IP Address&gt; 
 PTR Record: mail.e.mydomain.com. 
-</code></pre>
-
-<p>With this setup in place, it should be possible to run the installation script.</p>
-
+</code></pre><p>With this setup in place, it should be possible to run the installation script.</p>
 <h2 id="4-install-e-self-hosting-beta">4. Install /e self-hosting beta</h2>
-
 <p>Get installation script:</p>
-
-<pre><code>eramon@mail:~$ wget https://gitlab.e.foundation/e/infra/bootstrap/raw/master/bootstrap-generic.sh
-</code></pre>
-
-<p>Run installation script as root as described on the gitlab documentation:</p>
-
-<pre><code>eramon@mail:~$ sudo bash bootstrap-generic.sh https://gitlab.e.foundation/e/infra/ecloud-selfhosting master
-</code></pre>
-
+<pre><code>root@mail:/home/eramon# wget https://gitlab.e.foundation/e/infra/bootstrap/raw/master/bootstrap-generic.sh
+</code></pre><p>Run installation script as root as described on the gitlab documentation:</p>
+<pre><code>root@mail:/home/eramon# wget https://gitlab.e.foundation/e/infra/bootstrap/raw/master/bootstrap-generic.sh master
+</code></pre><p><em>NOTE: Since the script is kind of carefully balanced, I ran the script directly as root to make sure everythink works as foreseen by the developers.</em></p>
 <p>I was prompted to provide information:</p>
-
 <ul>
 <li>As mailserver (management) domain I provided <em>e.mydomain.com</em></li>
 <li>As additional domain(s) I did not provide any</li>
 <li>I provided an alternative e-mail address <em>eramon@mydomain.com</em></li>
 <li>I said I did NOT need OnlyOffice</li>
 </ul>
-
 <p>The installation script then provided a list of additional DNS entries to be configured:</p>
-
 <pre><code>MX                    |  e.mydomain.com               |  mail.e.mydomain.com  |  10
 CNAME                 |  autoconfig.e.mydomain.com    |  mail.e.mydomain.com  |  -
 CNAME                 |  autodiscover.e.mydomain.com  |  mail.e.mydomain.com  |  -
 CNAME                 |  spam.e.mydomain.com          |  mail.e.mydomain.com  |  -
 CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  | 
-</code></pre>
-
-<p>I added the entries to my DNS configuration on Cloudflare.</p>
-
-<p><em>TODO: Current issue:</em></p>
-
-<pre><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
-</code></pre>
-
-<p>I asked the /e community support for assistance. According to an older thread, the issue is related to the fact that in later builds MariaDB does not allow root access without password.</p>
-
-<h2 id="other-approaches-and-conclussion">Other approaches and conclussion:</h2>
-
-<p>On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it&rsquo;s uncomplicated. I liked it.</p>
-
-<p>On the server side, as for the last update of this post, there is still an open issue which prevents the install script to finish succesfully.</p>
-
-<p>Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using <em>salt</em>. Then it uses docker-compose to run docker instances of the different applications.</p>
-
-<p>Even working, for me this setup only works for testing, but it is a no go for a potential productive setup. Reasons:</p>
-
+</code></pre><p>I added the entries to my DNS configuration on Cloudflare.</p>
+<p>I would like to say everything ran smoothly on the first try, unfortunately this was not the case. I got several errors. I asked the /e community assistance. Finally I was able to finish the installation thanks to a workaround provided by a really nice member of the /e community, who helped me with the issues.</p>
+<p>Anyway, at the end of the installation script I was prompted to restart the server, and everything ran smoothly after that :) I logged in with the admin credentials shown as output of the installation script and created an user with username <em>me</em> and e-mail <em>my@e.mydomain.com</em>.</p>
+<p><em>NOTE: the workaround was to manually remove two lines from the postinstall.sh script after being prompted by the installer the first time and before resuming the installation. See links at the end for more information.</em></p>
+<p>Then I went to the <em>account manager</em> on the LG G3 and added a new /e account:</p>
 <ul>
+<li>As username and e-mail I used the ones of the just created account</li>
+<li>As server URL I wrote <em><a href="https://e.mydomain.com">https://e.mydomain.com</a></em></li>
+</ul>
+<h2 id="other-approaches-and-conclussion">Other approaches and conclussion:</h2>
+<p>On the client side, the android-based OS looks really good. The synchronization of files and photographs works perfectly and it&rsquo;s uncomplicated. I liked it.</p>
+<p>On the server side, as mentioned above, it was kind of cumbersome. However, once running, the synchronization with the mobile client and the synchronization of filew worked perfectly. The /e dashboard and interface looked really nice :)</p>
+<p>Unfortunately, the instructions and code for the self-hosting installation do not allow for flexibility. The installation script downloads source and files and applies a default configuration using <em>salt</em>. Then it uses docker-compose to run docker instances of the different applications.</p>
+<p>Even working, for me this setup only works for testing, but it is a no go for a potential productive setup. Reasons:</p>
+<ul>
+<li>Maintenance and updates are quite difficult if the installation script must be used.</li>
 <li>I don&rsquo;t want to host any data on the cloud. The idea is to keep private files on the home network.</li>
 <li>I don&rsquo;t want to host an own mail server. I&rsquo;m not interested in having an own e-mail address for this .</li>
 <li>I&rsquo;m just interested on files and pictures synchronization.</li>
 </ul>
-
 <h2 id="next-steps">Next steps</h2>
-
-<p>Basing on the premise that I don&rsquo;t need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I got the recommendation from the /e developers to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do.</p>
-
+<p>Basing on the premise that I don&rsquo;t need either a mail server nor only office, a setup with just NextCloud on the server side would be enough for me. I also got the recommendation from the /e developers to do so. Apparently there is no special account management to take into consideration, just installing nextcloud and connecting the LG G3 to the server should do.</p>
 <p>New post - Nextcloud - coming soon :)</p>
-
 <h2 id="troubleshooting-and-e-community-support">Troubleshooting and /e community support</h2>
-
-<p><a href="https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon" target="_blank">PHP Fatal Error: apc_mmap</a></p>
-
-<p><a href="https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500" target="_blank">MariaDB issue</a></p>
-
+<p><a href="https://community.e.foundation/t/mariadb-issue-access-denied-for-user-root-localhost/24500">MariaDB issue</a></p>
+<p><a href="https://community.e.foundation/t/php-fatal-error-apc-mmap/24440?u=eramon">PHP Fatal Error: apc_mmap</a></p>
 <h2 id="links">Links:</h2>
-
-<p><a href="https://doc.e.foundation/devices/d855/install" target="_blank">Install /e on LG G3</a></p>
-
-<p><a href="https://images.ecloud.global/dev/d855" target="_blank">Latest dev builds</a></p>
-
-<p><a href="https://www.digitalocean.com/" target="_blank">Digital Ocean</a></p>
-
-<p><a href="https://gitlab.e.foundation/e/infra/ecloud-selfhosting" target="_blank">Self-hosting</a></p>
-
-<p><a href="https://www.cloudflare.com" target="_blank">Cloudflare</a></p>
+<p><a href="https://doc.e.foundation/devices/d855/install">Install /e on LG G3</a></p>
+<p><a href="https://images.ecloud.global/dev/d855">Latest dev builds</a></p>
+<p><a href="https://www.digitalocean.com/">Digital Ocean</a></p>
+<p><a href="https://gitlab.e.foundation/e/infra/ecloud-selfhosting">Self-hosting</a></p>
+<p><a href="https://www.cloudflare.com">Cloudflare</a></p>
 
     </div>
   </div>
@@ -433,6 +347,9 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
     
 
     
+    <li class="next"><a href="https://eramons.github.io/techblog/post/thinkpadw500/">WIP Coreboot on ThinkPad W500 <span
+      aria-hidden="true">&rarr;</span></a></li>
+    
   </ul>
 </nav>
 
@@ -447,7 +364,7 @@ CNAME                 |  welcome.e.mydomain.com       |  mail.e.mydomain.com  |
   <div class="container">
     <p class="powered-by">
 
-      &copy; 2017-2020 E. Ramon &middot; 
+      © 2017-2020 E. Ramon &middot; 
 
       Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
       theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.

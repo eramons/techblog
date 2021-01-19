@@ -1,16 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Coreboot on Small Technical Blog</title>
+    <title>coreboot on Small Technical Blog</title>
     <link>https://eramons.github.io/techblog/tags/coreboot/</link>
-    <description>Recent content in Coreboot on Small Technical Blog</description>
+    <description>Recent content in coreboot on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
-    <lastBuildDate>Wed, 13 Mar 2019 10:00:00 +0200</lastBuildDate>
-    
-	<atom:link href="https://eramons.github.io/techblog/tags/coreboot/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Thu, 17 Dec 2020 09:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/coreboot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WIP Coreboot on ThinkPad W500</title>
+      <link>https://eramons.github.io/techblog/post/thinkpadw500/</link>
+      <pubDate>Thu, 17 Dec 2020 09:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/thinkpadw500/</guid>
+      <description>Goal:
+Give an old Lenovo Thinkpad W500 a second life featuring Coreboot and Ubuntu
+My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn&amp;rsquo;t getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the battery was almost dead.
+I got permission to play around with this old machine - even after pointing out the risks - and to try to give it a second life:</description>
+    </item>
     
     <item>
       <title>EHCI Debug</title>
