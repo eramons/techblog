@@ -1,258 +1,167 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/e/</loc>
-      <lastmod>2020-12-09T15:00:00+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/home/about/</loc>
+    <lastmod>2016-04-20T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/k3s/</loc>
-      <lastmod>2020-06-15T15:00:00+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/home/posts/</loc>
+    <lastmod>2016-04-20T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/cozy/</loc>
-      <lastmod>2020-05-28T17:00:00+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/home/contact/</loc>
+    <lastmod>2016-04-20T00:00:00+00:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/dns/</loc>
-      <lastmod>2020-05-19T10:00:00+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/e/</loc>
+    <lastmod>2021-01-07T09:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/kubernetes_cluster/</loc>
-      <lastmod>2020-03-21T15:00:00+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/kubernetes/</loc>
+    <lastmod>2021-01-07T09:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/debug_coreboot/</loc>
-      <lastmod>2019-03-13T10:00:00+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/nextcloud/</loc>
+    <lastmod>2021-01-07T09:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/build_coreboot/</loc>
-      <lastmod>2019-02-25T10:00:00+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/nextcloud/</loc>
+    <lastmod>2021-01-07T09:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/coreboot_librem/</loc>
-      <lastmod>2019-02-18T10:00:00+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/</loc>
+    <lastmod>2021-01-07T09:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/asuschromebook_debian/</loc>
-      <lastmod>2018-12-04T10:00:00+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/</loc>
+    <lastmod>2021-01-07T09:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/rock2_debian/</loc>
-      <lastmod>2017-07-27T15:03:58+02:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/coreboot/</loc>
+    <lastmod>2020-12-17T09:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/academic/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/thinkpadw500/</loc>
+    <lastmod>2020-12-17T09:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/e/</loc>
+    <lastmod>2020-12-09T15:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/post/drafts/vagrant_e/</loc>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/android/</loc>
+    <lastmod>2020-12-09T15:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/e/</loc>
-      <lastmod>2020-12-09T15:00:00+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/arm/</loc>
+    <lastmod>2020-06-15T15:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/android/</loc>
-      <lastmod>2020-12-09T15:00:00+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/cozy/</loc>
+    <lastmod>2020-06-15T15:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/arm/</loc>
-      <lastmod>2020-06-15T15:00:00+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/k3s/</loc>
+    <lastmod>2020-06-15T15:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/categories/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/cozy/</loc>
+    <lastmod>2020-05-28T17:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/coreboot/</loc>
-      <lastmod>2019-03-13T10:00:00+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/dns/</loc>
+    <lastmod>2020-05-19T10:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/cozy/</loc>
-      <lastmod>2020-06-15T15:00:00+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/networking/</loc>
+    <lastmod>2020-05-19T10:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/debian/</loc>
-      <lastmod>2019-03-13T10:00:00+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/kubernetes_cluster/</loc>
+    <lastmod>2020-03-21T15:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/kubernetes/</loc>
-      <lastmod>2020-06-15T15:00:00+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/debian/</loc>
+    <lastmod>2019-03-13T10:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/networking/</loc>
-      <lastmod>2020-05-19T10:00:00+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/debug_coreboot/</loc>
+    <lastmod>2019-03-13T10:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/nextcloud/</loc>
-      <lastmod>2020-12-09T15:00:00+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/build_coreboot/</loc>
+    <lastmod>2019-02-25T10:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/publication_types/</loc>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/coreboot_librem/</loc>
+    <lastmod>2019-02-18T10:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/</loc>
-      <lastmod>2016-04-20T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/asuschromebook_debian/</loc>
+    <lastmod>2018-12-04T10:00:00+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/</loc>
-      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/post/rock2_debian/</loc>
+    <lastmod>2017-07-27T15:03:58+02:00</lastmod>
+  </url>
   
-    
-    
-    <url>
-    
-      <loc>https://eramons.github.io/techblog/tags/u-boot/</loc>
-      <lastmod>2017-07-27T15:03:58+02:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/u-boot/</loc>
+    <lastmod>2017-07-27T15:03:58+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://eramons.github.io/techblog/tags/academic/</loc>
+    <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://eramons.github.io/techblog/post/</loc>
+    <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://eramons.github.io/techblog/home/</loc>
+    <lastmod>2016-04-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://eramons.github.io/techblog/home/footer/</loc>
+  </url>
+  
+  <url>
+    <loc>https://eramons.github.io/techblog/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>https://eramons.github.io/techblog/contact/</loc>
+  </url>
   
 </urlset>

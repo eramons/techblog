@@ -5,8 +5,7 @@
     <link>https://eramons.github.io/techblog/tags/networking/</link>
     <description>Recent content in networking on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>&amp;copy; 2017-2020 E. Ramon</copyright>
+    <copyright>&amp;copy; 2017-2021 E. Ramon</copyright>
     <lastBuildDate>Tue, 19 May 2020 10:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/networking/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>DNS Configuration for K8s</title>

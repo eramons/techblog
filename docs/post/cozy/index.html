@@ -1,207 +1,265 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en">
+
 <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.80.0" />
-  <meta name="author" content="E. Ramon">
-  <meta name="description" content="Alles wird gut">
 
-  
-  
-  
+
+
+
+
+    <meta name="description" content="Goal:
+Deploy cozy on my homemade kubernetes cluster
+The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
+I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
+Cozy is a personal, free and self-hostable cloud platform, written in Go.
+Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1.">
+
+
+
     
-  
-  
     
+        
     
-    <link rel="stylesheet" href="/techblog/css/highlight.min.css">
+
     
-  
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.0/css/academicons.min.css" integrity="sha512-GGGNUPDhnG8LEAEDsjqYIQns+Gu8RBs4j5XGlxl7UfRaZBhCCm5jenJkeJL8uPuOXGqgl8/H1gjlWQDRjd3cUQ==" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
-  
-  
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather%7CRoboto+Mono">
-  <link rel="stylesheet" href="/techblog/css/hugo-academic.css">
-  
 
-  
 
-  <link rel="alternate" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
-  <link rel="feed" href="https://eramons.github.io/techblog/index.xml" type="application/rss+xml" title="Small Technical Blog">
+    <title>Self-hosted cozy on K8s | Small Technical Blog</title>
 
-  <link rel="icon" type="image/png" href="/techblog/img/icon.png">
-  <link rel="apple-touch-icon" type="image/png" href="/techblog/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/techblog/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/techblog/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/techblog/favicon/favicon-16x16.png">
 
-  <link rel="canonical" href="https://eramons.github.io/techblog/post/cozy/">
+    
 
-  
+    <meta property="og:title" content="Self-hosted cozy on K8s" />
+<meta property="og:description" content="Goal:
+Deploy cozy on my homemade kubernetes cluster
+The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
+I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
+Cozy is a personal, free and self-hostable cloud platform, written in Go.
+Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://eramons.github.io/techblog/post/cozy/" />
+<meta property="article:published_time" content="2020-05-28T17:00:00+02:00" />
+<meta property="article:modified_time" content="2020-05-28T17:00:00+02:00" />
 
-  <title>Self-hosted cozy on K8s | Small Technical Blog</title>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Self-hosted cozy on K8s"/>
+<meta name="twitter:description" content="Goal:
+Deploy cozy on my homemade kubernetes cluster
+The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
+I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
+Cozy is a personal, free and self-hostable cloud platform, written in Go.
+Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1."/>
+
+
+    <link rel="preload" as="font" href="/techblog/fonts/Metropolis.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationSans.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationSans-Bold.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationSans-BoldItalic.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationSans-Italic.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationMono.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/DroidSans.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/GeekblogIcons.woff2" type="font/woff2" crossorigin="anonymous">
+
+<link rel="preload" href="/techblog/main-85732d8853.min.css" as="style">
+<link rel="stylesheet" href="/techblog/main-85732d8853.min.css" media="all">
+
+<link rel="preload" href="/techblog/mobile-14fbbb71d2.min.css" as="style">
+<link rel="stylesheet" href="/techblog/mobile-14fbbb71d2.min.css" media="screen and (max-width: 45rem)">
+
+<link rel="preload" href="/techblog/print-86167e859a.min.css" as="style">
+<link rel="stylesheet" href="/techblog/print-86167e859a.min.css" media="print">
+
+<link rel="preload" href="/techblog/custom.css" as="style">
+<link rel="stylesheet" href="/techblog/custom.css" media="all">
+
+
+
+<!-- Made with Geekblog theme https://github.com/thegeeklab/hugo-geekblog -->
+
+    
+
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "articleSection": "post",
+    "name": "Self-hosted cozy on K8s",
+    "headline": "Self-hosted cozy on K8s",
+    "alternativeHeadline": "",
+    "description": "Goal:\nDeploy cozy on my homemade kubernetes cluster\nThe K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)\nI decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.\nCozy is a personal, free and self-hostable cloud platform, written in Go.\nMilestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1.",
+    "inLanguage": "en",
+    "isFamilyFriendly": "true",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/eramons.github.io\/techblog\/post\/cozy\/"
+    },
+    "author" : [
+    ],
+    "copyrightHolder" : "Small Technical Blog",
+    "copyrightYear" : "2020",
+    "dateCreated": "2020-05-28T17:00:00.00Z",
+    "datePublished": "2020-05-28T17:00:00.00Z",
+    "dateModified": "2020-05-28T17:00:00.00Z",
+    "publisher":{
+        "@type":"Organization",
+        "name": "Small Technical Blog",
+        "url": "https://eramons.github.io/techblog/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/eramons.github.io\/techblog\/eve.png",
+            "width":"32",
+            "height":"32"
+        }
+    },
+    "url" : "https:\/\/eramons.github.io\/techblog\/post\/cozy\/",
+    "wordCount" : "2515",
+    "genre" : [ "cozy" , "kubernetes" ]
+}
+</script>
+
 
 </head>
-<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
 
-<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
-  <div class="container">
+<body>
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><symbol viewBox="-7.27 -7.27 46.55 46.55" id="arrow_back" xmlns="http://www.w3.org/2000/svg"><path d="M31.999 14.035v3.93H7.673l11.134 11.228L16 32 .001 16.001 16 .002l2.807 2.807L7.673 14.037h24.326z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="arrow_left" xmlns="http://www.w3.org/2000/svg"><path d="M7.954 17.965v5.988L.001 16l7.953-7.953v5.988H32v3.93H7.954z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="arrow_right" xmlns="http://www.w3.org/2000/svg"><path d="M24.046 14.035V8.047L31.999 16l-7.953 7.953v-5.988H0v-3.93h24.046z"/></symbol><symbol viewBox="-7.27 -7.27 42.55 42.55" id="bitbucket" xmlns="http://www.w3.org/2000/svg"><path d="M15.905 13.355c.189 1.444-1.564 2.578-2.784 1.839-1.375-.602-1.375-2.784-.034-3.403 1.151-.705 2.818.223 2.818 1.564zm1.907-.361c-.309-2.44-3.076-4.056-5.328-3.042-1.426.636-2.389 2.148-2.32 3.747.086 2.097 2.08 3.815 4.176 3.626s3.729-2.234 3.472-4.331zm4.108-9.315c-.756-.997-2.045-1.169-3.179-1.358-3.214-.516-6.513-.533-9.727.034-1.066.172-2.269.361-2.939 1.323 1.1 1.031 2.664 1.186 4.073 1.358 2.544.327 5.156.344 7.699.017 1.426-.172 3.008-.309 4.073-1.375zm.979 17.788c-.481 1.684-.206 3.953-1.994 4.932-3.076 1.701-6.806 1.89-10.191 1.289-1.787-.327-3.884-.894-4.864-2.578-.43-1.65-.705-3.334-.98-5.018l.103-.275.309-.155c5.121 3.386 12.288 3.386 17.427 0 .808.241.206 1.22.189 1.805zM26.01 4.951c-.584 3.764-1.255 7.51-1.908 11.257-.189 1.1-1.255 1.719-2.148 2.183-3.214 1.615-6.96 1.89-10.483 1.512-2.389-.258-4.829-.894-6.771-2.389-.911-.705-.911-1.908-1.083-2.922-.602-3.523-1.289-7.046-1.719-10.604.206-1.547 1.942-2.217 3.231-2.698C6.848.654 8.686.362 10.508.19c3.884-.378 7.854-.241 11.618.859 1.341.395 2.784.945 3.695 2.097.412.533.275 1.203.189 1.805z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="bookmarks" xmlns="http://www.w3.org/2000/svg"><path d="M20.357 5.856q1.157 0 2.043.851t.885 2.008v23.284l-10.212-4.357-10.144 4.357V8.715q0-1.157.885-2.008t2.042-.851h14.502zm5.787 18.859V5.856q0-1.157-.851-2.042t-2.008-.885H8.715q0-1.157.885-2.042t2.043-.885h14.502q1.157 0 2.043.885t.885 2.042v23.216z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="clear" xmlns="http://www.w3.org/2000/svg"><path d="M32 3.222L19.222 16 32 28.778l-3.221 3.221-12.778-12.778L3.223 31.999.002 28.778 12.78 16 .002 3.222 3.223.001l12.778 12.778L28.779.001z"/></symbol><symbol viewBox="-7.27 -7.27 42.55 42.55" id="code" xmlns="http://www.w3.org/2000/svg"><path d="M9.917 24.5a1.75 1.75 0 10-3.501.001 1.75 1.75 0 003.501-.001zm0-21a1.75 1.75 0 10-3.501.001A1.75 1.75 0 009.917 3.5zm11.666 2.333a1.75 1.75 0 10-3.501.001 1.75 1.75 0 003.501-.001zm1.75 0a3.502 3.502 0 01-1.75 3.026c-.055 6.581-4.721 8.039-7.82 9.023-2.898.911-3.846 1.349-3.846 3.117v.474a3.502 3.502 0 011.75 3.026c0 1.932-1.568 3.5-3.5 3.5s-3.5-1.568-3.5-3.5c0-1.294.711-2.424 1.75-3.026V6.526A3.502 3.502 0 014.667 3.5c0-1.932 1.568-3.5 3.5-3.5s3.5 1.568 3.5 3.5a3.502 3.502 0 01-1.75 3.026v9.06c.93-.456 1.914-.766 2.807-1.039 3.391-1.075 5.323-1.878 5.359-5.687a3.502 3.502 0 01-1.75-3.026c0-1.932 1.568-3.5 3.5-3.5s3.5 1.568 3.5 3.5z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="contacts" xmlns="http://www.w3.org/2000/svg"><path d="M22.688 22.688v-2q0-1.5-2.281-2.438t-4.406-.938-4.406.938-2.281 2.438v2h13.375zM16 9q-1.25 0-2.125.875T13 12t.875 2.125T16 15t2.125-.875T19 12t-.875-2.125T16 9zm10.688-3.687q1.063 0 1.844.813t.781 1.875v16q0 1.063-.781 1.875t-1.844.813H5.313q-1.063 0-1.844-.813t-.781-1.875v-16q0-1.063.781-1.875t1.844-.813h21.375zM5.313 32v-2.688h21.375V32H5.313zM26.688 0v2.688H5.313V0h21.375z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="create" xmlns="http://www.w3.org/2000/svg"><path d="M31.499 7.167l-3.25 3.25-6.666-6.666 3.25-3.25q.5-.5 1.25-.5t1.25.5l4.166 4.166q.5.5.5 1.25t-.5 1.25zM.001 25.333L19.667 5.667l6.666 6.666L6.667 31.999H.001v-6.666z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="date" xmlns="http://www.w3.org/2000/svg"><path d="M27.192 28.844V11.192H4.808v17.652h22.384zm0-25.689q1.277 0 2.253.976t.976 2.253v22.459q0 1.277-.976 2.216t-2.253.939H4.808q-1.352 0-2.291-.901t-.939-2.253V6.385q0-1.277.939-2.253t2.291-.976h1.577V.001h3.23v3.155h12.769V.001h3.23v3.155h1.577zm-3.155 11.267v3.155h-3.23v-3.155h3.23zm-6.46 0v3.155h-3.155v-3.155h3.155zm-6.384 0v3.155h-3.23v-3.155h3.23z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="download" xmlns="http://www.w3.org/2000/svg"><path d="M2.866 28.209h26.269v3.79H2.866v-3.79zm26.268-16.925L16 24.418 2.866 11.284h7.493V.001h11.283v11.283h7.493z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="email" xmlns="http://www.w3.org/2000/svg"><path d="M28.845 9.615v-3.23L16 14.422 3.155 6.385v3.23L16 17.577zm0-6.46q1.277 0 2.216.977T32 6.385v19.23q0 1.277-.939 2.253t-2.216.977H3.155q-1.277 0-2.216-.977T0 25.615V6.385q0-1.277.939-2.253t2.216-.977h25.69z"/></symbol><symbol viewBox="-7.27 -7.27 42.55 42.55" id="git" xmlns="http://www.w3.org/2000/svg"><path d="M27.472 12.753L15.247.529a1.803 1.803 0 00-2.55 0l-2.84 2.84 2.137 2.137a2.625 2.625 0 013.501 3.501l3.499 3.499a2.625 2.625 0 11-1.237 1.237l-3.499-3.499c-.083.04-.169.075-.257.106v7.3a2.626 2.626 0 11-1.75 0v-7.3a2.626 2.626 0 01-1.494-3.607L8.62 4.606l-8.09 8.09a1.805 1.805 0 000 2.551l12.225 12.224a1.803 1.803 0 002.55 0l12.168-12.168a1.805 1.805 0 000-2.551z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="github" xmlns="http://www.w3.org/2000/svg"><path d="M16 .394c8.833 0 15.999 7.166 15.999 15.999 0 7.062-4.583 13.062-10.937 15.187-.813.146-1.104-.354-1.104-.771 0-.521.021-2.25.021-4.396 0-1.5-.5-2.458-1.083-2.958 3.562-.396 7.312-1.75 7.312-7.896 0-1.75-.625-3.167-1.646-4.291.167-.417.708-2.042-.167-4.25-1.333-.417-4.396 1.646-4.396 1.646a15.032 15.032 0 00-8 0S8.937 6.602 7.603 7.018c-.875 2.208-.333 3.833-.167 4.25-1.021 1.125-1.646 2.542-1.646 4.291 0 6.125 3.729 7.5 7.291 7.896-.458.417-.875 1.125-1.021 2.146-.917.417-3.25 1.125-4.646-1.333-.875-1.521-2.458-1.646-2.458-1.646-1.562-.021-.104.979-.104.979 1.042.479 1.771 2.333 1.771 2.333.938 2.854 5.396 1.896 5.396 1.896 0 1.333.021 2.583.021 2.979 0 .417-.292.917-1.104.771C4.582 29.455-.001 23.455-.001 16.393-.001 7.56 7.165.394 15.998.394zM6.063 23.372c.042-.083-.021-.187-.146-.25-.125-.042-.229-.021-.271.042-.042.083.021.187.146.25.104.062.229.042.271-.042zm.646.709c.083-.062.062-.208-.042-.333-.104-.104-.25-.146-.333-.062-.083.062-.062.208.042.333.104.104.25.146.333.062zm.625.937c.104-.083.104-.25 0-.396-.083-.146-.25-.208-.354-.125-.104.062-.104.229 0 .375s.271.208.354.146zm.875.875c.083-.083.042-.271-.083-.396-.146-.146-.333-.167-.417-.062-.104.083-.062.271.083.396.146.146.333.167.417.062zm1.187.521c.042-.125-.083-.271-.271-.333-.167-.042-.354.021-.396.146s.083.271.271.312c.167.062.354 0 .396-.125zm1.313.104c0-.146-.167-.25-.354-.229-.187 0-.333.104-.333.229 0 .146.146.25.354.229.187 0 .333-.104.333-.229zm1.208-.208c-.021-.125-.187-.208-.375-.187-.187.042-.312.167-.292.312.021.125.187.208.375.167s.312-.167.292-.292z"/></symbol><symbol viewBox="-7.27 -7.27 42.55 42.55" id="gitlab" xmlns="http://www.w3.org/2000/svg"><path d="M1.629 11.034L14 26.888.442 17.048a1.09 1.09 0 01-.39-1.203l1.578-4.811zm7.217 0h10.309l-5.154 15.854zM5.753 1.475l3.093 9.559H1.63l3.093-9.559a.548.548 0 011.031 0zm20.618 9.559l1.578 4.811c.141.437-.016.922-.39 1.203l-13.558 9.84 12.371-15.854zm0 0h-7.216l3.093-9.559a.548.548 0 011.031 0z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="heart" xmlns="http://www.w3.org/2000/svg"><path d="M16 29.714a1.11 1.11 0 01-.786-.321L4.072 18.643c-.143-.125-4.071-3.714-4.071-8 0-5.232 3.196-8.357 8.535-8.357 3.125 0 6.053 2.464 7.464 3.857 1.411-1.393 4.339-3.857 7.464-3.857 5.339 0 8.535 3.125 8.535 8.357 0 4.286-3.928 7.875-4.089 8.035L16.785 29.392c-.214.214-.5.321-.786.321z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="keyborad_arrow_left" xmlns="http://www.w3.org/2000/svg"><path d="M25.875 28.25L22.125 32 6.126 16.001 22.125.002l3.75 3.75-12.25 12.25z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="keyborad_arrow_right" xmlns="http://www.w3.org/2000/svg"><path d="M6.125 28.25L18.375 16 6.125 3.75 9.875 0l15.999 15.999L9.875 31.998z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="link" xmlns="http://www.w3.org/2000/svg"><path d="M24.037 7.963q3.305 0 5.634 2.366T32 16t-2.329 5.671-5.634 2.366h-6.46v-3.08h6.46q2.028 0 3.493-1.465t1.465-3.493-1.465-3.493-3.493-1.465h-6.46v-3.08h6.46zM9.615 17.578v-3.155h12.77v3.155H9.615zM3.005 16q0 2.028 1.465 3.493t3.493 1.465h6.46v3.08h-6.46q-3.305 0-5.634-2.366T0 16.001t2.329-5.671 5.634-2.366h6.46v3.08h-6.46q-2.028 0-3.493 1.465t-1.465 3.493z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="menu" xmlns="http://www.w3.org/2000/svg"><path d="M.001 5.334h31.998v3.583H.001V5.334zm0 12.416v-3.5h31.998v3.5H.001zm0 8.916v-3.583h31.998v3.583H.001z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="notifications" xmlns="http://www.w3.org/2000/svg"><path d="M25.846 22.154l3.308 3.308v1.615H2.847v-1.615l3.308-3.308V14q0-3.846 1.961-6.692t5.423-3.692V2.462q0-1 .692-1.731T16 0t1.769.731.692 1.731v1.154q3.461.846 5.423 3.692T25.846 14v8.154zM16 32q-1.385 0-2.346-.923t-.962-2.308h6.615q0 1.308-1 2.269T15.999 32z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="person" xmlns="http://www.w3.org/2000/svg"><path d="M16 20.023q5.052 0 10.526 2.199t5.473 5.754v4.023H0v-4.023q0-3.555 5.473-5.754t10.526-2.199zM16 16q-3.275 0-5.614-2.339T8.047 8.047t2.339-5.661T16 0t5.614 2.386 2.339 5.661-2.339 5.614T16 16z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="pin" xmlns="http://www.w3.org/2000/svg"><path d="M17.6 19.2h9.6v-1.6L22.4 16V3.2l4.8-1.6V0H4.8v1.6l4.8 1.6V16l-4.8 1.6v1.6h9.6v11.2L16 32l1.6-1.6V19.2z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="rss_feed" xmlns="http://www.w3.org/2000/svg"><path d="M-.481 12.048q8.482 0 14.457 5.976t5.976 14.457h-5.879q0-5.976-4.289-10.264T-.48 17.928v-5.879zm0-11.565q13.204 0 22.601 9.397t9.397 22.601h-5.783q0-10.891-7.662-18.553T-.481 6.266V.483zm0 27.468q0-1.831 1.301-3.132t3.229-1.301 3.181 1.253 1.253 3.181-1.301 3.229-3.132 1.301q-1.928 0-3.229-1.301T-.48 27.952z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="search" xmlns="http://www.w3.org/2000/svg"><path d="M11.925 20.161q3.432 0 5.834-2.402t2.402-5.834-2.402-5.834-5.834-2.402-5.834 2.402-2.402 5.834 2.402 5.834 5.834 2.402zm10.981 0L32 29.255 29.255 32l-9.094-9.094v-1.458l-.515-.515q-3.26 2.831-7.721 2.831-4.976 0-8.45-3.432T.001 11.925t3.474-8.45 8.45-3.474 8.407 3.474 3.432 8.45q0 1.802-.858 4.075t-1.973 3.646l.515.515h1.458z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="security" xmlns="http://www.w3.org/2000/svg"><path d="M16 0l13.072 5.855v8.715q0 6.059-3.745 11.063T16 31.999q-5.583-1.362-9.327-6.366T2.928 14.57V5.855zm0 16v13.004q4.017-1.294 6.808-4.868T26.144 16H16zm0 0V3.2L5.856 7.693v8.306H16z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="telescope" xmlns="http://www.w3.org/2000/svg"><path d="M25.026 3.335a.466.466 0 00-.646-.238L13.362 8.91a.463.463 0 00-.216.575l.227.593-6.36 3.488a.462.462 0 00-.205.583l.211.508-6.755 3.228a.463.463 0 00-.228.595l1.386 3.341a.463.463 0 00.583.259l7.056-2.5.211.508a.462.462 0 00.557.267l6.733-1.941.202.527a.46.46 0 00.566.277l12.03-3.702a.46.46 0 00.293-.613L25.026 3.335zM2.109 21.061l-1.049-2.53 6.314-3.018 1.332 3.211-6.596 2.337zm7.857-1.708l-.22-.531-1.706-4.113-.22-.53 5.863-3.216 2.197 5.676.347.908-6.261 1.806zm7.505-1.146l-.188-.491c-.003-.01-.001-.022-.006-.032l-.572-1.478-2.549-6.668 10.201-5.381 4.249 10.624-11.136 3.428zm8.943-16.723a.463.463 0 00-.86.344l5.552 13.881a.464.464 0 00.602.258.464.464 0 00.258-.602L26.413 1.484zM16.268 20.627h-2.776c-1.055 0-1.851.796-1.851 1.851v1.217l-5.44 6.347a.462.462 0 10.702.602l5.415-6.316h2.101v6.015a.463.463 0 00.926 0v-6.015h2.101l5.414 6.316a.462.462 0 10.703-.602l-5.44-6.347v-1.148c0-1.076-.813-1.92-1.851-1.92zm.925 2.777h-4.627v-.925c0-.545.38-.925.925-.925h2.776c.527 0 .925.428.925.995v.856z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="timer" xmlns="http://www.w3.org/2000/svg"><path d="M16 29q4.428 0 7.536-3.143t3.107-7.571-3.107-7.536T16 7.643 8.464 10.75t-3.107 7.536 3.107 7.571T16 29zM26.714 9.786q1.214 1.571 2.107 4.036t.893 4.464q0 5.643-4 9.678T16 32t-9.714-4.036-4-9.678 4-9.678T16 4.572q1.929 0 4.464.929t4.107 2.143l2.143-2.214q1.143.929 2.143 2.143zM14.5 19.857v-9.143h3v9.143h-3zM20.571.001v3.071h-9.143V.001h9.143z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="tree" xmlns="http://www.w3.org/2000/svg"><path d="M32 14.423H20.808V9.616h-3.23v12.77h3.23v-4.807H32v12.845H20.808v-4.807h-6.385v-16h-3.23v4.807H.001V1.579h11.192v4.807h9.615V1.579H32v12.845z"/></symbol></svg>
 
-    
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-              data-target=".navbar-collapse" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/techblog/">Small Technical Blog</a>
+    <div class="wrapper">
+        <header class="gblog-header">
+    <div class="container flex align-center justify-center">
+        <a class="gblog-header__link" rel="me" href="https://eramons.github.io/techblog/">
+            <span class="gblog-brand flex align-center justify-center">
+                <img class="gblog-brand__img" src="/techblog/eve.png" alt="" width=60 height=60>
+                Small Technical Blog
+            </span>
+            
+            <span class="gblog-brand__subtitle flex align-center justify-center">E. Ramon</span>
+            
+        </a>
     </div>
-
-    
-    <div class="collapse navbar-collapse">
-
-      
-      <ul class="nav navbar-nav navbar-right">
-        
-
-        
-
-        <li class="nav-item">
-          <a href="/techblog/#about">
-            
-            <span>Home</span>
-          </a>
-        </li>
-
-        
-        
-
-        
-
-        <li class="nav-item">
-          <a href="/techblog/#posts">
-            
-            <span>Posts</span>
-          </a>
-        </li>
-
-        
-        
-
-        
-
-        <li class="nav-item">
-          <a href="/techblog/#contact">
-            
-            <span>Contact</span>
-          </a>
-        </li>
-
-        
-        
-
-        
-      </ul>
-
+</header>
+<nav class="gblog-nav">
+    <input type="checkbox" id="menu-control" class="hidden">
+    <div class="gblog-nav__control">
+        <label for="menu-control"  class="flex align-center justify-center">
+            <svg class="icon menu"><use xlink:href="#menu"></use></svg>
+            <svg class="icon clear"><use xlink:href="#clear"></use></svg>
+            <span>Nav</span>
+        </label>
     </div>
-  </div>
+    <ul class="gblog-nav__list container flex flex-wrap justify-center menu-content">
+        
+        
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/android/">android</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/arm/">arm</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/coreboot/">coreboot</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/cozy/">cozy</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/debian/">debian</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/kubernetes/">kubernetes</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/networking/">networking</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/nextcloud/">nextcloud</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/u-boot/">u-boot</a>
+        </li>
+        
+        
+    </ul>
 </nav>
 
 
-<article class="article" itemscope itemtype="http://schema.org/Article">
+        <main class="gblog-page container">
+            
+    <article class="gblog-post">
+        <header class="gblog-post__header">
+            
+            
 
-  
+            <h1>Self-hosted cozy on K8s</h1>
+            
+            <div class="gblog-post__meta">
+                <span class="no-wrap">
+                    <svg class="icon date"><use xlink:href="#date"></use></svg>
+                    <span class="gblog-post__tag">
+                        <time datetime="2020-05-28T17:00:00&#43;02:00">
+                            
+                            May 28, 2020
+                        </time>
+                    </span>
+                </span>
+
+                <span class="no-wrap">
+                    <svg class="icon timer"><use xlink:href="#timer"></use></svg>
+                    <span class="gblog-post__tag">12 min read</span>
+                </span>
+            </div>
+            
+        </header>
+
+        <section class="gblog-markdown">
+            
 
 
-  <div class="article-container">
-    <h1 itemprop="name">Self-hosted cozy on K8s</h1>
+
     
 
-<div class="article-metadata">
 
-  <span class="article-date">
-    <time datetime="2020-05-28 17:00:00 &#43;0200 CEST" itemprop="datePublished">
-      Thu, May 28, 2020
-    </time>
-  </span>
-
-  
-
-  
-  
-  
-  <span class="article-tags">
-    <i class="fa fa-tags"></i>
-    
-    <a href="/techblog/tags/cozy">cozy</a
-    >, 
-    
-    <a href="/techblog/tags/kubernetes">kubernetes</a
-    >
-    
-  </span>
-  
-  
-
-  
-  
-<div class="share-box" aria-hidden="true">
-  <ul class="share">
-    <li>
-      <a class="facebook"
-         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f"
-         target="_blank">
-        <i class="fa fa-facebook"></i>
-      </a>
-    </li>
-    <li>
-      <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=Self-hosted%20cozy%20on%20K8s&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f"
-         target="_blank">
-        <i class="fa fa-twitter"></i>
-      </a>
-    </li>
-    <li>
-      <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f&amp;title=Self-hosted%20cozy%20on%20K8s"
-         target="_blank">
-        <i class="fa fa-linkedin"></i>
-      </a>
-    </li>
-    <li>
-      <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f&amp;title=Self-hosted%20cozy%20on%20K8s"
-         target="_blank">
-        <i class="fa fa-weibo"></i>
-      </a>
-    </li>
-    <li>
-      <a class="email"
-         href="mailto:?subject=Self-hosted%20cozy%20on%20K8s&amp;body=https%3a%2f%2feramons.github.io%2ftechblog%2fpost%2fcozy%2f">
-        <i class="fa fa-envelope"></i>
-      </a>
-    </li>
-  </ul>
-</div>
-
-
-  
-
-</div>
-
-    <div class="article-style" itemprop="articleBody">
-      <p><strong>Goal:</strong></p>
+<p><strong>Goal:</strong></p>
 <p><em>Deploy cozy on my homemade kubernetes cluster</em></p>
 <p>The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)</p>
 <p>I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.</p>
 <p>Cozy is a personal, free and self-hostable cloud platform, written in Go.</p>
-<h3 id="milestones">Milestones</h3>
+<div class="gblog-post__anchorwrap"><h3 id="milestones">Milestones<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#milestones" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Milestones" href="#milestones"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <ol>
 <li><strong>Pre-requisites:</strong> make sure the infrastructure is ready</li>
 <li><strong>Cozy Software:</strong> installation, dependencies and configuration</li>
@@ -209,8 +267,8 @@
 <li><strong>K8s Configuration:</strong> write manifests for deployment in the cluster</li>
 <li><strong>Cozy instance:</strong> create a new cozy instance and test it</li>
 </ol>
-<h2 id="1-pre-conditions">1. Pre-conditions</h2>
-<h3 id="11-infrastructure">1.1. Infrastructure</h3>
+<div class="gblog-post__anchorwrap"><h2 id="1-pre-conditions">1. Pre-conditions<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#1-pre-conditions" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1. Pre-conditions" href="#1-pre-conditions"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
+<div class="gblog-post__anchorwrap"><h3 id="11-infrastructure">1.1. Infrastructure<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#11-infrastructure" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.1. Infrastructure" href="#11-infrastructure"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Following pre-requisites must be fullfilled by the infrastructure:</p>
 <ul>
 <li>Cozy needs to be served over HTTPS, which means it needs a reverse proxy in front of it.</li>
@@ -227,7 +285,7 @@
 <p>It remained the issue of the internal hostname resolution. My internet box was not able to properly route requests to its own external IP address from inside the internal network. To fix this I needed to modify the internal DNS resolution: from inside the network, the IP for <em>cozy.example.com</em> and <em>*.cozy.example.com</em> must be the one of my worker&rsquo;s node (since my ingress controller is deployed as a DaemonSet).</p>
 <p>To find out how did I set up the DNS configuration on the home network, see:
 <a href="https://eramons.github.io/techblog/post/dns/">DNS Configuration for K8s</a></p>
-<h3 id="12-k8s-cluster">1.2. K8s Cluster</h3>
+<div class="gblog-post__anchorwrap"><h3 id="12-k8s-cluster">1.2. K8s Cluster<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#12-k8s-cluster" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.2. K8s Cluster" href="#12-k8s-cluster"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Following pre-conditions must be fullfilled by the K8s cluster:</p>
 <ul>
 <li>To have <strong>nginx-ingress</strong> available as reverse-proxy</li>
@@ -236,7 +294,7 @@
 <li>To be able to serve <strong>persistent volume claims</strong></li>
 <li>In order to support nfs persistent volumes: to have <strong>nfs-common</strong> installed on all worker nodes of the cluster</li>
 </ul>
-<h3 id="13-k8s-client-and-applications">1.3. K8s Client and Applications</h3>
+<div class="gblog-post__anchorwrap"><h3 id="13-k8s-client-and-applications">1.3. K8s Client and Applications<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#13-k8s-client-and-applications" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.3. K8s Client and Applications" href="#13-k8s-client-and-applications"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Following software and tools must be available on the client machine (laptop):</p>
 <ul>
 <li>To have <strong>kubectl</strong> installed on my laptop and the credentials to the k8s cluster stored under <em>.kube/config</em> on the home directory</li>
@@ -245,7 +303,7 @@
 <p>So the pre-requisite is to have a K8s cluster available to deploy in and to have the necessary tools on the client to make the deployments.</p>
 <p>I addressed all these topics on my previous post:
 <a href="https://eramons.github.io/techblog/post/kubernetes_cluster/">Home-made K8s cluster</a></p>
-<h2 id="2-cozy">2. Cozy</h2>
+<div class="gblog-post__anchorwrap"><h2 id="2-cozy">2. Cozy<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#2-cozy" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2. Cozy" href="#2-cozy"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>According to the developer documentation, there are following ways of install and run cozy:</p>
 <ul>
 <li>using cozy-customized debian packages (non-debian official) following the self-hosting guide</li>
@@ -255,46 +313,46 @@
 <p>The official way seems to be to use the debian packages. This way install cozy-stack and their dependencies and an application called cozy-coclyco which manages cozy instances and SSL certificates. During the installation, the packages prompt the user to provide usernames and passwords and generate the configuration.</p>
 <p>I didn&rsquo;t need coclyco, since my cluster uses cert-manager and nginx-ingress for SSL termination and issuance and renewal of TLS server certificates. I figured out that the only part of cozy I needed was actually the cozy-stack binary application.</p>
 <p>Basing on this premise, I identified applications and dependencies to be considered:</p>
-<h3 id="21-applications">2.1. Applications</h3>
+<div class="gblog-post__anchorwrap"><h3 id="21-applications">2.1. Applications<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#21-applications" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.1. Applications" href="#21-applications"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <ul>
 <li><strong>cozy-stack</strong>: the core server of the cozy platform, which consists of a single process</li>
 <li><strong>couchdb</strong>: database for storing the cozy application data</li>
 </ul>
-<h3 id="22-dependencies-cozy-stack">2.2. Dependencies (cozy-stack)</h3>
+<div class="gblog-post__anchorwrap"><h3 id="22-dependencies-cozy-stack">2.2. Dependencies (cozy-stack)<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#22-dependencies-cozy-stack" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.2. Dependencies (cozy-stack)" href="#22-dependencies-cozy-stack"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <ul>
 <li><strong>mailhog</strong>: cozy-stack needs a smtp server in order to work. <em>Mailhog</em> is an e-mail testing tool for developers. I intended to use mailhog instead of configuring a smtp server.</li>
 <li><strong>imagemagick</strong>: image manipulation program binaries</li>
 </ul>
-<h3 id="23-cozy-configuration">2.3. Cozy Configuration</h3>
+<div class="gblog-post__anchorwrap"><h3 id="23-cozy-configuration">2.3. Cozy Configuration<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#23-cozy-configuration" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.3. Cozy Configuration" href="#23-cozy-configuration"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>The <em>cozy-stack</em> binary and its command <em>serve</em> allow to pass flags as configuration options. As an alternative, a <em>cozy.yaml</em> configuration file can be placed under <em>/etc/cozy</em>.</p>
 <p>I prefered to use a config file in order to keep the configuration separated from the container image.</p>
 <p>See my <a href="https://github.com/eramons/kubecozy/blob/master/config/cozy.yaml">cozy.yaml</a></p>
 <p>Let&rsquo;s go over the most important configuration settings:</p>
-<h4 id="service-hosts--port">Service hosts &amp; port</h4>
+<div class="gblog-post__anchorwrap"><h4 id="service-hosts--port">Service hosts &amp; port<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#service-hosts--port" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Service hosts &amp; port" href="#service-hosts--port"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <pre><code>host: 0.0.0.0 
 port: 8080
 </code></pre><p>The bind address and the port where cozy-stack will listen for connections. Important to use 0.0.0.0 and NOT localhost, otherwise the application will only bind to 127.0.0.1.</p>
-<h4 id="admin-interface">Admin interface</h4>
+<div class="gblog-post__anchorwrap"><h4 id="admin-interface">Admin interface<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#admin-interface" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Admin interface" href="#admin-interface"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <pre><code>admin:
   host: localhost 
   port: 6060
   secret_filename: cozy-admin-passphrase
 </code></pre><p>The admin interface to send requests to cozy-stack. The cozy admin password is stored encrypted in the filesystem. It must be generated beforehand using the cozy-stack binary (see K8s configuration: secrets).</p>
-<h4 id="database">Database</h4>
+<div class="gblog-post__anchorwrap"><h4 id="database">Database<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#database" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Database" href="#database"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <pre><code>couchdb:
   url: http://{{.Env.COUCHDB_USERNAME}}:{{.Env.COUCHDB_PASSPHRASE}}@couchdb:5984/
 </code></pre><p>The Couchdb stores the cozy application data.</p>
 <p>The environment variables must be provided later in the cozy-stack deployment manifest.</p>
-<h4 id="storage">Storage</h4>
+<div class="gblog-post__anchorwrap"><h4 id="storage">Storage<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#storage" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Storage" href="#storage"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <pre><code>fs:
   url: file://localhost/var/lib/cozy
 </code></pre><p>Filesystem path for the storage of user data: photos, documents, etc. Later we&rsquo;ll see on this path a nfs share folder will be mounted.</p>
-<h4 id="vault">Vault</h4>
+<div class="gblog-post__anchorwrap"><h4 id="vault">Vault<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#vault" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Vault" href="#vault"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <pre><code>vault:
   credentials_encryptor_key: /etc/cozy/keys/vault.enc
   credentials_decryptor_key: /etc/cozy/keys/vault.dec
 </code></pre><p>Cozy encrypts user credentials. The generation of the encryption and decryption keys must be done before the cozy-stack is started (see K8s configuration: secrets).</p>
-<h4 id="smtp-server">SMTP Server</h4>
+<div class="gblog-post__anchorwrap"><h4 id="smtp-server">SMTP Server<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#smtp-server" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor SMTP Server" href="#smtp-server"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <pre><code>mail:
   host: smtp 
   port: 1025 
@@ -303,15 +361,15 @@ port: 8080
 </code></pre><p>Apparently having a working SMTP server up und running is a requirement for cozy-stack. I wasn&rsquo;t actually interested in my cozy writting me e-mails. In the cozy documentation, I read that the cozy development image use <em>Mailhog</em>. The e-mails can be viewed on the browser but are not actually sent. I liked this approach, so I did the same.</p>
 <p>The hostname <em>smtp</em> is the dns name of a K8s service we&rsquo;ll define later, which will point to the mailhog instance.</p>
 <p><em>Note: mailhog does not allow to configure a username and a password. Otherwise, it fails with an &ldquo;unencrypted connection&rdquo; error</em></p>
-<h2 id="3-docker">3. Docker</h2>
-<h3 id="31-available-docker-images">3.1 Available Docker Images</h3>
+<div class="gblog-post__anchorwrap"><h2 id="3-docker">3. Docker<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#3-docker" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3. Docker" href="#3-docker"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
+<div class="gblog-post__anchorwrap"><h3 id="31-available-docker-images">3.1 Available Docker Images<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#31-available-docker-images" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.1 Available Docker Images" href="#31-available-docker-images"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>From the applications identified in the last section:</p>
 <ul>
 <li><strong>couchdb</strong> and <strong>mailhog</strong> have official docker images available</li>
 <li><strong>imagemagick</strong> is available as debian package (and should be included on the cozy-stack docker image)</li>
 <li>for <strong>cozy-stack</strong> I decided to create my own docker image</li>
 </ul>
-<h3 id="32-docker-image-for-cozy-stack">3.2 Docker image for cozy-stack</h3>
+<div class="gblog-post__anchorwrap"><h3 id="32-docker-image-for-cozy-stack">3.2 Docker image for cozy-stack<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#32-docker-image-for-cozy-stack" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.2 Docker image for cozy-stack" href="#32-docker-image-for-cozy-stack"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>The cozy-stack is a go binary. There was two options for writting a docker image:</p>
 <p>a)   Build the go binary inside the container</p>
 <p>b)   Pull the binary directly from github inside the container</p>
@@ -330,7 +388,7 @@ port: 8080
 docker image build -t eramon/cozy-stack .
 docker push eramon/cozy-stack
 </code></pre><p><em>LATER: instead of pushing the image manually, I should configure dockerhub and github for automatic building of the docker image when a commit to the Dockerfile is done.</em></p>
-<h2 id="4-k8s-configuration">4. K8s configuration</h2>
+<div class="gblog-post__anchorwrap"><h2 id="4-k8s-configuration">4. K8s configuration<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#4-k8s-configuration" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4. K8s configuration" href="#4-k8s-configuration"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>Now that I had the docker images an the cozy-stack configuration file prepared, the next step was to deploy the applications.</p>
 <p>For deploying cozy in K8s, I wrote yaml manifests for:</p>
 <ul>
@@ -342,7 +400,7 @@ docker push eramon/cozy-stack
 <li>The ingress</li>
 </ul>
 <p>All yaml files are available under my <a href="https://github.com/eramons/kubecozy">kubecozy</a>.</p>
-<h3 id="41-services">4.1 Services</h3>
+<div class="gblog-post__anchorwrap"><h3 id="41-services">4.1 Services<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#41-services" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.1 Services" href="#41-services"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>A K8s <strong>Service</strong> is an abstract way to expose an application running on a set of pods as a network service.</p>
 <p>I defined four services:</p>
 <ol>
@@ -351,9 +409,9 @@ docker push eramon/cozy-stack
 <li>The smtp-server service: <a href="https://github.com/eramons/kubecozy/blob/master/smtp-service.yaml">smtp-service.yaml</a></li>
 <li>The mailhog webserver service: <a href="https://github.com/eramons/kubecozy/blob/master/mailhog-service.yaml">mailhog-service.yaml</a></li>
 </ol>
-<h3 id="42-secrets">4.2 Secrets</h3>
+<div class="gblog-post__anchorwrap"><h3 id="42-secrets">4.2 Secrets<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#42-secrets" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.2 Secrets" href="#42-secrets"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Kubernetes <strong>Secrets</strong> let you store and manage sensitive information, such as passwords, tokens and keys.</p>
-<h4 id="421-admin-passphrase">4.2.1 admin passphrase</h4>
+<div class="gblog-post__anchorwrap"><h4 id="421-admin-passphrase">4.2.1 admin passphrase<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#421-admin-passphrase" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.2.1 admin passphrase" href="#421-admin-passphrase"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>The <em>cozy-stack</em> binary is necessary for generate the admin password. However my cozy-stack image executes <em>cozy serve</em> at the end, what does not work before generating the admin password. The solution was to run the docker image overriding the default CMD to generate the admin passphrase instead starting serve, mounting the new generated passphrase to an empty file on the host:</p>
 <pre><code>eramon@caipirinha:~/dev/kubernetes$ touch cozy-admin-passphrase
 eramon@caipirinha:~/dev/kubernetes$ docker run --rm -it -p 8080:8080 -v /home/eramon/dev/kubernetes/cozy-admin-passphrase:/home/cozy/cozy-admin-passphrase eramon/cozy-stack cozy-stack config passwd cozy-admin-passphrase
@@ -364,7 +422,7 @@ Confirmation:
 <pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-admin-passphrase-secret --from-file=cozy-admin-passphrase
 secret/cozy-admin-passphrase-secret created
 </code></pre><p>This secret will be mounted afterwards in the expected location on the <em>cozy-stack</em> pod, via the deployment manifest.</p>
-<h4 id="422-vault-keys">4.2.2 vault keys</h4>
+<div class="gblog-post__anchorwrap"><h4 id="422-vault-keys">4.2.2 vault keys<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#422-vault-keys" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.2.2 vault keys" href="#422-vault-keys"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>I followed the same procedure to generate the vault keys</p>
 <pre><code>eramon@caipirinha:~/dev/kubernetes$ docker run --rm -it -p 8080:8080 -v /home/eramon/dev/kubernetes/vault:/home/cozy/vault eramon/cozy-stack cozy-stack config gen-keys /home/cozy/vault
 keyfiles written in:
@@ -374,19 +432,19 @@ keyfiles written in:
 <pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-vault-secret --from-file=vault/vault.enc --from-file=vault/vault.dec
 secret/cozy-vault-secret created
 </code></pre><p>This secret will be mounted afterwards in the configured location on the <em>cozy-stack</em> pod, via the deployment manifest.</p>
-<h4 id="423-couchdb-credentials">4.2.3 couchdb credentials</h4>
+<div class="gblog-post__anchorwrap"><h4 id="423-couchdb-credentials">4.2.3 couchdb credentials<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#423-couchdb-credentials" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.2.3 couchdb credentials" href="#423-couchdb-credentials"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>I generated a secret for the couchdb username and password:</p>
 <pre><code>eramon@caipirinha:~/dev/kubernetes$ echo -n &quot;admin&quot; &gt; dbusername
 eramon@caipirinha:~/dev/kubernetes$ echo -n `pwgen -s -1 16` &gt; dbpassphrase 
 eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic db-secret --from-file=dbusername --from-file=dbpassphrase
 </code></pre><p>This secret must be used to set the environment variables in the couchdb and cozy-stack deployment afterwards.</p>
-<h3 id="43-configmap">4.3 ConfigMap</h3>
+<div class="gblog-post__anchorwrap"><h3 id="43-configmap">4.3 ConfigMap<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#43-configmap" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.3 ConfigMap" href="#43-configmap"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p><strong>ConfigMaps</strong> allow to decouple configuration artifacts from image content to keep containerized applications portable.</p>
-<h4 id="431-ingress-nginx-configmap">4.3.1. ingress-nginx configmap</h4>
+<div class="gblog-post__anchorwrap"><h4 id="431-ingress-nginx-configmap">4.3.1. ingress-nginx configmap<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#431-ingress-nginx-configmap" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.3.1. ingress-nginx configmap" href="#431-ingress-nginx-configmap"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>For customising the nginx configuration I mainly used annotations. The annotations allow to provide configuration customization on the virtual host level, that&rsquo;s way they are included in the ingress. However at some point I had to struggle with an issue which could not be solved through annotations: I had to deactivate http2. This configuration has to be done on the server level. For that I used a configmap:</p>
 <p><a href="https://github.com/eramons/kubecozy/blob/master/ingress-nginx-configmap.yaml">ingress-nginx-configmap.yaml</a></p>
 <p><em>Note: apparently nginx has an issue with http2. I didn&rsquo;t find an explanation.</em></p>
-<h3 id="432-configmapgenerator">4.3.2. ConfigMapGenerator</h3>
+<div class="gblog-post__anchorwrap"><h3 id="432-configmapgenerator">4.3.2. ConfigMapGenerator<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#432-configmapgenerator" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.3.2. ConfigMapGenerator" href="#432-configmapgenerator"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>As mentioned above, I decided to use a config file for rather than having flags passed as arguments. The file <em>cozy.yaml</em> would be included in a config map and mounted under <em>/etc/cozy</em> in the <em>cozy-stack</em> container.</p>
 <p>To generate the config map, I directly include it in the resource list of kustomization.yaml:</p>
 <pre><code># ConfigMaps
@@ -394,7 +452,7 @@ configMapGenerator:
 - name: cozy-config-map
   files:
   - config/cozy.yaml
-</code></pre><h3 id="44-persistent-volume-claims">4.4 Persistent Volume Claims</h3>
+</code></pre><div class="gblog-post__anchorwrap"><h3 id="44-persistent-volume-claims">4.4 Persistent Volume Claims<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#44-persistent-volume-claims" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.4 Persistent Volume Claims" href="#44-persistent-volume-claims"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>A <strong>PersistentVolume (PV)</strong> is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned.</p>
 <p>A <strong>PersistentVolumeClaim (PVC)</strong> is a request for storage by a user.</p>
 <p>To store user and application data, we need to use persistent volumes and bind them to the applications through persistent volume claims and volume mounts.</p>
@@ -405,16 +463,16 @@ configMapGenerator:
 <li>PVC for cozy-stack (user data): <a href="https://github.com/eramons/kubecozy/blob/master/cozy-stack-pvc.yaml">cozy-stack-pvc.yaml</a></li>
 </ol>
 <p>The volume mounts must be configured later on the corresponding deployment manifests.</p>
-<h3 id="45-deployments">4.5 Deployments</h3>
+<div class="gblog-post__anchorwrap"><h3 id="45-deployments">4.5 Deployments<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#45-deployments" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.5 Deployments" href="#45-deployments"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Finally, we come to the manifests for the deployments of couchdb, cozy-stack and mailhog.</p>
 <p>A <strong>Deployment</strong> provides declarative updates for Pods and ReplicaSets.</p>
-<h4 id="451-couchdb">4.5.1 couchdb</h4>
+<div class="gblog-post__anchorwrap"><h4 id="451-couchdb">4.5.1 couchdb<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#451-couchdb" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.5.1 couchdb" href="#451-couchdb"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>Deployment for couchdb (application data): <a href="https://github.com/eramons/kubecozy/blob/master/couchdb-deployment.yaml">couchdb-deployment.yaml</a></p>
 <ul>
 <li>The pvc we created before is mounted under <em>/opt/couchdb/data</em>.</li>
 <li>The secret containing the couchdb credentials is passed as environment variables</li>
 </ul>
-<h4 id="452-cozy-stack">4.5.2 cozy-stack</h4>
+<div class="gblog-post__anchorwrap"><h4 id="452-cozy-stack">4.5.2 cozy-stack<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#452-cozy-stack" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.5.2 cozy-stack" href="#452-cozy-stack"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>Deployment for cozy-stack (user data): <a href="https://github.com/eramons/kubecozy/blob/master/cozy-stack-deployment.yaml">cozy-stack-deployment.yaml</a></p>
 <p>Taking a closer look at the file we can see:</p>
 <ul>
@@ -425,9 +483,9 @@ configMapGenerator:
 <li>The secret containing the vault keys is mounted under <em>/etc/cozy/vault.enc</em> and <em>/etc/cozy/vault.dec</em></li>
 <li>The secret containing the couchdb credentials is passed as environment variables</li>
 </ul>
-<h4 id="453-mailhog">4.5.3 mailhog</h4>
+<div class="gblog-post__anchorwrap"><h4 id="453-mailhog">4.5.3 mailhog<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#453-mailhog" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.5.3 mailhog" href="#453-mailhog"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>Deployment for mailhog (smtp server): <a href="https://github.com/eramons/kubecozy/blob/master/mailhog-deployment.yaml">mailhog-deployment.yaml</a></p>
-<h3 id="46-ingress">4.6 Ingress</h3>
+<div class="gblog-post__anchorwrap"><h3 id="46-ingress">4.6 Ingress<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#46-ingress" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.6 Ingress" href="#46-ingress"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>An <strong>Ingress</strong> manages external access to the services in a cluster, typically HTTP.</p>
 <p>The cozy-ingress will expose our services via the nginx ingres controller installed previously:
 <a href="https://github.com/eramons/kubecozy/blob/master/cozy-ingress-example.yaml">cozy-ingress-example.yaml</a></p>
@@ -449,13 +507,13 @@ configMapGenerator:
 <li><em>proxy-body-size</em>, to set the <em>client_max_body_size</em> parameter in the nginx configuration. I set it to 1G, according to the example in <a href="https://github.com/cozy/cozy-coclyco/blob/master/nginx.conf">nginx.conf</a></li>
 <li><em>proxy-connect-</em>, <em>-read-</em>, and <em>-send-timeout</em>. The nginx-ingress controller supports websockets out of the box, however the default values of these attributes is set by default to 60s. That&rsquo;s not enough to backup photos from the mobile phone to the cozy drive. I set it to 2 hours (5200s).</li>
 </ul>
-<h3 id="47-kustomize">4.7 kustomize</h3>
+<div class="gblog-post__anchorwrap"><h3 id="47-kustomize">4.7 kustomize<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#47-kustomize" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.7 kustomize" href="#47-kustomize"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>In order to ease re-deployments after configuration changes, I used <em>kustomize</em>.</p>
 <p><strong>Kustomize</strong> introduces a template-free way to customize application configuration and it&rsquo;s built into the <em>kubectl</em> command.</p>
 <p>The <a href="https://github.com/eramons/kubecozy/blob/master/kustomization.yaml">kustomization.yaml</a> file includes all manifests and config files:</p>
 <p>To deploy everything the first time, or after any configuration changes to the cluster or to the application, it&rsquo;s enough to execute:</p>
 <pre><code>kubectl apply -k .
-</code></pre><h2 id="5-cozy-instance">5. Cozy Instance</h2>
+</code></pre><div class="gblog-post__anchorwrap"><h2 id="5-cozy-instance">5. Cozy Instance<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#5-cozy-instance" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5. Cozy Instance" href="#5-cozy-instance"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>The Dockerfile includes commands for downloading the latest cozy-stack binary, create directories, create a cozy user, set permissions and finally start <em>cozy-stack serve</em>. The creation of the instances must be done manually after deployment, using the binary. The creation of the instances is not part of the image build.</p>
 <p>For executing the cozy-stack binary to create my cozy instance, I logged into the running container:</p>
 <pre><code>kubectl exec -it cozy-stack-b6dbd5db8-m58dt /bin/bash
@@ -490,7 +548,7 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 <li>On my debian laptop: the <em>cozy desktop</em> client</li>
 </ul>
 <p>Looking good :)</p>
-<h2 id="links">Links:</h2>
+<div class="gblog-post__anchorwrap"><h2 id="links">Links:<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#links" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Links:" href="#links"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p><a href="https://cozy.io/">Cozy</a></p>
 <p><a href="https://docs.cozy.io/en/tutorials/selfhost-debian">Self-host in Debian</a></p>
 <p><a href="https://kubernetes.io/docs/home">Kubernetes</a></p>
@@ -502,87 +560,50 @@ cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0
 <p><a href="https://docs.cozy.io/en/howTos/sync/linux">Desktop client</a></p>
 <p><a href="https://forum.cozy.io/t/unencrypted-connection-storage-limit-nearly-reached/7011">cozy.io forum thread</a></p>
 
+
+        </section>
+    </article>
+
+        </main>
+
+        <footer class="gblog-footer">
+    <div class="container">
+        <div class="flex flex-wrap align-center">
+            
+            
+            <span class="gblog-footer__item">
+                <svg class="icon email"><use xlink:href="#email"></use></svg>
+                <a href='/techblog/contact/' class="gblog-footer__link">Contact</a>
+            </span>
+            
+            
+            
+            
+            <span class="gblog-footer__item">
+                Content licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="gblog-footer__link no-wrap">CC BY-SA 4.0</a>
+            </span>
+            
+        </div>
+        <div class="flex flex-wrap align-center">
+            <span class="gblog-footer__item">
+                Built with <a href="https://gohugo.io/" class="gblog-footer__link">Hugo</a> and
+                <svg class="icon heart"><use xlink:href="#heart"></use></svg>
+            </span>
+        </div>
+        
     </div>
-  </div>
-
-</article>
-
-<div class="container">
-  <nav>
-  <ul class="pager">
-    
-    <li class="previous"><a href="https://eramons.github.io/techblog/post/dns/"><span
-      aria-hidden="true">&larr;</span> DNS Configuration for K8s</a></li>
-    
-
-    
-    <li class="next"><a href="https://eramons.github.io/techblog/post/k3s/">K3s on Raspberry Pi 4 <span
-      aria-hidden="true">&rarr;</span></a></li>
-    
-  </ul>
-</nav>
-
-</div>
-
-<div class="article-container">
-  
-
-</div>
-
-<footer class="site-footer">
-  <div class="container">
-    <p class="powered-by">
-
-      © 2017-2020 E. Ramon &middot; 
-
-      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
-      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
-
-      <span class="pull-right" aria-hidden="true">
-        <a href="#" id="back_to_top">
-          <span class="button_icon">
-            <i class="fa fa-chevron-up fa-2x"></i>
-          </span>
-        </a>
-      </span>
-
-    </p>
-  </div>
 </footer>
 
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.2/imagesloaded.pkgd.min.js" integrity="sha512-iHzEu7GbSc705hE2skyH6/AlTpOfBmkx7nUqTLGzPYR+C1tRaItbRlJ7hT/D3YQ9SV0fqLKzp4XY9wKulTBGTw==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js" integrity="sha512-Z5heTz36xTemt1TbtbfXtTq5lMfYnOkXM2/eWcTTiLU01+Sw4ku1i7vScDc8fWhrP2abz9GQzgKH5NGBLoYlAw==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/plugins/ScrollToPlugin.min.js" integrity="sha512-CDeU7pRtkPX6XJtF/gcFWlEwyaX7mcAp5sO3VIu/ylsdR74wEw4wmBpD5yYTrmMAiAboi9thyBUr1vXRPA7t0Q==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
-    
-    <script src="/techblog/js/hugo-academic.js"></script>
-    
+    </div>
 
     
-    
-      
-      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+<script defer src="/techblog/js/clipboard-f06c52bfdd.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var clipboard = new ClipboardJS('.clip');
+    });
+</script>
 
-      
 
-      
-
-      <script>hljs.initHighlightingOnLoad();</script>
-    
-
-    
-    
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-    </script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
-    
-    
-
-  </body>
+</body>
 </html>
-
