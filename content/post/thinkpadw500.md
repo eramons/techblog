@@ -41,7 +41,7 @@ I own a SPI flasher (from the time I flashed Coreboot to my librem and I needed 
 
 The flash chip on the mainboard of my W500 has 8 pins. I had a SPI 8-pin clip.
 
-_The blogs of the guys I mentioned before referenced mainboards featuring a 16-pin chip. Since they were playing with exactly the same laptop than me, I thought that would be the case for me as well. So I ordered a 16-pin clip and let the project on hold, mainly waiting for the clip to arrive. Funny fact I discovered only after dissasembling: my mainboard had a 8-pin chip!_
+_NOTE: in the blogs I mentioned before, the referenced mainboards featured a 16-pin chip. Since they were playing with exactly the same laptop than me, I thought that would be the case for me as well. So I ordered a 16-pin clip and let the project on hold, mainly waiting for the clip to arrive. Funny fact I discovered only after dissasembling: my mainboard had a 8-pin chip!_
 
 ### 1.2. ROM Size
 
@@ -154,7 +154,7 @@ I stored it safelly away (GoogleDocs), since it might be useful for a recovery a
 
 ### 2.1. Dissassembling
 
-Before starting the disassembling, I considered this the scariest part. Even if I had a SPI flasher, I had never used it before. Reading the rom and flashing coreboot on the Librem is possible without having to disassemble the machine. And I had never bricked it (fingers crossed), so I have never needed the flasher. However most chips don't allow to flash a new firmware through the internal programmer, so I had to disassemble: 
+This was for me the scariest part. Even if I had a SPI flasher, I had never used it before. Reading the rom and flashing coreboot on the Librem is possible without having to disassemble the machine. And I had never bricked it (fingers crossed), so I have never needed the flasher. However most chips don't allow to flash a new firmware through the internal programmer, so I had to disassemble: 
 
  * to read the complete existing rom (including bios, flash descriptor, ME and Gbe) 
  * to flash coreboot for the first time
@@ -163,7 +163,7 @@ _NOTE: after flashing coreboot manually for the first time, we remove the write 
 
 __First surprise:__ it was way worst than I have thought. The ROM chip on the Thinkpad W500 is really hidden, meaning you need to disassemble the PC completely in order to access it. 
 
-Finally, I managed to see the chip. I took a zoomed picture to confirm the chip name. 
+Disassembling took long, but one day the little chip finally saw the sunlight. I took a zoomed picture to confirm the chip name. 
 
 ![ROM chip](/techblog/img/w500/chip_edited.jpg)
 
@@ -174,7 +174,7 @@ In the picture we are able to read MX25L3205DMi-12G, which matches the one we se
 
 ### 2.2. Connect 
 
-Surfing the web I found the specifications with a pin diagram looking like this: 
+Surfing the web I found the specifications with a beautiful pin diagram looking like this: 
 
 ![MX25L3205D](/techblog/img/w500/MX25L3205D_edited.jpg)
 
@@ -188,7 +188,7 @@ The SPI programmer includes a diagram on the back side which a picture of the ch
 
 ![Back side of SPI programmer](/techblog/img/w500/spi_back_edited.jpg)
 
-So with this information I got an idea about how to connect the clip to the programmer and the clip to the chip. I attached the clip to the programmer like this:
+So with this information we get an idea about how to connect the clip to the programmer and the clip to the chip. The clip attached to the programmer looked like this:
 
 ![SPI](/techblog/img/w500/spi_edited.jpg)
 
@@ -232,20 +232,26 @@ No EEPROM/flash device found.
 Note: flashrom can never write if the flash chip isn't found automatically.
 ```
 
-At this point, I tried and re-tried and checked the wiring and the grasp of the clip - alternating both spi programmers - but nothing was working. I was about to give up, suspecting I had broken the chip during trying. Just before giving up, I decided to perform step-by-step troubleshooting from an initial working scenario. 
+At this point, I tried and re-tried and checked the wiring and the grasp of the clip - alternating both spi programmers - but nothing was working. I thought I had broken the chip during trying. Just before giving up, I decided to start with a working scenario and move progressively towards the setup I needed. 
 
-To set up this initial working situation, I decided to read the rom chip from my laptop, a Librem13v1. I found the specifications of the chip and saw that the pin distribution was the same as the one of the W500 chip. So I removed the back of the laptop. Luckily, on the Librem the rom chip is easily accessible with just removing the back side - just 12 screws :)
+To set up this initial working situation, I was going to read the rom chip from my - productive - laptop, the Librem13v1. I found the specifications of the chip and saw that the pin distribution was the same as the one for the W500 chip. So I removed the back of the laptop. Luckily, on the Librem the rom chip is easily accessible with just removing the back side - 12 screws only :)
 
-I installed flashrom on an old desktop PC running Ubuntu - the laptop I was using before was the one whose chip I was trying to read. I connected the clip to the chip, exactly as before, inserted the programmer in the PC and ran the same flashrom command:
+I installed flashrom on an old desktop PC running Ubuntu (the laptop I was using before was the one whose chip I was trying to read). I connected the clip to the chip, exactly as before, inserted the programmer in the PC and ran the same flashrom command:
 ```
 eramon@whisky:~$ sudo flashrom -p ch341a_spi
 flashrom v1.2-230-gc193fbd on Linux 5.4.0-58-generic (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
-TODO Missing this output: repeat, if you want to include it.
+Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
+Found Macronix flash chip "MX25L6405" (8192 kB, SPI) on ch341a_spi.
+Found Macronix flash chip "MX25L6405D" (8192 kB, SPI) on ch341a_spi.
+Found Macronix flash chip "MX25L6406E/MX25L6408E" (8192 kB, SPI) on ch341a_spi.
+Found Macronix flash chip "MX25L6436E/MX25L6445E/MX25L6465E/MX25L6473E/MX25L6473F" (8192 kB, SPI) on ch341a_spi.
+Multiple flash chip definitions match the detected chip(s): "MX25L6405", "MX25L6405D", "MX25L6406E/MX25L6408E", "MX25L6436E/MX25L6445E/MX25L6465E/MX25L6473E/MX25L6473F"
+Please specify which chip definition to use with the -c <chipname> option.
 ```
 
-So the programmer was working correctly, the wiring was right and flashrom on the ubuntu PC were working correctly. Next thing would be to try exactly the same setup, but with the w500 board.
+So the programmer was working correctly, the wiring was right and flashrom on the ubuntu PC were working correctly. Next step would be to try the same setup changing the clip to the w500 board.
 
 ### 2.4. Success!
 
@@ -311,7 +317,7 @@ Looking good so far.
 
 I mainly followed the instructions on the coreboot documentation.
 
-_NOTE: I already had the build dependencies installed on my laptop. See older blog post "Build Coreboot"_
+_NOTE: I already had the build dependencies installed on my laptop. See previous blog post "Build Coreboot"._
 
 ### 3.1. Source and tools
 
@@ -334,19 +340,9 @@ Building toolchain using 4 thread(s).
 Target architecture is i386-elf
 ```
 
-Build cbfstool:
-```
-eramon@caipirinha:~/dev/thinkpadw500/coreboot$ cd util/cbfstool/
-eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/cbfstool$ make
-```
-
-CBFS stands for the Coreboot File System. 
-
-_As far as Coreboot is concerned, the ROM image is a read-only file system. A special tool (cbfstool) can add extra components to a ROM image file. File deletion is not supported at all. The ROM image is composed (as a file on disk) by cbfstool and then the whole image is flashed into the actual flash chip._
-
 Build ifdtool:
 ```
-eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/cbfstool$ cd ../ifdtool/
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ cd util
 eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/ifdtool$ make
 eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/ifdtool$ cd ..
 ```
@@ -355,7 +351,7 @@ idftool is a program to extract and dump Intel Firmware Descriptor information.
 
 ### 3.2. Payload
 
-As payload, I would use SeeBIOS, which should allow:
+As payload, SeeBIOS should allow:
 
  * First, still being able to boot the existing Windows installation
  * Second, boot Ubuntu after the installation 
@@ -452,32 +448,43 @@ eramon@caipirinha:~/dev/thinkpadw500/coreboot$ ls -la build/coreboot.rom
 
 Flash coreboot:
 ```
-TODO
+eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo flashrom -p ch341a_spi -c MX25L3205D/MX25L3208D -w build/coreboot.rom
+flashrom v1.2-230-gc193fbd on Linux 5.6.0-2-amd64 (x86_64)
+flashrom is free software, get the source code at https://flashrom.org
+
+Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
+Found Macronix flash chip "MX25L3205D/MX25L3208D" (4096 kB, SPI) on ch341a_spi.
+Reading old flash chip contents... done.
+Erasing and writing flash chip... Erase/write done.
+Verifying flash... VERIFIED.
 ```
 
-The second command should return VERIFIED - if so, coreboot has been successfully flashed to the device.
+The last line said VERIFIED so the custom coreboot image had been successfully flashed to the device.
 
-## 5. Test the image
+After flashing, read the new image from the chip twice and compare their checksums with the one of _build/coreboot.rom_:
+```
+147b8e4183e0d1605c60a64f65e0d21124f9ce0d  coreboot.rom
+147b8e4183e0d1605c60a64f65e0d21124f9ce0d  w500_coreboot_1.rom
+147b8e4183e0d1605c60a64f65e0d21124f9ce0d  w500_coreboot_2.rom
+```
 
-The idea of having to assemble the laptop together to find out if the built coreboot image was working correctly was not appealing. What if the image wasn't any good, the laptop did not boot and the only solution would be to disassemble again? Not an option.
+The checksums matched, at least I was positive that the flashed image was exactly the same one I had built. I don't know any way to test the image except re-assembling the machine and trying to boot, so this is it... for now. 
 
-_TODO: is there a way to test the image before flashing? With qemu?_
+## 5. Re-assemble
 
-## 6. Re-assemble
-
-That was about to be a lot of fun :D
+This is going to be a lot of fun :D
 
 ![ROM chip](/techblog/img/w500/pieces.jpg)
 
-After managing to assemble all pieces together again, it will be time to boot. Fingers crossed. 
+After re-assembling all things together again, it will be time to boot. Fingers crossed. 
 
-## 7. Linux 
+## 6. Linux 
 
-### 7.1. Re-partition
+### 6.1. Re-partition
 
-The Lenovo 500 had 150GB disk space, more than enough to keep the existing Windows installation and to install Ubuntu alongside it. Seebios should be able to boot both Windows and Ubuntu.
+The Lenovo 500 had 150GB disk space, more than enough to keep the existing Windows 7 installation and to install Ubuntu alongside it, after re-partitioning. Seebios should be able to boot both Windows and Ubuntu.
 
-### 7.2. Ubuntu 
+### 6.2. Ubuntu 
 
 Boot from USB and install Ubuntu LTS on the new partition, following the installer instructions. 
 ## Links:
@@ -497,8 +504,6 @@ Boot from USB and install Ubuntu LTS on the new partition, following the install
 [MX25L3205DMI/12G](https://pdf1.alldatasheet.com/datasheet-pdf/view/267918/MCNIX/MX25L3205DMI-12G.html)
 
 [MX25L6405D](https://www.mxic.com.tw/en-us/products/NOR-Flash/Serial-NOR-Flash/Pages/spec.aspx?p=MX25L6405D&m=Serial%20NOR%20Flash&n=NA)
-
-[Introducing CBFS](https://lennartb.home.xs4all.nl/coreboot/col5.html)
 
 [How to install libreboot on a ThinkPad W500](https://stafwag.github.io/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/)
 
