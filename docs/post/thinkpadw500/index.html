@@ -116,7 +116,7 @@ I got permission to play around with this old machine - even after pointing out 
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/thinkpadw500\/",
-    "wordCount" : "3376",
+    "wordCount" : "3703",
     "genre" : [ "coreboot" ]
 }
 </script>
@@ -235,7 +235,7 @@ I got permission to play around with this old machine - even after pointing out 
 
                 <span class="no-wrap">
                     <svg class="icon timer"><use xlink:href="#timer"></use></svg>
-                    <span class="gblog-post__tag">16 min read</span>
+                    <span class="gblog-post__tag">18 min read</span>
                 </span>
             </div>
             
@@ -579,11 +579,48 @@ Verifying flash... VERIFIED.
 <pre><code>147b8e4183e0d1605c60a64f65e0d21124f9ce0d  coreboot.rom
 147b8e4183e0d1605c60a64f65e0d21124f9ce0d  w500_coreboot_1.rom
 147b8e4183e0d1605c60a64f65e0d21124f9ce0d  w500_coreboot_2.rom
-</code></pre><p>The checksums matched, at least I was positive that the flashed image was exactly the same one I had built. I don&rsquo;t know any way to test the image except re-assembling the machine and trying to boot, so this is it&hellip; for now.</p>
+</code></pre><p>The checksums matched, at least I was positive that the flashed image was exactly the same one I had built.</p>
 <div class="gblog-post__anchorwrap"><h2 id="5-re-assemble">5. Re-assemble<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#5-re-assemble" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5. Re-assemble" href="#5-re-assemble"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
-<p>This is going to be a lot of fun :D</p>
-<p><img src="/techblog/img/w500/pieces.jpg" alt="ROM chip"></p>
+<p>This was going to be a lot of fun :D</p>
+<p><img src="/techblog/img/w500/pieces.jpg" alt="Pieces"></p>
 <p>After re-assembling all things together again, it will be time to boot. Fingers crossed.</p>
+<div class="gblog-post__anchorwrap"><h3 id="51-minimal-re-assembling">5.1. Minimal re-assembling<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#51-minimal-re-assembling" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5.1. Minimal re-assembling" href="#51-minimal-re-assembling"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
+<p>Having the laptop re-assembled again would take hours. The idea of having to do this before knowing if coreboot was going to work was not appealing. The solution was to put together a minimal working version:</p>
+<ul>
+<li>Use only the main board and the big metalic, grey piece with the fan on it</li>
+<li>Connect the little cables corresponding to the fan, the CPU battery and the power</li>
+<li>Insert the RAM modules in their place</li>
+<li>Connect an external display via VGA port</li>
+<li>Do NOT put any screws in place yet</li>
+<li>Do NOT connect the hard disk</li>
+</ul>
+<p><img src="/techblog/img/w500/minimal_edited.jpg" alt="Minimal"></p>
+<p>The result: after powering on the &ldquo;machine&rdquo;, following nice words greated me on the screen:</p>
+<pre><code>SeaBIOS (version rel/1.14.0-0-g155821a)
+Machine UUID df574981-504b-11cb-9973-fe56060fbf6e
+
+Press ESC for boot menu.
+
+Booting from Floppy...
+Boot failed: could not read the boot disk
+
+Booting from Hard Disk...
+Boot failed: could not read the boot disk
+
+No bootable device. Retrying in 60 seconds.
+</code></pre><p>Those were good news! The coreboot image with the seabios payload were working correctly. I went then a little bit further:</p>
+<ul>
+<li>Connect the Live Ubuntu USB drive (the same one used at the beginning)</li>
+<li>Connect an USB keyboard</li>
+</ul>
+<p>USB was working, so I was able to use the keyboard and to select and boot Ubuntu from the external drive. However after a warning indicating <em>critical temperature reached</em> I shutted down again. To complete the boot and to keep the temperature down, the thermal grease which was misplaced during disassembling had to be replaced. I ordered a tube of the grease.</p>
+<div class="gblog-post__anchorwrap"><h3 id="52-internal-flash">5.2. Internal flash<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#52-internal-flash" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5.2. Internal flash" href="#52-internal-flash"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
+<p>After replacing the paste - still without the hard disk - there was another test to do before proceeding to complete the reassembling: I wanted to know if the chip could be writen through the internal programmer i.e. if the write protection was correctly removed:</p>
+<ul>
+<li>Boot from external usb drive, including <em>iomem=relaxed</em> as boot parameter, editing the grub command line manually</li>
+<li>Try to flash internally using flashrom and the internal programmer</li>
+</ul>
+<p>After this last test, it was time to sit down and bring the laptop back to life, with all its parts and screws.</p>
 <div class="gblog-post__anchorwrap"><h2 id="6-linux">6. Linux<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#6-linux" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6. Linux" href="#6-linux"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <div class="gblog-post__anchorwrap"><h3 id="61-re-partition">6.1. Re-partition<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#61-re-partition" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6.1. Re-partition" href="#61-re-partition"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>The Lenovo 500 had 150GB disk space, more than enough to keep the existing Windows 7 installation and to install Ubuntu alongside it, after re-partitioning. Seebios should be able to boot both Windows and Ubuntu.</p>
