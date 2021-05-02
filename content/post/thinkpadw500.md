@@ -468,15 +468,61 @@ After flashing, read the new image from the chip twice and compare their checksu
 147b8e4183e0d1605c60a64f65e0d21124f9ce0d  w500_coreboot_2.rom
 ```
 
-The checksums matched, at least I was positive that the flashed image was exactly the same one I had built. I don't know any way to test the image except re-assembling the machine and trying to boot, so this is it... for now. 
+The checksums matched, at least I was positive that the flashed image was exactly the same one I had built.
 
 ## 5. Re-assemble
 
-This is going to be a lot of fun :D
+This was going to be a lot of fun :D
 
-![ROM chip](/techblog/img/w500/pieces.jpg)
+![Pieces](/techblog/img/w500/pieces.jpg)
 
-After re-assembling all things together again, it will be time to boot. Fingers crossed. 
+After re-assembling all things together again, it will be time to boot. Fingers crossed.
+
+### 5.1. Minimal re-assembling
+
+Having the laptop re-assembled again would take hours. The idea of having to do this before knowing if coreboot was going to work was not appealing. The solution was to put together a minimal working version:
+
+ * Use only the main board and the big metalic, grey piece with the fan on it
+ * Connect the little cables corresponding to the fan, the CPU battery and the power
+ * Insert the RAM modules in their place
+ * Connect an external display via VGA port
+ * Do NOT put any screws in place yet
+ * Do NOT connect the hard disk
+
+![Minimal](/techblog/img/w500/minimal_edited.jpg)
+
+The result: after powering on the "machine", following nice words greated me on the screen:
+
+```
+SeaBIOS (version rel/1.14.0-0-g155821a)
+Machine UUID df574981-504b-11cb-9973-fe56060fbf6e
+
+Press ESC for boot menu.
+
+Booting from Floppy...
+Boot failed: could not read the boot disk
+
+Booting from Hard Disk...
+Boot failed: could not read the boot disk
+
+No bootable device. Retrying in 60 seconds.
+```
+
+Those were good news! The coreboot image with the seabios payload were working correctly. I went then a little bit further:
+
+ * Connect the Live Ubuntu USB drive (the same one used at the beginning)
+ * Connect an USB keyboard
+
+USB was working, so I was able to use the keyboard and to select and boot Ubuntu from the external drive. However after a warning indicating _critical temperature reached_ I shutted down again. To complete the boot and to keep the temperature down, the thermal grease which was misplaced during disassembling had to be replaced. I ordered a tube of the grease.
+
+### 5.2. Internal flash
+
+After replacing the paste - still without the hard disk - there was another test to do before proceeding to complete the reassembling: I wanted to know if the chip could be writen through the internal programmer i.e. if the write protection was correctly removed:
+
+* Boot from external usb drive, including _iomem=relaxed_ as boot parameter, editing the grub command line manually
+* Try to flash internally using flashrom and the internal programmer
+
+After this last test, it was time to sit down and bring the laptop back to life, with all its parts and screws. 
 
 ## 6. Linux 
 
