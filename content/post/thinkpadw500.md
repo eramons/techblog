@@ -478,9 +478,9 @@ This was going to be a lot of fun :D
 
 After re-assembling all things together again, it will be time to boot. Fingers crossed.
 
-### 5.1. Minimal re-assembling
+### 5.1. Partial re-assembling and boot
 
-Having the laptop re-assembled again would take hours. The idea of having to do this before knowing if coreboot was going to work was not appealing. The solution was to put together a minimal working version:
+I didn't fancy the idea of having to re-assemble before knowing if coreboot was going to work. The solution was to put together a minimal working version:
 
  * Use only the main board and the big metalic, grey piece with the fan on it
  * Connect the little cables corresponding to the fan, the CPU battery and the power
@@ -508,31 +508,66 @@ Boot failed: could not read the boot disk
 No bootable device. Retrying in 60 seconds.
 ```
 
-Those were good news! The coreboot image with the seabios payload were working correctly. I went then a little bit further:
+Those were good news! The coreboot image with the seabios payload were working correctly. 
+
+### 5.2 Thermal grease and flashrom test
+
+I went then a little bit further:
 
  * Connect the Live Ubuntu USB drive (the same one used at the beginning)
  * Connect an USB keyboard
 
 USB was working, so I was able to use the keyboard and to select and boot Ubuntu from the external drive. However after a warning indicating _critical temperature reached_ I shutted down again. To complete the boot and to keep the temperature down, the thermal grease which was misplaced during disassembling had to be replaced. I ordered a tube of the grease.
 
-### 5.2. Internal flash
+To replace the grease, the fun must be disassembled:
 
-After replacing the paste - still without the hard disk - there was another test to do before proceeding to complete the reassembling: I wanted to know if the chip could be writen through the internal programmer i.e. if the write protection was correctly removed:
+ * Remove the fan and clean it well
+ * Replace the thermal grease where necessary
+ * Re-attach the fan to the big grey piece
+ * Re-attach the mainboard to the big grey piece, this time putting all necessary screws back in place
+ * Connect the external display via VGA
+ * Connect an USB keyboard and the Live Ubuntu USB Drive
+ * Connect a mobile phone and activate USB Tethering to share the internet connection
 
-* Boot from external usb drive, including _iomem=relaxed_ as boot parameter, editing the grub command line manually
-* Try to flash internally using flashrom and the internal programmer
+_NOTE: how convenient that the Thinkwpad W500 has THREE usb ports :)_
 
-After this last test, it was time to sit down and bring the laptop back to life, with all its parts and screws. 
+Boot from the external drive. This time there was no temperature warning, so the thermal grease was doing its job properly. After ubuntu booted, download and build flashrom from source (as described in _1.3. Use Flashrom internally_). 
+
+Run flashrom with the internal programmer:
+```
+ubuntu@ubuntu:~$ sudo flashrom -p internal 
+flashrom v1.2-292-gb81dbc5 on Linux 5.4.0-42-generic (x86_64)
+flashrom is free software, get the source code at https://flashrom.org
+
+Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
+coreboot table found at 0x7d76e000.
+Found chipset "Intel ICH9M".
+Enabling flash write... OK.
+Found Macronix flash chip "MX25L3205(A)" (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip "MX25L3205D/MX25L3208D" (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip "MX25L3206E/MX25L3208E" (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip "MX25L3233F/MX25L3273E" (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Multiple flash chip definitions match the detected chip(s): "MX25L3205(A)", "MX25L3205D/MX25L3208D", "MX25L3206E/MX25L3208E", "MX25L3233F/MX25L3273E"
+Please specify which chip definition to use with the -c <chipname> option.
+```
+Comparing this output with the first one at the beginning of this post, we see the write protection is gone. From now one, we'll be able to flash a complete image to the chip without disassembling.
+
+### 5.3. Complete re-assembling
+
+After this last test, it was time to sit down and bring the laptop back to life, with all its parts and tiny screws, knowing that the flashing was succesful. 
 
 ## 6. Linux 
 
 ### 6.1. Re-partition
 
-The Lenovo 500 had 150GB disk space, more than enough to keep the existing Windows 7 installation and to install Ubuntu alongside it, after re-partitioning. Seebios should be able to boot both Windows and Ubuntu.
+This Lenovo W500 has 150GB disk space, more than enough to keep the existing Windows 7 installation and to install Ubuntu alongside it, after re-sizing the existing partition (to 100G) and creating a new one (50 GB). 
+
+Seebios can boot both Windows and Ubuntu.
 
 ### 6.2. Ubuntu 
 
 Boot from USB and install Ubuntu LTS on the new partition, following the installer instructions. 
+
 ## Links:
 
 [Mainboards supported by coreboot](https://coreboot.org/status/board-status.html)
