@@ -13,13 +13,13 @@ __Goal:__
 
 _Give an old Lenovo Thinkpad W500 a second life featuring Coreboot and Ubuntu_
 
-My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn't getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the battery was almost dead. 
+My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn't getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the machine had overheating problems and the battery was almost dead. 
 
 I got permission to play around with this old machine - even after pointing out the risks - and to try to give it a second life:
 
  * Replacing the propietary firmware with a self-built Coreboot, since Thinkpads are usually good supported
  * Running the latest Ubuntu LTS Desktop version alongside the installed Windows distribution
- * Taking the battery away and using it plugged in only
+ * Either replace the battery or use the laptop plugged in only
 
 _NOTE: the risks are a) bricking the machine b) breaking something during disassembling_
 
@@ -35,7 +35,7 @@ _NOTE: the risks are a) bricking the machine b) breaking something during disass
 
 ### 1.1. Vendor, board and chip
 
-Googling a little around I found that the W500 was almost identical to T400, which was listed on the list of boards officially supported by coreboot. I also found the blogs of two guys which managed to install libreboot on the same laptop.
+Googling a little around I found that the W500 was almost identical to the T400, which was listed on the list of boards officially supported by coreboot. I also found the blogs of two guys which managed to install libreboot on the same laptop.
 
 I own a SPI flasher (from the time I flashed Coreboot to my librem and I needed to have a brick-contingency plan). 
 
@@ -55,7 +55,9 @@ ubuntu@ubuntu:~$ dmidecode | grep ROM\ Size
 
 Before dissasembling the machine, find out what can be done accessing the chip internally i.e. which read/write permissions the different regions have.
 
-Re-boot with the Live Ubuntu USB stick. __Important: when the live CD is starting, press TAB. Modify the boot options to add _nopat_ and _iomem=relaxed_.__
+Re-boot with the Live Ubuntu USB stick. 
+
+__Important: when the live CD is starting, press TAB. Modify the boot options to add _nopat_ and _iomem=relaxed_.__
 
 After booting, verify that both options were correctly set:
 ```
@@ -112,7 +114,7 @@ Basing on the output:
 
 According to the last point, it is possible to make a backup of the original bios region without diassembling.
 
-_NOTE: actually to do so we need to know which chip, what we theoretically do not know before proceeding with the disassembling. For that I relied on the information I found in other blog posts. See references._
+_NOTE: actually to do so we need to know the exact chip definition, what we theoretically do not know before proceeding with the disassembling. For that I relied on the information I found in other blog posts. See references._
 
 So I read the bios region: 
 ```
@@ -146,7 +148,7 @@ A couple of clarifications about this command:
  * The parameter -i says which region to access - in this example is the bios (i.e. the region where coreboot must be flashed)
  * The parameter -r says to read the desired region to the given file
 
-Now we had a backup of the original bios (without flash descriptor and without ME) on the binary file bios_orig.rom. 
+Now we had a backup of the original bios (without flash descriptor and without ME) on the binary file _bios_orig.rom_. 
 
 I stored it safelly away (GoogleDocs), since it might be useful for a recovery action with the flasher, in case of a brick.
 
@@ -403,7 +405,7 @@ We need to tell the compiler where to find the binary blobs:
  * On the _Mainboard_ menu, as _model_ select _Thinkpad W500_
  * On the _Mainboard_ menu, as ROM chip size, select _4096 KB (4 MB))_
 
- * On the _Chipset_ menu, verify that _Protect flash regions (Unlock flash regions)_ is selected
+ * On the _Chipset_ menu, verify that _Protect flash regions -> Unlock flash regions_ is selected
  * On the _Chipset_ menu, _Add Intel descriptor.bin file_: __YES__ 
  * On the _Chipset_ menu, _Add Intel ME/TXE Firmware_: __YES__ 
  * On the _Chipset_ menu, _Add gigabit ethernet configuration_: __YES__ 
@@ -556,13 +558,17 @@ Comparing this output with the first one at the beginning of this post, we see t
 
 After this last test, it was time to sit down and bring the laptop back to life, with all its parts and tiny screws, knowing that the flashing was succesful. 
 
+Once the laptop was whole again:
+
+ * Coreboot and seebios were working correctly
+ * Seebios automatically detected the existing windows installation on the hard disk 
+ * All overheating problems were gone! Either the cleaning of the fan or the new thermal grease or coreboot itself make the machine work better than it did before :)
+
 ## 6. Linux 
 
 ### 6.1. Re-partition
 
-This Lenovo W500 has 150GB disk space, more than enough to keep the existing Windows 7 installation and to install Ubuntu alongside it, after re-sizing the existing partition (to 100G) and creating a new one (50 GB). 
-
-Seebios can boot both Windows and Ubuntu.
+This Lenovo W500 has 300 GB disk space, more than enough to keep the existing Windows 7 installation and to install Ubuntu alongside it, after re-sizing the existing partition (to 150G) and creating a new one (150 GB). 
 
 ### 6.2. Ubuntu 
 
