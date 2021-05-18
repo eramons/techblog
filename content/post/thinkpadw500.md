@@ -13,7 +13,7 @@ __Goal:__
 
 _Give an old Lenovo Thinkpad W500 a second life featuring Coreboot and Ubuntu_
 
-My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn't getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the machine had overheating problems and the battery was almost dead. 
+My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn't getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the machine was overheating and the battery was almost dead. 
 
 I got permission to play around with this old machine - even after pointing out the risks - and to try to give it a second life:
 
@@ -560,19 +560,22 @@ After this last test, it was time to sit down and bring the laptop back to life,
 
 Once the laptop was whole again:
 
- * Coreboot and seebios were working correctly
- * Seebios automatically detected the existing windows installation on the hard disk 
- * All overheating problems were gone! Either the cleaning of the fan or the new thermal grease or coreboot itself make the machine work better than it did before :)
+ * Seebios automatically detected and listed the existing windows installation on the hard disk 
+ * The overheating issue was gone: probably due to the cleaning of the fan and to the replaceent of the thermal grease 
 
 ## 6. Linux 
 
 ### 6.1. Re-partition
 
-This Lenovo W500 has 300 GB disk space, more than enough to keep the existing Windows 7 installation and to install Ubuntu alongside it, after re-sizing the existing partition (to 150G) and creating a new one (150 GB). 
+This Lenovo W500 has 300 GB disk space, more than enough to keep the existing windows installation and to install Ubuntu alongside it. Run gparted or fdisk on the live ubuntu to do the partitioning: 
+
+ * Resize the existing NTFS partition from 300 GB to 150 GB
+ * Create a new EXT4 partition on the free space 
+ * Don't touch the boot partition
 
 ### 6.2. Ubuntu 
 
-Boot from USB and install Ubuntu LTS on the new partition, following the installer instructions. 
+Still running the live ubuntu on the usb drive, select _Install Ubuntu_ and proceed with the installation on the new partition following the installer instructions.
 
 ## Links:
 
