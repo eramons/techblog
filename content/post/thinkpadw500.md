@@ -560,8 +560,8 @@ After this last test, it was time to sit down and bring the laptop back to life,
 
 Once the laptop was whole again:
 
- * Seebios automatically detected and listed the existing windows installation on the hard disk 
- * The overheating issue was gone: probably due to the cleaning of the fan and to the replaceent of the thermal grease 
+ * Seabios detected and listed the existing windows installation
+ * The overheating issue was gone: probably due to the cleaning of the fan and to the new thermal grease 
 
 ## 6. Linux 
 
