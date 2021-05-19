@@ -558,24 +558,35 @@ Comparing this output with the first one at the beginning of this post, we see t
 
 After this last test, it was time to sit down and bring the laptop back to life, with all its parts and tiny screws, knowing that the flashing was succesful. 
 
-Once the laptop was whole again:
+Once finished, the SeaBios boot menu greeted me as expeted. 
 
- * Seabios detected and listed the existing windows installation
- * The overheating issue was gone: probably due to the cleaning of the fan and to the new thermal grease 
+A nice colateral effect of this whole exercise was that the overheating was gone - probably due to the cleaning of the fan and to the new thermal grease.
 
 ## 6. Linux 
 
+This Lenovo W500 has 300 GB disk space, enough to keep the existing windows installation - for now - and to install Ubuntu alongside it.  
+
 ### 6.1. Re-partition
 
-This Lenovo W500 has 300 GB disk space, more than enough to keep the existing windows installation and to install Ubuntu alongside it. Run gparted or fdisk on the live ubuntu to do the partitioning: 
+Boot the Live Ubuntu on the USB drive. 
 
- * Resize the existing NTFS partition from 300 GB to 150 GB
- * Create a new EXT4 partition on the free space 
- * Don't touch the boot partition
+Resize the existing NTFS filesystem from 300 GB to 150 GB:
+```
+ubuntu@ubuntu:~$ sudo ntfsresize -s 150G /dev/sda2
+```
 
-### 6.2. Ubuntu 
+This takes a while. Afterwards, use gparted to resize the NTFS partition to 150000 MiB (146.48 GiB). 
 
-Still running the live ubuntu on the usb drive, select _Install Ubuntu_ and proceed with the installation on the new partition following the installer instructions.
+### 6.2. Ubuntu Installer
+
+Still running the live ubuntu on the usb drive, select _Install Ubuntu_ and proceed with the installation. When prompted what to do regarding the partitioning, select _Something else_:
+
+* To create a new EXT4 partition (100G) to be mounted as /
+* To create a new swap partition (8G)
+
+Follow the installer instructions. 
+
+And that's it: a brand new old Thinkpad W500 featuring Coreboot, SeaBios and Ubuntu :) 
 
 ## Links:
 
@@ -594,6 +605,8 @@ Still running the live ubuntu on the usb drive, select _Install Ubuntu_ and proc
 [MX25L3205DMI/12G](https://pdf1.alldatasheet.com/datasheet-pdf/view/267918/MCNIX/MX25L3205DMI-12G.html)
 
 [MX25L6405D](https://www.mxic.com.tw/en-us/products/NOR-Flash/Serial-NOR-Flash/Pages/spec.aspx?p=MX25L6405D&m=Serial%20NOR%20Flash&n=NA)
+
+[Usermanual Wiki Lenovo](https://usermanual.wiki/Lenovo/LenovoW500UsersManual329347.539412003/view)
 
 [How to install libreboot on a ThinkPad W500](https://stafwag.github.io/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/)
 

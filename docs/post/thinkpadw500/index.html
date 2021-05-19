@@ -113,7 +113,7 @@ My partner replaced his laptop already two years and half ago, buying a beautifu
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/thinkpadw500\/",
-    "wordCount" : "4002",
+    "wordCount" : "4060",
     "genre" : [ "coreboot" ]
 }
 </script>
@@ -232,7 +232,7 @@ My partner replaced his laptop already two years and half ago, buying a beautifu
 
                 <span class="no-wrap">
                     <svg class="icon timer"><use xlink:href="#timer"></use></svg>
-                    <span class="gblog-post__tag">19 min read</span>
+                    <span class="gblog-post__tag">20 min read</span>
                 </span>
             </div>
             
@@ -644,21 +644,23 @@ Please specify which chip definition to use with the -c &lt;chipname&gt; option.
 </code></pre><p>Comparing this output with the first one at the beginning of this post, we see the write protection is gone. From now one, we&rsquo;ll be able to flash a complete image to the chip without disassembling.</p>
 <div class="gblog-post__anchorwrap"><h3 id="53-complete-re-assembling">5.3. Complete re-assembling<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#53-complete-re-assembling" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5.3. Complete re-assembling" href="#53-complete-re-assembling"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>After this last test, it was time to sit down and bring the laptop back to life, with all its parts and tiny screws, knowing that the flashing was succesful.</p>
-<p>Once the laptop was whole again:</p>
-<ul>
-<li>Seabios detected and listed the existing windows installation</li>
-<li>The overheating issue was gone: probably due to the cleaning of the fan and to the new thermal grease</li>
-</ul>
+<p>Once finished, the SeaBios boot menu greeted me as expeted.</p>
+<p>A nice colateral effect of this whole exercise was that the overheating was gone - probably due to the cleaning of the fan and to the new thermal grease.</p>
 <div class="gblog-post__anchorwrap"><h2 id="6-linux">6. Linux<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#6-linux" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6. Linux" href="#6-linux"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
+<p>This Lenovo W500 has 300 GB disk space, enough to keep the existing windows installation - for now - and to install Ubuntu alongside it.</p>
 <div class="gblog-post__anchorwrap"><h3 id="61-re-partition">6.1. Re-partition<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#61-re-partition" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6.1. Re-partition" href="#61-re-partition"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
-<p>This Lenovo W500 has 300 GB disk space, more than enough to keep the existing windows installation and to install Ubuntu alongside it. Run gparted or fdisk on the live ubuntu to do the partitioning:</p>
+<p>Boot the Live Ubuntu on the USB drive.</p>
+<p>Resize the existing NTFS filesystem from 300 GB to 150 GB:</p>
+<pre><code>ubuntu@ubuntu:~$ sudo ntfsresize -s 150G /dev/sda2
+</code></pre><p>This takes a while. Afterwards, use gparted to resize the NTFS partition to 150000 MiB (146.48 GiB).</p>
+<div class="gblog-post__anchorwrap"><h3 id="62-ubuntu-installer">6.2. Ubuntu Installer<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#62-ubuntu-installer" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6.2. Ubuntu Installer" href="#62-ubuntu-installer"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
+<p>Still running the live ubuntu on the usb drive, select <em>Install Ubuntu</em> and proceed with the installation. When prompted what to do regarding the partitioning, select <em>Something else</em>:</p>
 <ul>
-<li>Resize the existing NTFS partition from 300 GB to 150 GB</li>
-<li>Create a new EXT4 partition on the free space</li>
-<li>Don&rsquo;t touch the boot partition</li>
+<li>To create a new EXT4 partition (100G) to be mounted as /</li>
+<li>To create a new swap partition (8G)</li>
 </ul>
-<div class="gblog-post__anchorwrap"><h3 id="62-ubuntu">6.2. Ubuntu<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#62-ubuntu" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6.2. Ubuntu" href="#62-ubuntu"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
-<p>Still running the live ubuntu on the usb drive, select <em>Install Ubuntu</em> and proceed with the installation on the new partition following the installer instructions.</p>
+<p>Follow the installer instructions.</p>
+<p>And that&rsquo;s it: a brand new old Thinkpad W500 featuring Coreboot, SeaBios and Ubuntu :)</p>
 <div class="gblog-post__anchorwrap"><h2 id="links">Links:<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#links" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Links:" href="#links"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p><a href="https://coreboot.org/status/board-status.html">Mainboards supported by coreboot</a></p>
 <p><a href="https://www.coreboot.org/Board:lenovo/t400">Board:lenovo T400</a></p>
@@ -668,6 +670,7 @@ Please specify which chip definition to use with the -c &lt;chipname&gt; option.
 <p><a href="https://wiki.gentoo.org/wiki/Coreboot">Gentoo: Coreboot</a></p>
 <p><a href="https://pdf1.alldatasheet.com/datasheet-pdf/view/267918/MCNIX/MX25L3205DMI-12G.html">MX25L3205DMI/12G</a></p>
 <p><a href="https://www.mxic.com.tw/en-us/products/NOR-Flash/Serial-NOR-Flash/Pages/spec.aspx?p=MX25L6405D&amp;m=Serial%20NOR%20Flash&amp;n=NA">MX25L6405D</a></p>
+<p><a href="https://usermanual.wiki/Lenovo/LenovoW500UsersManual329347.539412003/view">Usermanual Wiki Lenovo</a></p>
 <p><a href="https://stafwag.github.io/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/">How to install libreboot on a ThinkPad W500</a></p>
 <p><a href="https://p1trson.blogspot.com/2017/01/journey-to-freedom-part-ii.html">Journey to freedom part 2</a></p>
 
