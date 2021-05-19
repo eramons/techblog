@@ -13,13 +13,13 @@ __Goal:__
 
 _Give an old Lenovo Thinkpad W500 a second life featuring Coreboot and Ubuntu_
 
-My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn't getting any further Windows updates and it was painfully slow, rarely being used. Furthermore, the machine was overheating and the battery was almost dead. 
+My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn't getting any further updates for Windows 7 and it was painfully slow, rarely being used. Furthermore, the machine was overheating and the battery was almost dead. 
 
 I got permission to play around with this old machine - even after pointing out the risks - and to try to give it a second life:
 
  * Replacing the propietary firmware with a self-built Coreboot, since Thinkpads are usually good supported
- * Running the latest Ubuntu LTS Desktop version alongside the installed Windows distribution
- * Either replace the battery or use the laptop plugged in only
+ * Installing the latest Ubuntu LTS Desktop version
+ * Using the laptop plugged in only (and maybe getting a new battery)
 
 _NOTE: the risks are a) bricking the machine b) breaking something during disassembling_
 
@@ -236,9 +236,9 @@ Note: flashrom can never write if the flash chip isn't found automatically.
 
 At this point, I tried and re-tried and checked the wiring and the grasp of the clip - alternating both spi programmers - but nothing was working. I thought I had broken the chip during trying. Just before giving up, I decided to start with a working scenario and move progressively towards the setup I needed. 
 
-To set up this initial working situation, I was going to read the rom chip from my - productive - laptop, the Librem13v1. I found the specifications of the chip and saw that the pin distribution was the same as the one for the W500 chip. So I removed the back of the laptop. Luckily, on the Librem the rom chip is easily accessible with just removing the back side - 12 screws only :)
+To set up this initial working situation, I was going to read the rom chip from my - productive - laptop, the Librem13v1. I found the specifications of the chip and saw that the pin distribution was the same as the one for the W500 chip. So I removed the back of the laptop. Luckily, on the Librem the rom chip is easily accessible with just removing the back side - 12 screws only!
 
-I installed flashrom on an old desktop PC running Ubuntu (the laptop I was using before was the one whose chip I was trying to read). I connected the clip to the chip, exactly as before, inserted the programmer in the PC and ran the same flashrom command:
+I installed flashrom on my old desktop PC running Ubuntu (since the flashrom I was using before was the one on the laptop whose chip I was trying to read). I connected the clip to the chip, exactly as before, inserted the programmer in the PC and ran the same flashrom command:
 ```
 eramon@whisky:~$ sudo flashrom -p ch341a_spi
 flashrom v1.2-230-gc193fbd on Linux 5.4.0-58-generic (x86_64)
@@ -278,7 +278,7 @@ Please specify which chip definition to use with the -c <chipname> option.
 
 This time it worked! The programmer was able to read the rom and found several matching chip definitions, among them "MX25L3205D/MX25L3208D", which was the expected one. 
 
-I re-assembled my Librem again, putting in place all its 12 little screws ;) I booted and after some more re-tries with flashrom and the programmer I was able to obtain the same result as with the ubuntu PC. Apparently one of the USB ports on the laptop had an issue. In addition the grasp of the clip on the chip wasn't very good. All these things together made the initial try and error difficult. But now I was able to read the chip using flashrom on either of the two machines.  
+I re-assembled my Librem again, putting in place all its 12 little screws. I booted and after some more re-tries with flashrom and the programmer I was able to obtain the same result as with the ubuntu PC. Apparently one of the USB ports on the laptop had an issue. In addition the grasp of the clip on the chip wasn't very good. All these things together made the initial try and error difficult. But now I was able to read the chip using flashrom on either of the two machines.  
 
 _NOTE: one thing which would have helped if I had known is that both little red leds on the programmer, at either sides of the USB connector, must be lighting. If not, the connection is not good._
 
@@ -353,12 +353,10 @@ idftool is a program to extract and dump Intel Firmware Descriptor information.
 
 ### 3.2. Payload
 
-As payload, SeaBIOS should allow:
+As a payload I'll use SeaBIOS, which:
 
- * First, still being able to boot the existing Windows installation
- * Second, boot Ubuntu after the installation 
-
-SeaBIOS is the default payload downloaded and built during the coreboot build process. So nothing to prepare here.
+ * is the default payload downloaded and built during the coreboot build process
+ * supports booting of ubuntu and other linux distributions in bios mode 
 
 ### 3.3. Binary blobs
 
@@ -562,9 +560,7 @@ After this last test, it was time to sit down and patiently bring the laptop bac
 
 Boot the Live Ubuntu on the USB drive. Select _Install Ubuntu_ and proceed with the installation.
 
-_NOTE: this Lenovo W500 has 320 GB disk, which is enough room to dual-boot linux and windows, so I resized the windows partition and installed ubuntu alongside it_
-
-And that's it: a brand-new-old Thinkpad W500 featuring Coreboot, SeaBios and Ubuntu :) 
+And that's it: a brand-new-old Thinkpad W500 featuring Coreboot, SeaBios and Ubuntu :D
 
 A nice colateral effect of this whole exercise was that the overheating was gone - probably due to the cleaning of the fan and to the new thermal grease.
 
