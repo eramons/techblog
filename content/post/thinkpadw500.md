@@ -353,12 +353,12 @@ idftool is a program to extract and dump Intel Firmware Descriptor information.
 
 ### 3.2. Payload
 
-As payload, SeeBIOS should allow:
+As payload, SeaBIOS should allow:
 
  * First, still being able to boot the existing Windows installation
  * Second, boot Ubuntu after the installation 
 
-SeeBIOS is the default payload downloaded and built during the coreboot build process. So nothing to prepare here.
+SeaBIOS is the default payload downloaded and built during the coreboot build process. So nothing to prepare here.
 
 ### 3.3. Binary blobs
 
@@ -493,7 +493,7 @@ I didn't fancy the idea of having to re-assemble before knowing if coreboot was 
 
 ![Minimal](/techblog/img/w500/minimal_edited.jpg)
 
-The result: after powering on the "machine", following nice words greated me on the screen:
+The result: after powering on the "machine", following nice words greeted me on the screen:
 
 ```
 SeaBIOS (version rel/1.14.0-0-g155821a)
@@ -519,7 +519,7 @@ I went then a little bit further:
  * Connect the Live Ubuntu USB drive (the same one used at the beginning)
  * Connect an USB keyboard
 
-USB was working, so I was able to use the keyboard and to select and boot Ubuntu from the external drive. However after a warning indicating _critical temperature reached_ I shutted down again. To complete the boot and to keep the temperature down, the thermal grease which was misplaced during disassembling had to be replaced. I ordered a tube of the grease.
+USB was working, so I was able to use the keyboard to select and boot Ubuntu from the external drive. However after a warning indicating _critical temperature reached_ I shutted down again. To keep the temperature down, the thermal grease which was misplaced during disassembling had to be replaced. I ordered a tube of the grease.
 
 To replace the grease, the fun must be disassembled:
 
@@ -533,7 +533,7 @@ To replace the grease, the fun must be disassembled:
 
 _NOTE: how convenient that the Thinkwpad W500 has THREE usb ports :)_
 
-Boot from the external drive. This time there was no temperature warning, so the thermal grease was doing its job properly. After ubuntu booted, download and build flashrom from source (as described in _1.3. Use Flashrom internally_). 
+Boot from the external drive. This time there was no temperature warning, so the thermal grease was doing its job properly. Download and build flashrom from source (as described in _1.3. Use Flashrom internally_). 
 
 Run flashrom with the internal programmer:
 ```
@@ -556,37 +556,17 @@ Comparing this output with the first one at the beginning of this post, we see t
 
 ### 5.3. Complete re-assembling
 
-After this last test, it was time to sit down and bring the laptop back to life, with all its parts and tiny screws, knowing that the flashing was succesful. 
+After this last test, it was time to sit down and patiently bring the laptop back to life, with all its parts and tiny screws, knowing that the flashing had been succesful. 
 
-Once finished, the SeaBios boot menu greeted me as expeted. 
+## 6. Install Linux 
+
+Boot the Live Ubuntu on the USB drive. Select _Install Ubuntu_ and proceed with the installation.
+
+_NOTE: this Lenovo W500 has 320 GB disk, which is enough room to dual-boot linux and windows, so I resized the windows partition and installed ubuntu alongside it_
+
+And that's it: a brand-new-old Thinkpad W500 featuring Coreboot, SeaBios and Ubuntu :) 
 
 A nice colateral effect of this whole exercise was that the overheating was gone - probably due to the cleaning of the fan and to the new thermal grease.
-
-## 6. Linux 
-
-This Lenovo W500 has 300 GB disk space, enough to keep the existing windows installation - for now - and to install Ubuntu alongside it.  
-
-### 6.1. Re-partition
-
-Boot the Live Ubuntu on the USB drive. 
-
-Resize the existing NTFS filesystem from 300 GB to 150 GB:
-```
-ubuntu@ubuntu:~$ sudo ntfsresize -s 150G /dev/sda2
-```
-
-This takes a while. Afterwards, use gparted to resize the NTFS partition to 150000 MiB (146.48 GiB). 
-
-### 6.2. Ubuntu Installer
-
-Still running the live ubuntu on the usb drive, select _Install Ubuntu_ and proceed with the installation. When prompted what to do regarding the partitioning, select _Something else_:
-
-* To create a new EXT4 partition (100G) to be mounted as /
-* To create a new swap partition (8G)
-
-Follow the installer instructions. 
-
-And that's it: a brand new old Thinkpad W500 featuring Coreboot, SeaBios and Ubuntu :) 
 
 ## Links:
 

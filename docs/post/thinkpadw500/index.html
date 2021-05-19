@@ -113,7 +113,7 @@ My partner replaced his laptop already two years and half ago, buying a beautifu
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/thinkpadw500\/",
-    "wordCount" : "4060",
+    "wordCount" : "3963",
     "genre" : [ "coreboot" ]
 }
 </script>
@@ -232,7 +232,7 @@ My partner replaced his laptop already two years and half ago, buying a beautifu
 
                 <span class="no-wrap">
                     <svg class="icon timer"><use xlink:href="#timer"></use></svg>
-                    <span class="gblog-post__tag">20 min read</span>
+                    <span class="gblog-post__tag">19 min read</span>
                 </span>
             </div>
             
@@ -480,12 +480,12 @@ eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/ifdtool$ make
 eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/ifdtool$ cd ..
 </code></pre><p>idftool is a program to extract and dump Intel Firmware Descriptor information.</p>
 <div class="gblog-post__anchorwrap"><h3 id="32-payload">3.2. Payload<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#32-payload" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.2. Payload" href="#32-payload"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
-<p>As payload, SeeBIOS should allow:</p>
+<p>As payload, SeaBIOS should allow:</p>
 <ul>
 <li>First, still being able to boot the existing Windows installation</li>
 <li>Second, boot Ubuntu after the installation</li>
 </ul>
-<p>SeeBIOS is the default payload downloaded and built during the coreboot build process. So nothing to prepare here.</p>
+<p>SeaBIOS is the default payload downloaded and built during the coreboot build process. So nothing to prepare here.</p>
 <div class="gblog-post__anchorwrap"><h3 id="33-binary-blobs">3.3. Binary blobs<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#33-binary-blobs" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.3. Binary blobs" href="#33-binary-blobs"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>According to the documentation, for Intel boards following files must be provided since coreboot can&rsquo;t generate them itself:</p>
 <ul>
@@ -593,7 +593,7 @@ Verifying flash... VERIFIED.
 <li>Do NOT connect the hard disk</li>
 </ul>
 <p><img src="/techblog/img/w500/minimal_edited.jpg" alt="Minimal"></p>
-<p>The result: after powering on the &ldquo;machine&rdquo;, following nice words greated me on the screen:</p>
+<p>The result: after powering on the &ldquo;machine&rdquo;, following nice words greeted me on the screen:</p>
 <pre><code>SeaBIOS (version rel/1.14.0-0-g155821a)
 Machine UUID df574981-504b-11cb-9973-fe56060fbf6e
 
@@ -613,7 +613,7 @@ No bootable device. Retrying in 60 seconds.
 <li>Connect the Live Ubuntu USB drive (the same one used at the beginning)</li>
 <li>Connect an USB keyboard</li>
 </ul>
-<p>USB was working, so I was able to use the keyboard and to select and boot Ubuntu from the external drive. However after a warning indicating <em>critical temperature reached</em> I shutted down again. To complete the boot and to keep the temperature down, the thermal grease which was misplaced during disassembling had to be replaced. I ordered a tube of the grease.</p>
+<p>USB was working, so I was able to use the keyboard to select and boot Ubuntu from the external drive. However after a warning indicating <em>critical temperature reached</em> I shutted down again. To keep the temperature down, the thermal grease which was misplaced during disassembling had to be replaced. I ordered a tube of the grease.</p>
 <p>To replace the grease, the fun must be disassembled:</p>
 <ul>
 <li>Remove the fan and clean it well</li>
@@ -625,7 +625,7 @@ No bootable device. Retrying in 60 seconds.
 <li>Connect a mobile phone and activate USB Tethering to share the internet connection</li>
 </ul>
 <p><em>NOTE: how convenient that the Thinkwpad W500 has THREE usb ports :)</em></p>
-<p>Boot from the external drive. This time there was no temperature warning, so the thermal grease was doing its job properly. After ubuntu booted, download and build flashrom from source (as described in <em>1.3. Use Flashrom internally</em>).</p>
+<p>Boot from the external drive. This time there was no temperature warning, so the thermal grease was doing its job properly. Download and build flashrom from source (as described in <em>1.3. Use Flashrom internally</em>).</p>
 <p>Run flashrom with the internal programmer:</p>
 <pre><code>ubuntu@ubuntu:~$ sudo flashrom -p internal 
 flashrom v1.2-292-gb81dbc5 on Linux 5.4.0-42-generic (x86_64)
@@ -643,24 +643,12 @@ Multiple flash chip definitions match the detected chip(s): &quot;MX25L3205(A)&q
 Please specify which chip definition to use with the -c &lt;chipname&gt; option.
 </code></pre><p>Comparing this output with the first one at the beginning of this post, we see the write protection is gone. From now one, we&rsquo;ll be able to flash a complete image to the chip without disassembling.</p>
 <div class="gblog-post__anchorwrap"><h3 id="53-complete-re-assembling">5.3. Complete re-assembling<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#53-complete-re-assembling" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5.3. Complete re-assembling" href="#53-complete-re-assembling"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
-<p>After this last test, it was time to sit down and bring the laptop back to life, with all its parts and tiny screws, knowing that the flashing was succesful.</p>
-<p>Once finished, the SeaBios boot menu greeted me as expeted.</p>
+<p>After this last test, it was time to sit down and patiently bring the laptop back to life, with all its parts and tiny screws, knowing that the flashing had been succesful.</p>
+<div class="gblog-post__anchorwrap"><h2 id="6-install-linux">6. Install Linux<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#6-install-linux" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6. Install Linux" href="#6-install-linux"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
+<p>Boot the Live Ubuntu on the USB drive. Select <em>Install Ubuntu</em> and proceed with the installation.</p>
+<p><em>NOTE: this Lenovo W500 has 320 GB disk, which is enough room to dual-boot linux and windows, so I resized the windows partition and installed ubuntu alongside it</em></p>
+<p>And that&rsquo;s it: a brand-new-old Thinkpad W500 featuring Coreboot, SeaBios and Ubuntu :)</p>
 <p>A nice colateral effect of this whole exercise was that the overheating was gone - probably due to the cleaning of the fan and to the new thermal grease.</p>
-<div class="gblog-post__anchorwrap"><h2 id="6-linux">6. Linux<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#6-linux" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6. Linux" href="#6-linux"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
-<p>This Lenovo W500 has 300 GB disk space, enough to keep the existing windows installation - for now - and to install Ubuntu alongside it.</p>
-<div class="gblog-post__anchorwrap"><h3 id="61-re-partition">6.1. Re-partition<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#61-re-partition" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6.1. Re-partition" href="#61-re-partition"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
-<p>Boot the Live Ubuntu on the USB drive.</p>
-<p>Resize the existing NTFS filesystem from 300 GB to 150 GB:</p>
-<pre><code>ubuntu@ubuntu:~$ sudo ntfsresize -s 150G /dev/sda2
-</code></pre><p>This takes a while. Afterwards, use gparted to resize the NTFS partition to 150000 MiB (146.48 GiB).</p>
-<div class="gblog-post__anchorwrap"><h3 id="62-ubuntu-installer">6.2. Ubuntu Installer<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#62-ubuntu-installer" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6.2. Ubuntu Installer" href="#62-ubuntu-installer"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
-<p>Still running the live ubuntu on the usb drive, select <em>Install Ubuntu</em> and proceed with the installation. When prompted what to do regarding the partitioning, select <em>Something else</em>:</p>
-<ul>
-<li>To create a new EXT4 partition (100G) to be mounted as /</li>
-<li>To create a new swap partition (8G)</li>
-</ul>
-<p>Follow the installer instructions.</p>
-<p>And that&rsquo;s it: a brand new old Thinkpad W500 featuring Coreboot, SeaBios and Ubuntu :)</p>
 <div class="gblog-post__anchorwrap"><h2 id="links">Links:<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#links" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Links:" href="#links"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p><a href="https://coreboot.org/status/board-status.html">Mainboards supported by coreboot</a></p>
 <p><a href="https://www.coreboot.org/Board:lenovo/t400">Board:lenovo T400</a></p>
