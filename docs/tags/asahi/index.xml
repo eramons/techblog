@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>asahi on Small Technical Blog</title>
+    <link>https://eramons.github.io/techblog/tags/asahi/</link>
+    <description>Recent content in asahi on Small Technical Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>&amp;copy; 2017-2021 E. Ramon</copyright>
+    <lastBuildDate>Sat, 01 Oct 2022 10:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/asahi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Asahi Linux kernel with u-root on Macbook</title>
+      <link>https://eramons.github.io/techblog/post/asahi/</link>
+      <pubDate>Sat, 01 Oct 2022 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/asahi/</guid>
+      <description>Goal:
+Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook
+At some point I encountered myself with a Macbook Air booting Asahi&amp;rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.
+Introduction Why did I buy a Macbook and how I accidentally destroyed it
+Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacBook Air M1 which should fullfill the following purposes:</description>
+    </item>
+    
+  </channel>
+</rss>

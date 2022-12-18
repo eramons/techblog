@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+
+
+    <meta name="description" content="Goal:
+Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook
+At some point I encountered myself with a Macbook Air booting Asahi&rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.
+Introduction Why did I buy a Macbook and how I accidentally destroyed it
+Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacBook Air M1 which should fullfill the following purposes:">
+
+
+
+    
+    
+        
+    
+
+    
+
+
+    <title>Asahi Linux kernel with u-root on Macbook | Small Technical Blog</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/techblog/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/techblog/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/techblog/favicon/favicon-16x16.png">
+
+    
+
+    <meta property="og:title" content="Asahi Linux kernel with u-root on Macbook" />
+<meta property="og:description" content="Goal:
+Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook
+At some point I encountered myself with a Macbook Air booting Asahi&rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.
+Introduction Why did I buy a Macbook and how I accidentally destroyed it
+Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacBook Air M1 which should fullfill the following purposes:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://eramons.github.io/techblog/post/asahi/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-10-01T10:00:00+02:00" />
+<meta property="article:modified_time" content="2022-10-01T10:00:00+02:00" />
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Asahi Linux kernel with u-root on Macbook"/>
+<meta name="twitter:description" content="Goal:
+Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook
+At some point I encountered myself with a Macbook Air booting Asahi&rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.
+Introduction Why did I buy a Macbook and how I accidentally destroyed it
+Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacBook Air M1 which should fullfill the following purposes:"/>
+
+
+    <link rel="preload" as="font" href="/techblog/fonts/Metropolis.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationSans.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationSans-Bold.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationSans-BoldItalic.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationSans-Italic.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/LiberationMono.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/DroidSans.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/techblog/fonts/GeekblogIcons.woff2" type="font/woff2" crossorigin="anonymous">
+
+<link rel="preload" href="/techblog/main-85732d8853.min.css" as="style">
+<link rel="stylesheet" href="/techblog/main-85732d8853.min.css" media="all">
+
+<link rel="preload" href="/techblog/mobile-14fbbb71d2.min.css" as="style">
+<link rel="stylesheet" href="/techblog/mobile-14fbbb71d2.min.css" media="screen and (max-width: 45rem)">
+
+<link rel="preload" href="/techblog/print-86167e859a.min.css" as="style">
+<link rel="stylesheet" href="/techblog/print-86167e859a.min.css" media="print">
+
+<link rel="preload" href="/techblog/custom.css" as="style">
+<link rel="stylesheet" href="/techblog/custom.css" media="all">
+
+
+
+<!-- Made with Geekblog theme https://github.com/thegeeklab/hugo-geekblog -->
+
+    
+
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "articleSection": "post",
+    "name": "Asahi Linux kernel with u-root on Macbook",
+    "headline": "Asahi Linux kernel with u-root on Macbook",
+    "alternativeHeadline": "",
+    "description": "Goal:\nBoot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook\nAt some point I encountered myself with a Macbook Air booting Asahi\u0026rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.\nIntroduction Why did I buy a Macbook and how I accidentally destroyed it\nEven if I definitely am a Linux-kind-of-person, I got myself an entry-level MacBook Air M1 which should fullfill the following purposes:",
+    "inLanguage": "en",
+    "isFamilyFriendly": "true",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/eramons.github.io\/techblog\/post\/asahi\/"
+    },
+    "author" : [
+    ],
+    "copyrightHolder" : "Small Technical Blog",
+    "copyrightYear" : "2022",
+    "dateCreated": "2022-10-01T10:00:00.00Z",
+    "datePublished": "2022-10-01T10:00:00.00Z",
+    "dateModified": "2022-10-01T10:00:00.00Z",
+    "publisher":{
+        "@type":"Organization",
+        "name": "Small Technical Blog",
+        "url": "https://eramons.github.io/techblog/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/eramons.github.io\/techblog\/eve.png",
+            "width":"32",
+            "height":"32"
+        }
+    },
+    "url" : "https:\/\/eramons.github.io\/techblog\/post\/asahi\/",
+    "wordCount" : "1599",
+    "genre" : [ "asahi" ]
+}
+</script>
+
+
+</head>
+
+<body>
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><symbol viewBox="-7.27 -7.27 46.55 46.55" id="arrow_back" xmlns="http://www.w3.org/2000/svg"><path d="M31.999 14.035v3.93H7.673l11.134 11.228L16 32 .001 16.001 16 .002l2.807 2.807L7.673 14.037h24.326z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="arrow_left" xmlns="http://www.w3.org/2000/svg"><path d="M7.954 17.965v5.988L.001 16l7.953-7.953v5.988H32v3.93H7.954z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="arrow_right" xmlns="http://www.w3.org/2000/svg"><path d="M24.046 14.035V8.047L31.999 16l-7.953 7.953v-5.988H0v-3.93h24.046z"/></symbol><symbol viewBox="-7.27 -7.27 42.55 42.55" id="bitbucket" xmlns="http://www.w3.org/2000/svg"><path d="M15.905 13.355c.189 1.444-1.564 2.578-2.784 1.839-1.375-.602-1.375-2.784-.034-3.403 1.151-.705 2.818.223 2.818 1.564zm1.907-.361c-.309-2.44-3.076-4.056-5.328-3.042-1.426.636-2.389 2.148-2.32 3.747.086 2.097 2.08 3.815 4.176 3.626s3.729-2.234 3.472-4.331zm4.108-9.315c-.756-.997-2.045-1.169-3.179-1.358-3.214-.516-6.513-.533-9.727.034-1.066.172-2.269.361-2.939 1.323 1.1 1.031 2.664 1.186 4.073 1.358 2.544.327 5.156.344 7.699.017 1.426-.172 3.008-.309 4.073-1.375zm.979 17.788c-.481 1.684-.206 3.953-1.994 4.932-3.076 1.701-6.806 1.89-10.191 1.289-1.787-.327-3.884-.894-4.864-2.578-.43-1.65-.705-3.334-.98-5.018l.103-.275.309-.155c5.121 3.386 12.288 3.386 17.427 0 .808.241.206 1.22.189 1.805zM26.01 4.951c-.584 3.764-1.255 7.51-1.908 11.257-.189 1.1-1.255 1.719-2.148 2.183-3.214 1.615-6.96 1.89-10.483 1.512-2.389-.258-4.829-.894-6.771-2.389-.911-.705-.911-1.908-1.083-2.922-.602-3.523-1.289-7.046-1.719-10.604.206-1.547 1.942-2.217 3.231-2.698C6.848.654 8.686.362 10.508.19c3.884-.378 7.854-.241 11.618.859 1.341.395 2.784.945 3.695 2.097.412.533.275 1.203.189 1.805z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="bookmarks" xmlns="http://www.w3.org/2000/svg"><path d="M20.357 5.856q1.157 0 2.043.851t.885 2.008v23.284l-10.212-4.357-10.144 4.357V8.715q0-1.157.885-2.008t2.042-.851h14.502zm5.787 18.859V5.856q0-1.157-.851-2.042t-2.008-.885H8.715q0-1.157.885-2.042t2.043-.885h14.502q1.157 0 2.043.885t.885 2.042v23.216z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="clear" xmlns="http://www.w3.org/2000/svg"><path d="M32 3.222L19.222 16 32 28.778l-3.221 3.221-12.778-12.778L3.223 31.999.002 28.778 12.78 16 .002 3.222 3.223.001l12.778 12.778L28.779.001z"/></symbol><symbol viewBox="-7.27 -7.27 42.55 42.55" id="code" xmlns="http://www.w3.org/2000/svg"><path d="M9.917 24.5a1.75 1.75 0 10-3.501.001 1.75 1.75 0 003.501-.001zm0-21a1.75 1.75 0 10-3.501.001A1.75 1.75 0 009.917 3.5zm11.666 2.333a1.75 1.75 0 10-3.501.001 1.75 1.75 0 003.501-.001zm1.75 0a3.502 3.502 0 01-1.75 3.026c-.055 6.581-4.721 8.039-7.82 9.023-2.898.911-3.846 1.349-3.846 3.117v.474a3.502 3.502 0 011.75 3.026c0 1.932-1.568 3.5-3.5 3.5s-3.5-1.568-3.5-3.5c0-1.294.711-2.424 1.75-3.026V6.526A3.502 3.502 0 014.667 3.5c0-1.932 1.568-3.5 3.5-3.5s3.5 1.568 3.5 3.5a3.502 3.502 0 01-1.75 3.026v9.06c.93-.456 1.914-.766 2.807-1.039 3.391-1.075 5.323-1.878 5.359-5.687a3.502 3.502 0 01-1.75-3.026c0-1.932 1.568-3.5 3.5-3.5s3.5 1.568 3.5 3.5z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="contacts" xmlns="http://www.w3.org/2000/svg"><path d="M22.688 22.688v-2q0-1.5-2.281-2.438t-4.406-.938-4.406.938-2.281 2.438v2h13.375zM16 9q-1.25 0-2.125.875T13 12t.875 2.125T16 15t2.125-.875T19 12t-.875-2.125T16 9zm10.688-3.687q1.063 0 1.844.813t.781 1.875v16q0 1.063-.781 1.875t-1.844.813H5.313q-1.063 0-1.844-.813t-.781-1.875v-16q0-1.063.781-1.875t1.844-.813h21.375zM5.313 32v-2.688h21.375V32H5.313zM26.688 0v2.688H5.313V0h21.375z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="create" xmlns="http://www.w3.org/2000/svg"><path d="M31.499 7.167l-3.25 3.25-6.666-6.666 3.25-3.25q.5-.5 1.25-.5t1.25.5l4.166 4.166q.5.5.5 1.25t-.5 1.25zM.001 25.333L19.667 5.667l6.666 6.666L6.667 31.999H.001v-6.666z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="date" xmlns="http://www.w3.org/2000/svg"><path d="M27.192 28.844V11.192H4.808v17.652h22.384zm0-25.689q1.277 0 2.253.976t.976 2.253v22.459q0 1.277-.976 2.216t-2.253.939H4.808q-1.352 0-2.291-.901t-.939-2.253V6.385q0-1.277.939-2.253t2.291-.976h1.577V.001h3.23v3.155h12.769V.001h3.23v3.155h1.577zm-3.155 11.267v3.155h-3.23v-3.155h3.23zm-6.46 0v3.155h-3.155v-3.155h3.155zm-6.384 0v3.155h-3.23v-3.155h3.23z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="download" xmlns="http://www.w3.org/2000/svg"><path d="M2.866 28.209h26.269v3.79H2.866v-3.79zm26.268-16.925L16 24.418 2.866 11.284h7.493V.001h11.283v11.283h7.493z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="email" xmlns="http://www.w3.org/2000/svg"><path d="M28.845 9.615v-3.23L16 14.422 3.155 6.385v3.23L16 17.577zm0-6.46q1.277 0 2.216.977T32 6.385v19.23q0 1.277-.939 2.253t-2.216.977H3.155q-1.277 0-2.216-.977T0 25.615V6.385q0-1.277.939-2.253t2.216-.977h25.69z"/></symbol><symbol viewBox="-7.27 -7.27 42.55 42.55" id="git" xmlns="http://www.w3.org/2000/svg"><path d="M27.472 12.753L15.247.529a1.803 1.803 0 00-2.55 0l-2.84 2.84 2.137 2.137a2.625 2.625 0 013.501 3.501l3.499 3.499a2.625 2.625 0 11-1.237 1.237l-3.499-3.499c-.083.04-.169.075-.257.106v7.3a2.626 2.626 0 11-1.75 0v-7.3a2.626 2.626 0 01-1.494-3.607L8.62 4.606l-8.09 8.09a1.805 1.805 0 000 2.551l12.225 12.224a1.803 1.803 0 002.55 0l12.168-12.168a1.805 1.805 0 000-2.551z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="github" xmlns="http://www.w3.org/2000/svg"><path d="M16 .394c8.833 0 15.999 7.166 15.999 15.999 0 7.062-4.583 13.062-10.937 15.187-.813.146-1.104-.354-1.104-.771 0-.521.021-2.25.021-4.396 0-1.5-.5-2.458-1.083-2.958 3.562-.396 7.312-1.75 7.312-7.896 0-1.75-.625-3.167-1.646-4.291.167-.417.708-2.042-.167-4.25-1.333-.417-4.396 1.646-4.396 1.646a15.032 15.032 0 00-8 0S8.937 6.602 7.603 7.018c-.875 2.208-.333 3.833-.167 4.25-1.021 1.125-1.646 2.542-1.646 4.291 0 6.125 3.729 7.5 7.291 7.896-.458.417-.875 1.125-1.021 2.146-.917.417-3.25 1.125-4.646-1.333-.875-1.521-2.458-1.646-2.458-1.646-1.562-.021-.104.979-.104.979 1.042.479 1.771 2.333 1.771 2.333.938 2.854 5.396 1.896 5.396 1.896 0 1.333.021 2.583.021 2.979 0 .417-.292.917-1.104.771C4.582 29.455-.001 23.455-.001 16.393-.001 7.56 7.165.394 15.998.394zM6.063 23.372c.042-.083-.021-.187-.146-.25-.125-.042-.229-.021-.271.042-.042.083.021.187.146.25.104.062.229.042.271-.042zm.646.709c.083-.062.062-.208-.042-.333-.104-.104-.25-.146-.333-.062-.083.062-.062.208.042.333.104.104.25.146.333.062zm.625.937c.104-.083.104-.25 0-.396-.083-.146-.25-.208-.354-.125-.104.062-.104.229 0 .375s.271.208.354.146zm.875.875c.083-.083.042-.271-.083-.396-.146-.146-.333-.167-.417-.062-.104.083-.062.271.083.396.146.146.333.167.417.062zm1.187.521c.042-.125-.083-.271-.271-.333-.167-.042-.354.021-.396.146s.083.271.271.312c.167.062.354 0 .396-.125zm1.313.104c0-.146-.167-.25-.354-.229-.187 0-.333.104-.333.229 0 .146.146.25.354.229.187 0 .333-.104.333-.229zm1.208-.208c-.021-.125-.187-.208-.375-.187-.187.042-.312.167-.292.312.021.125.187.208.375.167s.312-.167.292-.292z"/></symbol><symbol viewBox="-7.27 -7.27 42.55 42.55" id="gitlab" xmlns="http://www.w3.org/2000/svg"><path d="M1.629 11.034L14 26.888.442 17.048a1.09 1.09 0 01-.39-1.203l1.578-4.811zm7.217 0h10.309l-5.154 15.854zM5.753 1.475l3.093 9.559H1.63l3.093-9.559a.548.548 0 011.031 0zm20.618 9.559l1.578 4.811c.141.437-.016.922-.39 1.203l-13.558 9.84 12.371-15.854zm0 0h-7.216l3.093-9.559a.548.548 0 011.031 0z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="heart" xmlns="http://www.w3.org/2000/svg"><path d="M16 29.714a1.11 1.11 0 01-.786-.321L4.072 18.643c-.143-.125-4.071-3.714-4.071-8 0-5.232 3.196-8.357 8.535-8.357 3.125 0 6.053 2.464 7.464 3.857 1.411-1.393 4.339-3.857 7.464-3.857 5.339 0 8.535 3.125 8.535 8.357 0 4.286-3.928 7.875-4.089 8.035L16.785 29.392c-.214.214-.5.321-.786.321z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="keyborad_arrow_left" xmlns="http://www.w3.org/2000/svg"><path d="M25.875 28.25L22.125 32 6.126 16.001 22.125.002l3.75 3.75-12.25 12.25z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="keyborad_arrow_right" xmlns="http://www.w3.org/2000/svg"><path d="M6.125 28.25L18.375 16 6.125 3.75 9.875 0l15.999 15.999L9.875 31.998z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="link" xmlns="http://www.w3.org/2000/svg"><path d="M24.037 7.963q3.305 0 5.634 2.366T32 16t-2.329 5.671-5.634 2.366h-6.46v-3.08h6.46q2.028 0 3.493-1.465t1.465-3.493-1.465-3.493-3.493-1.465h-6.46v-3.08h6.46zM9.615 17.578v-3.155h12.77v3.155H9.615zM3.005 16q0 2.028 1.465 3.493t3.493 1.465h6.46v3.08h-6.46q-3.305 0-5.634-2.366T0 16.001t2.329-5.671 5.634-2.366h6.46v3.08h-6.46q-2.028 0-3.493 1.465t-1.465 3.493z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="menu" xmlns="http://www.w3.org/2000/svg"><path d="M.001 5.334h31.998v3.583H.001V5.334zm0 12.416v-3.5h31.998v3.5H.001zm0 8.916v-3.583h31.998v3.583H.001z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="notifications" xmlns="http://www.w3.org/2000/svg"><path d="M25.846 22.154l3.308 3.308v1.615H2.847v-1.615l3.308-3.308V14q0-3.846 1.961-6.692t5.423-3.692V2.462q0-1 .692-1.731T16 0t1.769.731.692 1.731v1.154q3.461.846 5.423 3.692T25.846 14v8.154zM16 32q-1.385 0-2.346-.923t-.962-2.308h6.615q0 1.308-1 2.269T15.999 32z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="person" xmlns="http://www.w3.org/2000/svg"><path d="M16 20.023q5.052 0 10.526 2.199t5.473 5.754v4.023H0v-4.023q0-3.555 5.473-5.754t10.526-2.199zM16 16q-3.275 0-5.614-2.339T8.047 8.047t2.339-5.661T16 0t5.614 2.386 2.339 5.661-2.339 5.614T16 16z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="pin" xmlns="http://www.w3.org/2000/svg"><path d="M17.6 19.2h9.6v-1.6L22.4 16V3.2l4.8-1.6V0H4.8v1.6l4.8 1.6V16l-4.8 1.6v1.6h9.6v11.2L16 32l1.6-1.6V19.2z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="rss_feed" xmlns="http://www.w3.org/2000/svg"><path d="M-.481 12.048q8.482 0 14.457 5.976t5.976 14.457h-5.879q0-5.976-4.289-10.264T-.48 17.928v-5.879zm0-11.565q13.204 0 22.601 9.397t9.397 22.601h-5.783q0-10.891-7.662-18.553T-.481 6.266V.483zm0 27.468q0-1.831 1.301-3.132t3.229-1.301 3.181 1.253 1.253 3.181-1.301 3.229-3.132 1.301q-1.928 0-3.229-1.301T-.48 27.952z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="search" xmlns="http://www.w3.org/2000/svg"><path d="M11.925 20.161q3.432 0 5.834-2.402t2.402-5.834-2.402-5.834-5.834-2.402-5.834 2.402-2.402 5.834 2.402 5.834 5.834 2.402zm10.981 0L32 29.255 29.255 32l-9.094-9.094v-1.458l-.515-.515q-3.26 2.831-7.721 2.831-4.976 0-8.45-3.432T.001 11.925t3.474-8.45 8.45-3.474 8.407 3.474 3.432 8.45q0 1.802-.858 4.075t-1.973 3.646l.515.515h1.458z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="security" xmlns="http://www.w3.org/2000/svg"><path d="M16 0l13.072 5.855v8.715q0 6.059-3.745 11.063T16 31.999q-5.583-1.362-9.327-6.366T2.928 14.57V5.855zm0 16v13.004q4.017-1.294 6.808-4.868T26.144 16H16zm0 0V3.2L5.856 7.693v8.306H16z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="telescope" xmlns="http://www.w3.org/2000/svg"><path d="M25.026 3.335a.466.466 0 00-.646-.238L13.362 8.91a.463.463 0 00-.216.575l.227.593-6.36 3.488a.462.462 0 00-.205.583l.211.508-6.755 3.228a.463.463 0 00-.228.595l1.386 3.341a.463.463 0 00.583.259l7.056-2.5.211.508a.462.462 0 00.557.267l6.733-1.941.202.527a.46.46 0 00.566.277l12.03-3.702a.46.46 0 00.293-.613L25.026 3.335zM2.109 21.061l-1.049-2.53 6.314-3.018 1.332 3.211-6.596 2.337zm7.857-1.708l-.22-.531-1.706-4.113-.22-.53 5.863-3.216 2.197 5.676.347.908-6.261 1.806zm7.505-1.146l-.188-.491c-.003-.01-.001-.022-.006-.032l-.572-1.478-2.549-6.668 10.201-5.381 4.249 10.624-11.136 3.428zm8.943-16.723a.463.463 0 00-.86.344l5.552 13.881a.464.464 0 00.602.258.464.464 0 00.258-.602L26.413 1.484zM16.268 20.627h-2.776c-1.055 0-1.851.796-1.851 1.851v1.217l-5.44 6.347a.462.462 0 10.702.602l5.415-6.316h2.101v6.015a.463.463 0 00.926 0v-6.015h2.101l5.414 6.316a.462.462 0 10.703-.602l-5.44-6.347v-1.148c0-1.076-.813-1.92-1.851-1.92zm.925 2.777h-4.627v-.925c0-.545.38-.925.925-.925h2.776c.527 0 .925.428.925.995v.856z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="timer" xmlns="http://www.w3.org/2000/svg"><path d="M16 29q4.428 0 7.536-3.143t3.107-7.571-3.107-7.536T16 7.643 8.464 10.75t-3.107 7.536 3.107 7.571T16 29zM26.714 9.786q1.214 1.571 2.107 4.036t.893 4.464q0 5.643-4 9.678T16 32t-9.714-4.036-4-9.678 4-9.678T16 4.572q1.929 0 4.464.929t4.107 2.143l2.143-2.214q1.143.929 2.143 2.143zM14.5 19.857v-9.143h3v9.143h-3zM20.571.001v3.071h-9.143V.001h9.143z"/></symbol><symbol viewBox="-7.27 -7.27 46.55 46.55" id="tree" xmlns="http://www.w3.org/2000/svg"><path d="M32 14.423H20.808V9.616h-3.23v12.77h3.23v-4.807H32v12.845H20.808v-4.807h-6.385v-16h-3.23v4.807H.001V1.579h11.192v4.807h9.615V1.579H32v12.845z"/></symbol></svg>
+
+    <div class="wrapper">
+        <header class="gblog-header">
+    <div class="container flex align-center justify-center">
+        <a class="gblog-header__link" rel="me" href="https://eramons.github.io/techblog/">
+            <span class="gblog-brand flex align-center justify-center">
+                <img class="gblog-brand__img" src="/techblog/eve.png" alt="" width=60 height=60>
+                Small Technical Blog
+            </span>
+            
+            <span class="gblog-brand__subtitle flex align-center justify-center">E. Ramon</span>
+            
+        </a>
+    </div>
+</header>
+<nav class="gblog-nav">
+    <input type="checkbox" id="menu-control" class="hidden">
+    <div class="gblog-nav__control">
+        <label for="menu-control"  class="flex align-center justify-center">
+            <svg class="icon menu"><use xlink:href="#menu"></use></svg>
+            <svg class="icon clear"><use xlink:href="#clear"></use></svg>
+            <span>Nav</span>
+        </label>
+    </div>
+    <ul class="gblog-nav__list container flex flex-wrap justify-center menu-content">
+        
+        
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/android/">android</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/arm/">arm</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/asahi/">asahi</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/coreboot/">coreboot</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/cozy/">cozy</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/debian/">debian</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/home-automation/">home automation</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/kubernetes/">kubernetes</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/networking/">networking</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/nextcloud/">nextcloud</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/u-boot/">u-boot</a>
+        </li>
+        
+        
+    </ul>
+</nav>
+
+
+        <main class="gblog-page container">
+            
+    <article class="gblog-post">
+        <header class="gblog-post__header">
+            
+            
+
+            <h1>Asahi Linux kernel with u-root on Macbook</h1>
+            
+            <div class="gblog-post__meta">
+                <span class="no-wrap">
+                    <svg class="icon date"><use xlink:href="#date"></use></svg>
+                    <span class="gblog-post__tag">
+                        <time datetime="2022-10-01T10:00:00&#43;02:00">
+                            
+                            Oct 1, 2022
+                        </time>
+                    </span>
+                </span>
+
+                <span class="no-wrap">
+                    <svg class="icon timer"><use xlink:href="#timer"></use></svg>
+                    <span class="gblog-post__tag">8 min read</span>
+                </span>
+            </div>
+            
+        </header>
+
+        <section class="gblog-markdown">
+            
+
+
+
+    
+
+
+<p><strong>Goal:</strong></p>
+<p><em>Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook</em></p>
+<p>At some point I encountered myself with a Macbook Air booting Asahi&rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.</p>
+<div class="gblog-post__anchorwrap"><h2 id="introduction">Introduction<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#introduction" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Introduction" href="#introduction"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
+<p><strong>Why did I buy a Macbook and how I accidentally destroyed it</strong></p>
+<p>Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacBook Air M1 which should fullfill the following purposes:</p>
+<ul>
+<li>Act as a temporary work device until getting my work laptop from the company - since it was also going to be a Macbook</li>
+<li>Because it&rsquo;s light and handy, be the laptop of choice to take with me in vacation</li>
+<li>The most important reason: to have an excuse to play around with Asahi Linux</li>
+</ul>
+<p><em>Asahi Linux is a project and community with the goal of porting linux to apple silicon macs.</em></p>
+<p>I acquired this laptop at the end of March and middle April I had already got my company laptop: at least its main mission was fullfilled. It was middle May when I managed to empty some black tee all over the keyboard. Quick prognose: the keyboard and the touchpad had suffered an inminent death.</p>
+<p><strong>Lessons learnt</strong></p>
+<ul>
+<li>When you have water or any drink spilled over your laptop keyboard: shut it down immediately (even if you think <em>oh it&rsquo;s just a couple of drops</em> )</li>
+<li>If you want to incline the laptop to move the water away from the critical parts, do it so that the liquid goes to the back, since there is a slot there where it can come out</li>
+</ul>
+<p><strong>And then what?</strong></p>
+<p>The estimated cost of reparing was same as buying a new device, so not worth of it. My repair attempt consisting in disassembling and cleaning the burnt spots with ethanol, did not work, like at all.
+The good news: I had some fun ahead of me: I had installed the m1n1 proxy on the device before the fatal accident.</p>
+<p><strong>Steps:</strong></p>
+<p><em>1. (BEFORE) On the mac:</em></p>
+<ul>
+<li>Partition the SSD and install m1n1</li>
+</ul>
+<p><em>2. On the linux laptop:</em></p>
+<ul>
+<li>Build m1n1</li>
+<li>Build the Asahi Kernel</li>
+<li>Build u-root</li>
+</ul>
+<p><em>3. (AFTER) On the linux laptop, conneced to the Mac via serial/USB:</em></p>
+<ul>
+<li>Boot the Asahi Kernel and u-root</li>
+</ul>
+<div class="gblog-post__anchorwrap"><h2 id="_before-the-damage_"><em>BEFORE the damage</em><a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#_before-the-damage_" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor <em>BEFORE the damage</em>" href="#_before-the-damage_"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
+<p>As mentioned my Mac was mainly intented to be used to play around with Asahi Linux. Since Asahi is meant to be ran alongside MacOS and because macbooks are almost impossible to brick, there was no risk in installing m1n1 even if I still needed to use MacOS for work.</p>
+<p><em>m1n1 is the bootloader developed by the Asahi Linux project to bridge the Apple (XNU) boot ecosystem to the Linux boot ecosystem.</em></p>
+<div class="gblog-post__anchorwrap"><h3 id="1-on-the-mac">1. On the Mac<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#1-on-the-mac" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1. On the Mac" href="#1-on-the-mac"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
+<div class="gblog-post__anchorwrap"><h4 id="11-partition-the-ssd-and-install-m1n1">1.1 Partition the SSD and install m1n1<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#11-partition-the-ssd-and-install-m1n1" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.1 Partition the SSD and install m1n1" href="#11-partition-the-ssd-and-install-m1n1"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
+<p>Following the instructions on the wiki, I prepared the partitions and install m1n1:</p>
+<p><em>TODO Find my notes to the partitioning</em></p>
+<div class="gblog-post__anchorwrap"><h2 id="_after-the-damage_"><em>AFTER the damage</em><a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#_after-the-damage_" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor <em>AFTER the damage</em>" href="#_after-the-damage_"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
+<p>After the incident, the boot menu did not appear anymore when hold-pressing the power button, apparently it was also damaged. When booting the system the Asahi logo would greet me, followed for the m1n1 in proxy mode. I couldn&rsquo;t get anywhere else but there.</p>
+<p>At this point, what was intending to achieve? Even if it wasn&rsquo;t that clear to me how, the idea I got in mind was the following:</p>
+<ul>
+<li>As I understood, booting Linux in a Silicon Mac works as follows: <em>m1n1 -&gt; bootloader -&gt; kernel -&gt; rootfs</em></li>
+<li>Bootloader: the Asahi project uses u-boot as the bootloader, here where I intended to do things a little differently: to follow Linuxboot approach using a (reduced) Asahi kernel with u-root as initramfs</li>
+<li>Kernel: Asahi (relying in the .config of the ARCH distribution)</li>
+<li>Rootfs: Debian</li>
+</ul>
+<div class="gblog-post__anchorwrap"><h3 id="2-on-the-linux-laptop">2. On the linux laptop<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#2-on-the-linux-laptop" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2. On the linux laptop" href="#2-on-the-linux-laptop"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
+<div class="gblog-post__anchorwrap"><h4 id="21-build-m1n1">2.1. Build m1n1<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#21-build-m1n1" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.1. Build m1n1" href="#21-build-m1n1"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
+<p>m1n1 is not just the bootloader installed on the Mac, is also a binary used on a host computer to send commands to the Mac when it&rsquo;s in Asahi Proxy Mode.</p>
+<p><em>The m1n1 proxy mode provides a USB device interface for booting a linux kernel directly from the host computer.</em></p>
+<p>Clone and build m1n1:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev$ git clone --recursive https://github.com/AsahiLinux/m1n1.git
+eramon@caipirinha:~/dev$ cd m1n1
+eramon@caipirinha:~/dev/m1n1$ make
+</code></pre><div class="gblog-post__anchorwrap"><h4 id="22-build-asahi-kernel">2.2. Build asahi kernel<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#22-build-asahi-kernel" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.2. Build asahi kernel" href="#22-build-asahi-kernel"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
+<p>Install the cross-compiler:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/asahi/m1n1$ sudo apt-get install make gcc-aarch64-linux-gnu
+</code></pre><p>Clone the asahi linux kernel:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev$ git clone https://github.com/AsahiLinux/linux.git
+</code></pre><p>I relied in the files of the ARCH Asahi Linux distribution:</p>
+<ul>
+<li>To know which version of the asahi linux kernel to build</li>
+<li>To have a working kernel config</li>
+</ul>
+<p><em>NOTE: I asked for a recommendation regarding which .config to use in the Asahi IRC channel</em></p>
+<p><em>NOTE: even if this config is the recommended one for the Asahi Linux distribution, it might be not the ideal choice to use it as a bootloader, following the linuxboot approach. The necessary modules should be included directly in the kernel.</em></p>
+<p>To know which source code tag to build, I took a look inside the file <a href="https://github.com/AsahiLinux/PKGBUILDs/blob/main/linux-asahi/PKGBUILD">https://github.com/AsahiLinux/PKGBUILDs/blob/main/linux-asahi/PKGBUILD</a>:</p>
+<pre tabindex="0"><code>_rcver=5.19
+_asahirel=1
+</code></pre><p>Checkout the source corresponding to 5.19-1:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev$ cd linux/
+eramon@caipirinha:~/dev/linux$ git fetch --tags --all
+eramon@caipirinha:~/dev/linux$ git checkout asahi-5.19-1
+</code></pre><p>Get the config file from the ARCH distribution:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/linux$ wget https://raw.githubusercontent.com/AsahiLinux/PKGBUILDs/main/linux-asahi/config
+eramon@caipirinha:~/dev/linux$ cp config .config
+</code></pre><p>Configure and build the kernel:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/linux$ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make olddefconfig
+eramon@caipirinha:~/dev/linux$ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make Image.gz dtbs
+</code></pre><p>After built, following files have been generated:</p>
+<ul>
+<li>The compressed kernel image: Image.gz</li>
+<li>The MacBook Air device tree, knowing that the product name is J313AP and the SoC is T8103 the product name is J313AP and the SoC is T8103</li>
+</ul>
+<p>Copy the above mentioned files, which we&rsquo;re going to need later, close to the m1n1 binary:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/linux$ mkdir ../m1n1/files
+eramon@caipirinha:~/dev/linux$ cp arch/arm64/boot/dts/apple/t8103-j313.dtb ../m1n1/files/
+eramon@caipirinha:~/dev/linux$ cp arch/arm64/boot/Image.gz ../m1n1/files/
+</code></pre><div class="gblog-post__anchorwrap"><h4 id="23-u-root">2.3. u-root<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#23-u-root" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.3. u-root" href="#23-u-root"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
+<p>u-root is one of the deliverables of the Linuxboot project.</p>
+<p>Linuxboot replaces specific firmware functionality with a Linux kernel and runtime.</p>
+<p>One of the outcomes of linuxboot is u-root: a minimal initrams written in Go.</p>
+<p>We are using u-root to build an initramfs to be started after the asahi kernel boots.</p>
+<p>Clone the u-root source code:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev$ git clone https://github.com/u-root/u-root
+eramon@caipirinha:~/dev$ cd u-root 
+</code></pre><p>Install go:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/u-root$ wget https://go.dev/dl/go1.19.linux-amd64.tar.gz
+eramon@caipirinha:~/dev/u-root$ sudo rm -rf /usr/local/go
+eramon@caipirinha:~/dev/u-root$ sudo tar -C /usr/local -xzf go1.19.linux-amd64.tar.gz
+</code></pre><p>Build and install u-root:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/u-root$ export PATH=$PATH:/usr/local/go/bin
+eramon@caipirinha:~/dev/u-root$ export GOPATH=/home/eramon/dev/go
+eramon@caipirinha:~/dev/u-root$ go install github.com/u-root/u-root
+</code></pre><p>The u-root binary will be installed under $GOPATH:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/u-root$ export PATH=$PATH:/home/eramon/dev/go/bin
+</code></pre><p>Run u-root with the cross-architecture prefix:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/u-root$ GOARCH=arm64 u-root
+</code></pre><p>An initramfs for the arch64 architecture was generated:</p>
+<pre tabindex="0"><code>09:59:10 Successfully built &#34;/tmp/initramfs.linux_arm64.cpio&#34; (size 11877784)
+</code></pre><p>Same as before, copy the file close to the m1n1 binary:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/u-root$ cp /tmp/initramfs.linux_arm64.cpio ../m1n1/files/
+</code></pre><div class="gblog-post__anchorwrap"><h3 id="3-boot-the-kernel-with-u-root">3. Boot the kernel with u-root<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#3-boot-the-kernel-with-u-root" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3. Boot the kernel with u-root" href="#3-boot-the-kernel-with-u-root"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
+<p>Pre-condition: you need to have Python3 installed on the system</p>
+<p>Opening the lid of the macbook air is all the preparation we need, since:</p>
+<ul>
+<li>Macbooks boot automatically when opening the lid</li>
+<li>The Options menu does not work anymore, the laptop boots straight to the asahi proxy</li>
+</ul>
+<p>Connect the Macbook with an USB-C cable to the linux laptop, where m1n1, the linux kernel and u-root were built.</p>
+<p>Go to the directory where m1n1 was built:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~$ cd dev/m1n1/
+</code></pre><p>There are two different ways to boot the kernel and the initramfs with m1n1:</p>
+<ul>
+<li>Directly: booting a linux kernel directly, passing a gzipped kernel, the device tree and optionally an initramfs</li>
+<li>Virtualized: under the m1n1 hypervisor. M1n1 will first load as a guest inside m1n1 - what the asahi developers call inception - and then load the embedded kernel and initramfs</li>
+</ul>
+<p>The first way do not - at the time of this writting - work properly. The reason is that the console is not initialised properly, so even if it&rsquo;s indeed working, we do not see anything else than the asahi logo frozen on the screen.</p>
+<p>For the sake of having everything documented, that&rsquo;s how to boot using the first way:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/asahi/m1n1$ export M1N1DEVICE=/dev/ttyACM0
+eramon@caipirinha:~/dev/asahi/m1n1$ python3 proxyclient/tools/linux.py -b &#39;earlycon debug rootwait&#39; files/Image.gz files/t8103-j313.dtb files/initramfs.linux_arm64.cpio.gz
+</code></pre><p>m1n1 communicates with the host via serial, which in the host is /dev/ttyACM1. I used picocom to see the output there, but it always crashed at some point.</p>
+<p>The second way allows to do the same while having a serial console, so we have the output and keyboard input through the host.</p>
+<p>First, gzip the initramfs, since it must be gzip compressed:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/m1n1$ gzip -9 files/initramfs.linux_arm64.cpio
+</code></pre><p>Build the binary concatenating the m1n1 binary - the older format .macho - with the DTB, the initramfs and the kernel image:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/m1n1$ cat build/m1n1.macho &lt;(echo &#39;chosen.bootargs=earlycon debug rw&#39;) files/t8103-j313.dtb files/initramfs.linux_arm64.cpio.gz files/Image.gz &gt; files/m1n1-linux-uroot.macho
+</code></pre><p>In another terminal, prepare the serial console, opening the second port with a serial terminal:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/m1n1$ sudo apt-get install picocom
+eramon@caipirinha:~/dev/m1n1$ picocom --omap crlf --imap lfcrlf -b 500000 /dev/ttyACM1
+</code></pre><p>You should see the following:</p>
+<pre tabindex="0"><code>Type [C-a] [C-h] to see available commands
+
+Terminal ready
+</code></pre><p>Go back to the first terminal and run the binary as guest to the m1n1 hypervisor:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/m1n1$ python3 proxyclient/tools/run_guest.py files/m1n1-linux-uroot.macho
+</code></pre><p>If everything goes well, we should be greeted by the u-root logo in the serial console:</p>
+<pre tabindex="0"><code>1970/01/01 00:00:00 Welcome to u-root!
+                              _
+   _   _      _ __ ___   ___ | |_
+  | | | |____| &#39;__/ _ \ / _ \| __|
+  | |_| |____| | | (_) | (_) | |_
+   \__,_|    |_|  \___/ \___/ \__|
+
+/# 
+</code></pre><p>With u-root we get a shell with a minimalistic set of commands.</p>
+<p>What next? From there, boot a linux kernel and mount a root system. That&rsquo;s a whole story on its own, so enough material for another blog post :)</p>
+<p>The first outcome was that the disk devices were not visible from the u-root environment, probably because the nvme controller was compiled as a module in the kernel configuration I had chosen.</p>
+<div class="gblog-post__anchorwrap"><h3 id="links">Links:<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#links" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Links:" href="#links"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
+<p><a href="https://github.com/AsahiLinux/m1n1">https://github.com/AsahiLinux/m1n1</a>
+<a href="https://github.com/AsahiLinux/docs/wiki/m1n1%3AUser-Guide">https://github.com/AsahiLinux/docs/wiki/m1n1%3AUser-Guide</a>
+<a href="https://github.com/AsahiLinux/PKGBUILDs/tree/main/linux-asahi">https://github.com/AsahiLinux/PKGBUILDs/tree/main/linux-asahi</a>
+<a href="https://github.com/AsahiLinux/linux">https://github.com/AsahiLinux/linux</a>
+<a href="https://github.com/AsahiLinux/docs/wiki/Devices">https://github.com/AsahiLinux/docs/wiki/Devices</a>
+<a href="https://go.dev/doc/install">https://go.dev/doc/install</a>
+<a href="https://www.linuxboot.org/">https://www.linuxboot.org/</a>
+<a href="https://github.com/linuxboot/book">https://github.com/linuxboot/book</a>
+<a href="https://github.com/u-root/u-root">https://github.com/u-root/u-root</a></p>
+
+
+        </section>
+    </article>
+
+        </main>
+
+        <footer class="gblog-footer">
+    <div class="container">
+        <div class="flex flex-wrap align-center">
+            
+            
+            <span class="gblog-footer__item">
+                <svg class="icon email"><use xlink:href="#email"></use></svg>
+                <a href='/techblog/contact/' class="gblog-footer__link">Contact</a>
+            </span>
+            
+            
+            
+            
+            <span class="gblog-footer__item">
+                Content licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="gblog-footer__link no-wrap">CC BY-SA 4.0</a>
+            </span>
+            
+        </div>
+        <div class="flex flex-wrap align-center">
+            <span class="gblog-footer__item">
+                Built with <a href="https://gohugo.io/" class="gblog-footer__link">Hugo</a> and
+                <svg class="icon heart"><use xlink:href="#heart"></use></svg>
+            </span>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+
+    
+<script defer src="/techblog/js/clipboard-f06c52bfdd.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var clipboard = new ClipboardJS('.clip');
+    });
+</script>
+
+
+</body>
+</html>

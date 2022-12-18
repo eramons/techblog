@@ -65,6 +65,8 @@ After updating the operating system, I opted for uninstalling k3s and reinstalln
 pi@raspberrypi:~$ sudo /usr/local/bin/k3s-uninstall.sh
 pi@raspberrypi:~$ curl -sfL https://get.k3s.io | sh 
 ```
+After the upgrade, the K3s installation did not work, I got an error related to _cgroup memory_. After googling a little I tried this, what solved the issue: I manually added _cgroup_memory=1_ and _cgroup_enable=memory_ to _/boot/cmdline.txt_
+
 Avoid sudo when invoking _kubectl_ locally:
 ```
 pi@raspberrypi:~$ sudo mkdir -p /home/pi/.kube
@@ -74,6 +76,14 @@ pi@raspberrypi:~/.kube $ sudo chmod 600 /home/pi/.kube/config
 pi@raspberrypi:~$ export KUBECONFIG=~/.kube/config
 ```
 _NOTE: copy the _.kube/config_ file to another machine and replace localhost with the actual IP to manage the cluster remotely_
+
+Make sure the cluster is up and running:
+```
+pi@raspberrypi:~ $ kubectl cluster-info
+Kubernetes control plane is running at https://127.0.0.1:6443
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:https/proxy
+```
 
 #### 1.2. Helm
 
@@ -203,10 +213,6 @@ ExecStart=/usr/local/bin/k3s \
 Reload service, remove traefik manifest and restart k3s service:
 ```
 pi@raspberrypi:~/unifi $ sudo systemctl daemon-reload
-pi@raspberrypi:~/unifi $ ls /var/lib/rancher/k3s/server/manifests/traefik.yaml
-ls: cannot access '/var/lib/rancher/k3s/server/manifests/traefik.yaml': Permission denied
-pi@raspberrypi:~/unifi $ sudo ls /var/lib/rancher/k3s/server/manifests/traefik.yaml
-/var/lib/rancher/k3s/server/manifests/traefik.yaml
 pi@raspberrypi:~/unifi $ sudo rm /var/lib/rancher/k3s/server/manifests/traefik.yaml
 pi@raspberrypi:~/unifi $ sudo service k3s start
 ```
@@ -224,7 +230,7 @@ Run helm to proceed with the installation:
 ```
 helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
-  --namespace ingress-nginx --create-namespace -f values.yaml
+  --namespace ingress-nginx --create-namespace -f nginx-values.yaml
 ```
 I used a _nginx-values.yaml_ file to pass it as parameter to helm for the nginx ingress controller installation. The file is available in my repo:
 [nginx-values.yaml](https://github.com/eramons/k3s-home/blob/main/cluster/nginx-values.yaml)
@@ -245,7 +251,9 @@ Some points worth to mention regarding the manifests:
  * The deployment pulls the image provided by _linuxserver.io_, available in _dockerhub_ 
  * For storage, I use the _local provisioner_ provided by K3s: 
 ```
-_TODO: kubectl get storageclass_
+pi@raspberrypi:~/unifi $ kubectl get storageclass
+NAME                   PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+local-path (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  28m
 ```
 
  * I would be mounting the _/config_ directory in the container on a local path on the raspberry pi. For that, I defined the _volumeMount_ in the deployment manifest and a _persistent volume claim_ which uses the _local-path_ storage class  
@@ -284,17 +292,63 @@ There are two types of logs I like to mention:
  * The logs of the controller itself
  * The logs of the access points
 
-The logs of the controller can be found in the mount point of the _config_ directory, in my case available in a directory on the raspberry pi itself:
-```
-_TODO_
-```
+The logs of the controller can be found in the mount point of the _config_ directory, in my case available in a directory on the raspberry pi itself.
 
-The logs of the access points are sent via syslog to a syslog server. You can either configure your own, or you can just use the controller, which acts itself as a syslog server. In that case, the logs will be available under (...)
+Describe the persistent volume to found the local mount point:
 ```
-_TODO_
+pi@raspberrypi:~/unifi $ kubectl describe pv
+Name:              pvc-c1792c77-de79-46a3-9d00-6292444de738
+Labels:            <none>
+Annotations:       pv.kubernetes.io/provisioned-by: rancher.io/local-path
+Finalizers:        [kubernetes.io/pv-protection]
+StorageClass:      local-path
+Status:            Bound
+Claim:             default/local-path-pvc
+Reclaim Policy:    Delete
+Access Modes:      RWO
+VolumeMode:        Filesystem
+Capacity:          50Mi
+Node Affinity:     
+  Required Terms:  
+    Term 0:        kubernetes.io/hostname in [raspberrypi]
+Message:           
+Source:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/lib/rancher/k3s/storage/pvc-c1792c77-de79-46a3-9d00-6292444de738_default_local-path-pvc
+    HostPathType:  DirectoryOrCreate
+Events:            <none>
 ```
+Under _Path_ is the location where the config files can be accessed:
+```
+pi@raspberrypi:~/unifi $ ls -la /var/lib/rancher/k3s/storage/pvc-c1792c77-de79-46a3-9d00-6292444de738_default_local-path-pvc/data
+total 72
+drwxr-xr-x 4 pi 911  4096 Oct 31 09:14 .
+drwxrwxrwx 5 pi 911  4096 Oct 31 09:11 ..
+drwxr-xr-x 3 pi 911  4096 Oct 31 09:13 backup
+drwxr-xr-x 4 pi 911 20480 Oct 31 09:16 db
+-rw-r--r-- 1 pi 911 21017 Oct 31 09:14 firmware.json
+-rw-r--r-- 1 pi 911  3729 Oct 31 09:11 keystore
+-rw-r--r-- 1 pi 911  1424 Oct 31 09:13 model_lifecycles.json
+-rw-r--r-- 1 pi 911  1352 Oct 31 09:13 system.properties
+-rw-r--r-- 1 pi 911  1352 Oct 31 09:13 system.properties.bk
+```
+Same applies for the log files:
+```
+pi@raspberrypi:~/unifi $ ls -la /var/lib/rancher/k3s/storage/pvc-c1792c77-de79-46a3-9d00-6292444de738_default_local-path-pvc/logs/
+total 136
+drwxr-xr-x 3 pi 911   4096 Oct 31 09:18 .
+drwxrwxrwx 5 pi 911   4096 Oct 31 09:11 ..
+-rw-r--r-- 1 pi 911      0 Oct 31 09:12 migration.log
+-rw-r--r-- 1 pi 911 107489 Oct 31 09:18 mongod.log
+drwxr-xr-x 2 pi 911   4096 Oct 31 09:18 remote
+-rw-r--r-- 1 pi 911  16086 Oct 31 09:14 server.log
+```
+The log configuration on the unifi controller looks like this:
+![logging](/techblog/img/unifi_logging.jpg)
 
-With this in mind, the next project would be to centralize the logs collection and visualize them. But that's enough material for a dedicated blog post. 
+The logs of the access points are sent via syslog to a syslog server. If unchecking the checkbox _Syslog & Netconsole Logs_, you can specify your own remote syslog server. Otherwise - if the checkbox is checked - the access points logs are sent to the controller, which acts as a syslog server. In that case, the logs will be available under _logs/remote_. 
+
+With this in mind, the next project would be to centralize the logs collection. But that's enough material for a dedicated blog post ;)
 
 ### Links:
 
