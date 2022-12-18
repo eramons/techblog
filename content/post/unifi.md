@@ -346,6 +346,7 @@ drwxr-xr-x 2 pi 911   4096 Oct 31 09:18 remote
 ```
 The log configuration on the unifi controller looks like this:
 ![logging](/techblog/img/unifi_logging.jpg)
+_TODO Screenshot is missing_
 
 The logs of the access points are sent via syslog to a syslog server. If unchecking the checkbox _Syslog & Netconsole Logs_, you can specify your own remote syslog server. Otherwise - if the checkbox is checked - the access points logs are sent to the controller, which acts as a syslog server. In that case, the logs will be available under _logs/remote_. 
 

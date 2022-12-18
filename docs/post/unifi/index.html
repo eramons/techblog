@@ -116,7 +116,7 @@ The unifi controller, to manage our two Unifi Access Points The Logitech Media S
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/unifi\/",
-    "wordCount" : "2158",
+    "wordCount" : "2162",
     "genre" : [ "kubernetes" , "arm" ]
 }
 </script>
@@ -510,7 +510,8 @@ drwxrwxrwx 5 pi 911   4096 Oct 31 09:11 ..
 drwxr-xr-x 2 pi 911   4096 Oct 31 09:18 remote
 -rw-r--r-- 1 pi 911  16086 Oct 31 09:14 server.log
 </code></pre><p>The log configuration on the unifi controller looks like this:
-<img src="/techblog/img/unifi_logging.jpg" alt="logging"></p>
+<img src="/techblog/img/unifi_logging.jpg" alt="logging">
+<em>TODO Screenshot is missing</em></p>
 <p>The logs of the access points are sent via syslog to a syslog server. If unchecking the checkbox <em>Syslog &amp; Netconsole Logs</em>, you can specify your own remote syslog server. Otherwise - if the checkbox is checked - the access points logs are sent to the controller, which acts as a syslog server. In that case, the logs will be available under <em>logs/remote</em>.</p>
 <p>With this in mind, a nice-to-have next step would be to centralize and visualize the controller and AP logs. Let&rsquo;s see ;)</p>
 <div class="gblog-post__anchorwrap"><h3 id="links">Links:<a data-clipboard-text="https://eramons.github.io/techblog/post/unifi/#links" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Links:" href="#links"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
