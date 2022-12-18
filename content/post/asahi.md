@@ -60,13 +60,90 @@ _m1n1 is the bootloader developed by the Asahi Linux project to bridge the Apple
 
 #### 1.1 Partition the SSD and install m1n1
 
-Following the instructions on the wiki, I prepared the partitions and install m1n1:
+List disks and partitions:
+```
+eramon@cider dev % diskutil list
+/dev/disk0 (internal):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                         251.0 GB   disk0
+   1:             Apple_APFS_ISC ⁨⁩                        524.3 MB   disk0s1
+   2:                 Apple_APFS ⁨Container disk3⁩         245.1 GB   disk0s2
+   3:        Apple_APFS_Recovery ⁨⁩                        5.4 GB     disk0s3
 
-_TODO Find my notes about partitioning_ 
+/dev/disk3 (synthesized):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      APFS Container Scheme -                      +245.1 GB   disk3
+                                 Physical Store disk0s2
+   1:                APFS Volume ⁨Macintosh HD⁩            15.3 GB    disk3s1
+   2:              APFS Snapshot ⁨com.apple.os.update-...⁩ 15.3 GB    disk3s1s1
+   3:                APFS Volume ⁨Preboot⁩                 186.5 MB   disk3s2
+   4:                APFS Volume ⁨Recovery⁩                1.0 GB     disk3s3
+   5:                APFS Volume ⁨Data⁩                    13.5 GB    disk3s5
+   6:                APFS Volume ⁨VM⁩                      20.5 KB    disk3s6
+```
+Following the documentation, I resize the APFS container:
+```
+eramon@cider ~ % diskutil apfs resizeContainer disk0s2 150GB
+```
+Run diskutil again, and see if it worked:
+```
+eramon@cider ~ % diskutil list                              
+/dev/disk0 (internal):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                         251.0 GB   disk0
+   1:             Apple_APFS_ISC ⁨⁩                        524.3 MB   disk0s1
+   2:                 Apple_APFS ⁨Container disk3⁩         150.0 GB   disk0s2
+                    (free space)                         95.1 GB    -
+   3:        Apple_APFS_Recovery ⁨⁩                        5.4 GB     disk0s3
+
+/dev/disk3 (synthesized):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      APFS Container Scheme -                      +150.0 GB   disk3
+                                 Physical Store disk0s2
+   1:                APFS Volume ⁨Macintosh HD⁩            15.3 GB    disk3s1
+   2:              APFS Snapshot ⁨com.apple.os.update-...⁩ 15.3 GB    disk3s1s1
+   3:                APFS Volume ⁨Preboot⁩                 184.6 MB   disk3s2
+   4:                APFS Volume ⁨Recovery⁩                1.0 GB     disk3s3
+   5:                APFS Volume ⁨Data⁩                    16.3 GB    disk3s5
+   6:                APFS Volume ⁨VM⁩                      20.5 KB    disk3s6
+```
+There was now some free space now after the disk0s2. At this point I tried to restart, the MacBook was rebooting without any problem, so at least we didn't break anything with the resizing.
 
 #### 1.2 Install m1n1 
 
-_TODO Find my notes about running the asahi installer_
+Run the asahi installer:
+```
+eramon@cider asahi % curl -L https://mrcn.st/alxsh | sh
+```
+At some point, the user is prompted to say if the advanced options should be displayed:
+```
+By default, this installer will hide certain advanced options that
+are only useful for developers. You can enable expert mode to show them.
+» Enable expert mode? (y/N): 
+```
+Choose YES. A little further below, information about the partitions is displayed, and the installer asks what to do:
+```
+Partitions in system disk (disk0):
+  1: APFS [Macintosh HD] (150.00 GB, 6 volumes)
+    OS: [B*] [Macintosh HD] macOS v12.3 [disk3s1, 46277907-5BF2-4627-9192-9C780B38A30A]
+  2: (free space: 95.11 GB)
+  3: APFS (System Recovery) (5.37 GB, 2 volumes)
+    OS: [  ] recoveryOS v12.3 [Primary recoveryOS]
+
+  [B ] = Booted OS, [R ] = Booted recovery, [? ] = Unknown
+  [ *] = Default boot volume
+
+Using OS 'Macintosh HD' (disk3s1) for machine authentication.
+
+Choose what to do:
+  f: Install an OS into free space
+  r: Resize an existing partition to make space for a new OS
+  q: Quit without doing anything
+» Action (f): f
+```
+Choose "f": _Install an OS into free space_
+
+When asked about _which OS to install_, I selected the third option, to install just the m1n1 in proxy: no u-boot, no asahi linux. Yet. I did this since I wanted to play around with the m1n1 binary booting a kernel manually. I wasn't counting with a damaged system, which is what happened next.
 
 ## _AFTER the damage_
 

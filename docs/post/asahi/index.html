@@ -119,7 +119,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/asahi\/",
-    "wordCount" : "1663",
+    "wordCount" : "2134",
     "genre" : [ "asahi" ]
 }
 </script>
@@ -244,7 +244,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
 
                 <span class="no-wrap">
                     <svg class="icon timer"><use xlink:href="#timer"></use></svg>
-                    <span class="gblog-post__tag">8 min read</span>
+                    <span class="gblog-post__tag">11 min read</span>
                 </span>
             </div>
             
@@ -299,10 +299,75 @@ The good news: I had some fun ahead of me: I had installed the m1n1 proxy on the
 <p><em>m1n1 is the bootloader developed by the Asahi Linux project to bridge the Apple (XNU) boot ecosystem to the Linux boot ecosystem.</em></p>
 <div class="gblog-post__anchorwrap"><h3 id="1-on-the-mac">1. On the Mac<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#1-on-the-mac" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1. On the Mac" href="#1-on-the-mac"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <div class="gblog-post__anchorwrap"><h4 id="11-partition-the-ssd-and-install-m1n1">1.1 Partition the SSD and install m1n1<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#11-partition-the-ssd-and-install-m1n1" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.1 Partition the SSD and install m1n1" href="#11-partition-the-ssd-and-install-m1n1"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
-<p>Following the instructions on the wiki, I prepared the partitions and install m1n1:</p>
-<p><em>TODO Find my notes about partitioning</em></p>
+<p>List disks and partitions:</p>
+<pre tabindex="0"><code>eramon@cider dev % diskutil list
+/dev/disk0 (internal):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                         251.0 GB   disk0
+   1:             Apple_APFS_ISC ⁨⁩                        524.3 MB   disk0s1
+   2:                 Apple_APFS ⁨Container disk3⁩         245.1 GB   disk0s2
+   3:        Apple_APFS_Recovery ⁨⁩                        5.4 GB     disk0s3
+
+/dev/disk3 (synthesized):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      APFS Container Scheme -                      +245.1 GB   disk3
+                                 Physical Store disk0s2
+   1:                APFS Volume ⁨Macintosh HD⁩            15.3 GB    disk3s1
+   2:              APFS Snapshot ⁨com.apple.os.update-...⁩ 15.3 GB    disk3s1s1
+   3:                APFS Volume ⁨Preboot⁩                 186.5 MB   disk3s2
+   4:                APFS Volume ⁨Recovery⁩                1.0 GB     disk3s3
+   5:                APFS Volume ⁨Data⁩                    13.5 GB    disk3s5
+   6:                APFS Volume ⁨VM⁩                      20.5 KB    disk3s6
+</code></pre><p>Following the documentation, I resize the APFS container:</p>
+<pre tabindex="0"><code>eramon@cider ~ % diskutil apfs resizeContainer disk0s2 150GB
+</code></pre><p>Run diskutil again, and see if it worked:</p>
+<pre tabindex="0"><code>eramon@cider ~ % diskutil list                              
+/dev/disk0 (internal):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                         251.0 GB   disk0
+   1:             Apple_APFS_ISC ⁨⁩                        524.3 MB   disk0s1
+   2:                 Apple_APFS ⁨Container disk3⁩         150.0 GB   disk0s2
+                    (free space)                         95.1 GB    -
+   3:        Apple_APFS_Recovery ⁨⁩                        5.4 GB     disk0s3
+
+/dev/disk3 (synthesized):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      APFS Container Scheme -                      +150.0 GB   disk3
+                                 Physical Store disk0s2
+   1:                APFS Volume ⁨Macintosh HD⁩            15.3 GB    disk3s1
+   2:              APFS Snapshot ⁨com.apple.os.update-...⁩ 15.3 GB    disk3s1s1
+   3:                APFS Volume ⁨Preboot⁩                 184.6 MB   disk3s2
+   4:                APFS Volume ⁨Recovery⁩                1.0 GB     disk3s3
+   5:                APFS Volume ⁨Data⁩                    16.3 GB    disk3s5
+   6:                APFS Volume ⁨VM⁩                      20.5 KB    disk3s6
+</code></pre><p>There was now some free space now after the disk0s2. At this point I tried to restart, the MacBook was rebooting without any problem, so at least we didn&rsquo;t break anything with the resizing.</p>
 <div class="gblog-post__anchorwrap"><h4 id="12-install-m1n1">1.2 Install m1n1<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#12-install-m1n1" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.2 Install m1n1" href="#12-install-m1n1"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
-<p><em>TODO Find my notes about running the asahi installer</em></p>
+<p>Run the asahi installer:</p>
+<pre tabindex="0"><code>eramon@cider asahi % curl -L https://mrcn.st/alxsh | sh
+</code></pre><p>At some point, the user is prompted to say if the advanced options should be displayed:</p>
+<pre tabindex="0"><code>By default, this installer will hide certain advanced options that
+are only useful for developers. You can enable expert mode to show them.
+» Enable expert mode? (y/N): 
+</code></pre><p>Choose YES. A little further below, information about the partitions is displayed, and the installer asks what to do:</p>
+<pre tabindex="0"><code>Partitions in system disk (disk0):
+  1: APFS [Macintosh HD] (150.00 GB, 6 volumes)
+    OS: [B*] [Macintosh HD] macOS v12.3 [disk3s1, 46277907-5BF2-4627-9192-9C780B38A30A]
+  2: (free space: 95.11 GB)
+  3: APFS (System Recovery) (5.37 GB, 2 volumes)
+    OS: [  ] recoveryOS v12.3 [Primary recoveryOS]
+
+  [B ] = Booted OS, [R ] = Booted recovery, [? ] = Unknown
+  [ *] = Default boot volume
+
+Using OS &#39;Macintosh HD&#39; (disk3s1) for machine authentication.
+
+Choose what to do:
+  f: Install an OS into free space
+  r: Resize an existing partition to make space for a new OS
+  q: Quit without doing anything
+» Action (f): f
+</code></pre><p>Choose &ldquo;f&rdquo;: <em>Install an OS into free space</em></p>
+<p>When asked about <em>which OS to install</em>, I selected the third option, to install just the m1n1 in proxy: no u-boot, no asahi linux. Yet. I did this since I wanted to play around with the m1n1 binary booting a kernel manually. I wasn&rsquo;t counting with a damaged system, which is what happened next.</p>
 <div class="gblog-post__anchorwrap"><h2 id="_after-the-damage_"><em>AFTER the damage</em><a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#_after-the-damage_" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor <em>AFTER the damage</em>" href="#_after-the-damage_"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>After the incident, the boot menu did not appear anymore when hold-pressing the power button, apparently it was also damaged. When booting the system the Asahi logo would greet me, followed for the m1n1 in proxy mode. I couldn&rsquo;t get anywhere else but there.</p>
 <p>At this point, what was I intending to achieve? Even if it wasn&rsquo;t that clear to me how, the idea I got in mind was the following:</p>
