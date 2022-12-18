@@ -1,7 +1,7 @@
 +++
 math = true
 date = "2022-10-01T10:00:00+02:00"
-title = "Linuxboot with Asahi Linux Kernel on Macbook"
+title = "Boot Asahi Kernel with u-root on Macbook"
 tags = ["asahi"]
 highlight = true
 
@@ -193,6 +193,12 @@ eramon@caipirinha:~/dev/u-root$ cp /tmp/initramfs.linux_arm64.cpio ../m1n1/files
 ### 3. Boot the kernel with u-root
 
 Pre-condition: you need to have Python3 installed on the system
+
+In addition to python3, modules _serial_ and _construct_ are necessary:
+```
+eramon@caipirinha:~/dev/m1n1$ pip3 install construct
+eramon@caipirinha:~/dev/m1n1$ pip3 install pyserial
+```
 
 Opening the lid of the macbook air is all the preparation we need, since:
  * Macbooks boot automatically when opening the lid

@@ -26,7 +26,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
     
 
 
-    <title>Linuxboot with Asahi Linux Kernel on Macbook | Small Technical Blog</title>
+    <title>Boot Asahi Kernel with u-root on Macbook | Small Technical Blog</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/techblog/favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/techblog/favicon/favicon-32x32.png">
@@ -34,7 +34,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
 
     
 
-    <meta property="og:title" content="Linuxboot with Asahi Linux Kernel on Macbook" />
+    <meta property="og:title" content="Boot Asahi Kernel with u-root on Macbook" />
 <meta property="og:description" content="Goal:
 Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook
 At some point I encountered myself with a Macbook Air booting Asahi&rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.
@@ -47,7 +47,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
 
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Linuxboot with Asahi Linux Kernel on Macbook"/>
+<meta name="twitter:title" content="Boot Asahi Kernel with u-root on Macbook"/>
 <meta name="twitter:description" content="Goal:
 Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook
 At some point I encountered myself with a Macbook Air booting Asahi&rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.
@@ -90,8 +90,8 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
     "@context": "http://schema.org",
     "@type": "BlogPosting",
     "articleSection": "post",
-    "name": "Linuxboot with Asahi Linux Kernel on Macbook",
-    "headline": "Linuxboot with Asahi Linux Kernel on Macbook",
+    "name": "Boot Asahi Kernel with u-root on Macbook",
+    "headline": "Boot Asahi Kernel with u-root on Macbook",
     "alternativeHeadline": "",
     "description": "Goal:\nBoot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook\nAt some point I encountered myself with a Macbook Air booting Asahi\u0026rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.\nIntroduction Why did I buy a Macbook and how I accidentally destroyed it\nEven if I definitely am a Linux-kind-of-person, I got myself an entry-level MacBook Air M1 which should fullfill the following purposes:",
     "inLanguage": "en",
@@ -119,7 +119,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/asahi\/",
-    "wordCount" : "1645",
+    "wordCount" : "1663",
     "genre" : [ "asahi" ]
 }
 </script>
@@ -229,7 +229,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
             
             
 
-            <h1>Linuxboot with Asahi Linux Kernel on Macbook</h1>
+            <h1>Boot Asahi Kernel with u-root on Macbook</h1>
             
             <div class="gblog-post__meta">
                 <span class="no-wrap">
@@ -381,7 +381,10 @@ eramon@caipirinha:~/dev/u-root$ go install github.com/u-root/u-root
 <pre tabindex="0"><code>eramon@caipirinha:~/dev/u-root$ cp /tmp/initramfs.linux_arm64.cpio ../m1n1/files/
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="3-boot-the-kernel-with-u-root">3. Boot the kernel with u-root<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#3-boot-the-kernel-with-u-root" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3. Boot the kernel with u-root" href="#3-boot-the-kernel-with-u-root"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Pre-condition: you need to have Python3 installed on the system</p>
-<p>Opening the lid of the macbook air is all the preparation we need, since:</p>
+<p>In addition to python3, modules <em>serial</em> and <em>construct</em> are necessary:</p>
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/m1n1$ pip3 install construct
+eramon@caipirinha:~/dev/m1n1$ pip3 install pyserial
+</code></pre><p>Opening the lid of the macbook air is all the preparation we need, since:</p>
 <ul>
 <li>Macbooks boot automatically when opening the lid</li>
 <li>The Options menu does not work anymore, the laptop boots straight to the asahi proxy</li>
