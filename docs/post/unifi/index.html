@@ -116,7 +116,7 @@ The unifi controller, to manage our two Unifi Access Points The Logitech Media S
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/unifi\/",
-    "wordCount" : "2162",
+    "wordCount" : "2158",
     "genre" : [ "kubernetes" , "arm" ]
 }
 </script>
@@ -453,13 +453,12 @@ local-path (default)   rancher.io/local-path   Delete          WaitForFirstConsu
 </ul>
 <p>Then in the console of the new controller:</p>
 <ul>
-<li>Restore the backup. When accessing the new controsller, the possibility to directly restore a backup is offered at the beginning.</li>
-<li><em>Adopt</em> the access points</li>
+<li>Restore the backup. When accessing the new controller, the possibility to directly restore a backup is offered at the beginning</li>
 </ul>
 <p>After the initial setup, the credentials to access the new controller will be the same as for the old one.</p>
-<p><strong>Important: in the configuration under Network - System, the inform host must be manually overriden to point to unifi.mysubdomain.mydomain.com</strong></p>
+<p><em>Important: in the configuration under Network - System, the inform host must be manually overriden to point to unifi.mysubdomain.mydomain.com</em></p>
 <p>Only one thing left: shut down the unifi container running on the synology.</p>
-<p>And that&rsquo;s it: that&rsquo;s how the unifi controller became the first application in the home lightweight kubernetes cluster. Other application might now follow :)</p>
+<p>And that&rsquo;s it: that&rsquo;s how the unifi controller became the first application in the home lightweight kubernetes cluster. Other applications might now follow :)</p>
 <div class="gblog-post__anchorwrap"><h4 id="23-logging">2.3. Logging<a data-clipboard-text="https://eramons.github.io/techblog/post/unifi/#23-logging" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.3. Logging" href="#23-logging"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>There are two types of logs I like to mention:</p>
 <ul>

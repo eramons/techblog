@@ -277,16 +277,15 @@ To move from the previous unifi controller running on the docker application on 
  * _Forget device_ for each of the two access points
 
 Then in the console of the new controller:
- * Restore the backup. When accessing the new controsller, the possibility to directly restore a backup is offered at the beginning. 
- * _Adopt_ the access points
+ * Restore the backup. When accessing the new controller, the possibility to directly restore a backup is offered at the beginning 
 
 After the initial setup, the credentials to access the new controller will be the same as for the old one.
 
-__Important: in the configuration under Network - System, the inform host must be manually overriden to point to unifi.mysubdomain.mydomain.com__
+_Important: in the configuration under Network - System, the inform host must be manually overriden to point to unifi.mysubdomain.mydomain.com_
 
 Only one thing left: shut down the unifi container running on the synology. 
 
-And that's it: that's how the unifi controller became the first application in the home lightweight kubernetes cluster. Other application might now follow :)  
+And that's it: that's how the unifi controller became the first application in the home lightweight kubernetes cluster. Other applications might now follow :)  
 
 #### 2.3. Logging
 
