@@ -2,7 +2,7 @@
 math = true
 date = "2022-10-26T10:00:00+02:00"
 title = "Unifi Controller on K3s"
-tags = ["home automation","kubernetes"]
+tags = ["kubernetes", "arm"]
 highlight = true
 
 [header]
@@ -71,8 +71,8 @@ Avoid sudo when invoking _kubectl_ locally:
 ```
 pi@raspberrypi:~$ sudo mkdir -p /home/pi/.kube
 pi@raspberrypi:~$ sudo cp /etc/rancher/k3s/k3s.yaml /home/pi/.kube/config
-pi@raspberrypi:~/.kube $ sudo chown $USER /home/pi/.kube/config
-pi@raspberrypi:~/.kube $ sudo chmod 600 /home/pi/.kube/config
+pi@raspberrypi:~$ sudo chown $USER /home/pi/.kube/config
+pi@raspberrypi:~$ sudo chmod 600 /home/pi/.kube/config
 pi@raspberrypi:~$ export KUBECONFIG=~/.kube/config
 ```
 _NOTE: copy the _.kube/config_ file to another machine and replace localhost with the actual IP to manage the cluster remotely_
@@ -277,10 +277,12 @@ To move from the previous unifi controller running on the docker application on 
  * _Forget device_ for each of the two access points
 
 Then in the console of the new controller:
- * Restore the backup. When accessing the new controller, the possibility to directly restore a backup is offered at the beginning. 
+ * Restore the backup. When accessing the new controsller, the possibility to directly restore a backup is offered at the beginning. 
  * _Adopt_ the access points
 
 After the initial setup, the credentials to access the new controller will be the same as for the old one.
+
+__Important: in the configuration under Network - System, the inform host must be manually overriden to point to unifi.mysubdomain.mydomain.com__
 
 Only one thing left: shut down the unifi container running on the synology. 
 
@@ -348,7 +350,7 @@ The log configuration on the unifi controller looks like this:
 
 The logs of the access points are sent via syslog to a syslog server. If unchecking the checkbox _Syslog & Netconsole Logs_, you can specify your own remote syslog server. Otherwise - if the checkbox is checked - the access points logs are sent to the controller, which acts as a syslog server. In that case, the logs will be available under _logs/remote_. 
 
-With this in mind, the next project would be to centralize the logs collection. But that's enough material for a dedicated blog post ;)
+With this in mind, a nice-to-have next step would be to centralize and visualize the controller and AP logs. Let's see ;)
 
 ### Links:
 

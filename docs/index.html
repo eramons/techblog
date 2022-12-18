@@ -2,7 +2,7 @@
 <html itemscope itemtype="http://schema.org/WebPage" lang="en">
 
 <head>
-	<meta name="generator" content="Hugo 0.82.0" />
+	<meta name="generator" content="Hugo 0.105.0">
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -129,6 +129,12 @@
         
         
         <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/asahi/">asahi</a>
+        </li>
+        
+        
+        
+        <li>
             <a class="gblog-nav__entry " href="/techblog/tags/coreboot/">coreboot</a>
         </li>
         
@@ -142,6 +148,12 @@
         
         <li>
             <a class="gblog-nav__entry " href="/techblog/tags/debian/">debian</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/home-automation/">home automation</a>
         </li>
         
         
@@ -181,6 +193,139 @@
     
 
     
+    
+    <article class="gblog-post">
+        <header class="gblog-post__header">
+            <h1><a href="/techblog/post/unifi/">Unifi Controller on K3s</a></h1>
+        </header>
+
+        <section class="gblog-markdown">
+            Goal:
+Run the unifi controller as container on my home K3s cluster.
+Introduction The synology D916+ can run a docker application packed in a single container, which I found quite convenient to host a couple of applications in my home network:
+The unifi controller, to manage our two Unifi Access Points The Logitech Media Server - yes, I still own several squeezeboxes I wouldn&rsquo;t change for anything :D Home Assistant Planning to add further applications - and having in mind a setup where the logs from some of the home applications are fed into a elasticsearch cluster later - I decided to move them to Kubernetes, which it meant to reactivate my K3s cluster, which I had installed on a Raspberry Pi 4 a while ago - see my previous post:
+        </section>
+        <div class="gblog-post__readmore">
+            
+            <a class="flex-inline align-center fake-link" title="Read full post" href="/techblog/post/unifi/">Read full post</a>
+            
+        </div>
+
+        <footer class="gblog-post__footer">
+            <span class="no-wrap">
+                <svg class="icon date"><use xlink:href="#date"></use></svg>
+                <span class="gblog-post__tag">
+                    <time datetime="2022-10-26T10:00:00&#43;02:00">
+                        
+                        Oct 26, 2022
+                    </time>
+                </span>
+            </span>
+
+            <span class="no-wrap">
+                <svg class="icon timer"><use xlink:href="#timer"></use></svg>
+                <span class="gblog-post__tag">11 min read</span>
+            </span>
+
+            
+
+            
+            
+
+            
+            
+            
+                
+                
+                    
+                    <span class="no-wrap">
+                    <svg class="icon bookmarks"><use xlink:href="#bookmarks"></use></svg>
+                    
+<span class="gblog-post__tag gblog-button">
+    <a class="gblog-button__link" href="/techblog/tags/home-automation/" title="All posts tagged with 'home automation'">home automation</a>
+</span>
+
+                    </span>
+                    
+                
+                
+            
+                
+                
+                    
+                    
+<span class="gblog-post__tag gblog-button">
+    <a class="gblog-button__link" href="/techblog/tags/kubernetes/" title="All posts tagged with 'kubernetes'">kubernetes</a>
+</span>
+
+                    
+                
+                
+            
+            
+        </footer>
+    </article>
+    
+    <article class="gblog-post">
+        <header class="gblog-post__header">
+            <h1><a href="/techblog/post/asahi/">Linuxboot with Asahi Linux Kernel on Macbook</a></h1>
+        </header>
+
+        <section class="gblog-markdown">
+            Goal:
+Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook
+At some point I encountered myself with a Macbook Air booting Asahi&rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.
+Introduction Why did I buy a Macbook and how I accidentally destroyed it
+Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacBook Air M1 which should fullfill the following purposes:
+        </section>
+        <div class="gblog-post__readmore">
+            
+            <a class="flex-inline align-center fake-link" title="Read full post" href="/techblog/post/asahi/">Read full post</a>
+            
+        </div>
+
+        <footer class="gblog-post__footer">
+            <span class="no-wrap">
+                <svg class="icon date"><use xlink:href="#date"></use></svg>
+                <span class="gblog-post__tag">
+                    <time datetime="2022-10-01T10:00:00&#43;02:00">
+                        
+                        Oct 1, 2022
+                    </time>
+                </span>
+            </span>
+
+            <span class="no-wrap">
+                <svg class="icon timer"><use xlink:href="#timer"></use></svg>
+                <span class="gblog-post__tag">8 min read</span>
+            </span>
+
+            
+
+            
+            
+
+            
+            
+            
+                
+                
+                    
+                    <span class="no-wrap">
+                    <svg class="icon bookmarks"><use xlink:href="#bookmarks"></use></svg>
+                    
+<span class="gblog-post__tag gblog-button">
+    <a class="gblog-button__link" href="/techblog/tags/asahi/" title="All posts tagged with 'asahi'">asahi</a>
+</span>
+
+                    </span>
+                    
+                
+                
+            
+            
+        </footer>
+    </article>
     
     <article class="gblog-post">
         <header class="gblog-post__header">
@@ -324,7 +469,7 @@ See previous post to see how to install the OS on a LG G3 and my efforts to self
             Goal:
 Rely on the /e platform for private cloud self-hosting and as android operating system
 /e is a mobile ecosystem that:
- is open source is presented as an environment which values privacy is un-googled but still compatible with android apps  The /e/ ROM is a fork of Android (more precisely from LineageOS).
+is open source is presented as an environment which values privacy is un-googled but still compatible with android apps The /e/ ROM is a fork of Android (more precisely from LineageOS).
 The /e/ cloud includes several applications and it’s built upon NextCloud, Postfix, Dovecot and OnlyOffice. It’s been integrated to offer a single login identity in /e/OS as well as online, where users can retrieve their data from the ecloud global services.
         </section>
         <div class="gblog-post__readmore">
@@ -483,7 +628,7 @@ Deploy cozy on my homemade kubernetes cluster
 The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
 I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
 Cozy is a personal, free and self-hostable cloud platform, written in Go.
-Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1.
+Milestones Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it 1.
         </section>
         <div class="gblog-post__readmore">
             
@@ -627,7 +772,7 @@ In particular I had the issue of the internal host resolution. My internet box w
             Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
+Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage 1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
         </section>
         <div class="gblog-post__readmore">
             
@@ -740,122 +885,6 @@ Since I installed Coreboot on my Librem, I experienced some issues. In order to 
     <a class="gblog-button__link" href="/techblog/tags/debian/" title="All posts tagged with 'debian'">debian</a>
 </span>
 
-                    
-                
-                
-            
-            
-        </footer>
-    </article>
-    
-    <article class="gblog-post">
-        <header class="gblog-post__header">
-            <h1><a href="/techblog/post/build_coreboot/">Build Coreboot</a></h1>
-        </header>
-
-        <section class="gblog-markdown">
-            DISCLAIMER: try anything described here at your own risk! These are just my notes. That it did work for me then does not mean this would work for you now.
-After successfully installing coreboot on my librem 13 v1, I noticed that unfortunately the wifi wasn&rsquo;t working anymore. Since the coreboot version I flashed previously wasn&rsquo;t quite new, I decided to build a new rom image myself using the newest coreboot source code.
-        </section>
-        <div class="gblog-post__readmore">
-            
-            <a class="flex-inline align-center fake-link" title="Read full post" href="/techblog/post/build_coreboot/">Read full post</a>
-            
-        </div>
-
-        <footer class="gblog-post__footer">
-            <span class="no-wrap">
-                <svg class="icon date"><use xlink:href="#date"></use></svg>
-                <span class="gblog-post__tag">
-                    <time datetime="2019-02-25T10:00:00&#43;02:00">
-                        
-                        Feb 25, 2019
-                    </time>
-                </span>
-            </span>
-
-            <span class="no-wrap">
-                <svg class="icon timer"><use xlink:href="#timer"></use></svg>
-                <span class="gblog-post__tag">3 min read</span>
-            </span>
-
-            
-
-            
-            
-
-            
-            
-            
-                
-                
-                    
-                    <span class="no-wrap">
-                    <svg class="icon bookmarks"><use xlink:href="#bookmarks"></use></svg>
-                    
-<span class="gblog-post__tag gblog-button">
-    <a class="gblog-button__link" href="/techblog/tags/coreboot/" title="All posts tagged with 'coreboot'">coreboot</a>
-</span>
-
-                    </span>
-                    
-                
-                
-            
-            
-        </footer>
-    </article>
-    
-    <article class="gblog-post">
-        <header class="gblog-post__header">
-            <h1><a href="/techblog/post/coreboot_librem/">Install Coreboot on the Librem 13 v.1</a></h1>
-        </header>
-
-        <section class="gblog-markdown">
-            DISCLAIMER: try this at your own risk! The information below it&rsquo;s just a summary of my notes and experiences during the installation of coreboot on my notebook.
-I am the proud owner of a Librem 13 v1 (bought in September 2016). Currently all librem laptops are shipped with coreboot installed on them, but mine was still shipped with propietary firmware on it. Fortunately coreboot is supported anyway - it was possible for me to install coreboot myself.
-        </section>
-        <div class="gblog-post__readmore">
-            
-            <a class="flex-inline align-center fake-link" title="Read full post" href="/techblog/post/coreboot_librem/">Read full post</a>
-            
-        </div>
-
-        <footer class="gblog-post__footer">
-            <span class="no-wrap">
-                <svg class="icon date"><use xlink:href="#date"></use></svg>
-                <span class="gblog-post__tag">
-                    <time datetime="2019-02-18T10:00:00&#43;02:00">
-                        
-                        Feb 18, 2019
-                    </time>
-                </span>
-            </span>
-
-            <span class="no-wrap">
-                <svg class="icon timer"><use xlink:href="#timer"></use></svg>
-                <span class="gblog-post__tag">7 min read</span>
-            </span>
-
-            
-
-            
-            
-
-            
-            
-            
-                
-                
-                    
-                    <span class="no-wrap">
-                    <svg class="icon bookmarks"><use xlink:href="#bookmarks"></use></svg>
-                    
-<span class="gblog-post__tag gblog-button">
-    <a class="gblog-button__link" href="/techblog/tags/coreboot/" title="All posts tagged with 'coreboot'">coreboot</a>
-</span>
-
-                    </span>
                     
                 
                 

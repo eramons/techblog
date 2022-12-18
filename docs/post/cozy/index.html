@@ -15,7 +15,7 @@ Deploy cozy on my homemade kubernetes cluster
 The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
 I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
 Cozy is a personal, free and self-hostable cloud platform, written in Go.
-Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1.">
+Milestones Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it 1.">
 
 
 
@@ -41,11 +41,11 @@ Deploy cozy on my homemade kubernetes cluster
 The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
 I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
 Cozy is a personal, free and self-hostable cloud platform, written in Go.
-Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1." />
+Milestones Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it 1." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://eramons.github.io/techblog/post/cozy/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2020-05-28T17:00:00&#43;02:00" />
-<meta property="article:modified_time" content="2020-05-28T17:00:00&#43;02:00" />
+<meta property="article:published_time" content="2020-05-28T17:00:00+02:00" />
+<meta property="article:modified_time" content="2020-05-28T17:00:00+02:00" />
 
 
 <meta name="twitter:card" content="summary"/>
@@ -55,7 +55,7 @@ Deploy cozy on my homemade kubernetes cluster
 The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
 I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
 Cozy is a personal, free and self-hostable cloud platform, written in Go.
-Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1."/>
+Milestones Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it 1."/>
 
 
     <link rel="preload" as="font" href="/techblog/fonts/Metropolis.woff2" type="font/woff2" crossorigin="anonymous">
@@ -96,7 +96,7 @@ Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software:
     "name": "Self-hosted cozy on K8s",
     "headline": "Self-hosted cozy on K8s",
     "alternativeHeadline": "",
-    "description": "Goal:\nDeploy cozy on my homemade kubernetes cluster\nThe K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)\nI decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.\nCozy is a personal, free and self-hostable cloud platform, written in Go.\nMilestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1.",
+    "description": "Goal:\nDeploy cozy on my homemade kubernetes cluster\nThe K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)\nI decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.\nCozy is a personal, free and self-hostable cloud platform, written in Go.\nMilestones Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it 1.",
     "inLanguage": "en",
     "isFamilyFriendly": "true",
     "mainEntityOfPage": {
@@ -175,6 +175,12 @@ Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software:
         
         
         <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/asahi/">asahi</a>
+        </li>
+        
+        
+        
+        <li>
             <a class="gblog-nav__entry " href="/techblog/tags/coreboot/">coreboot</a>
         </li>
         
@@ -188,6 +194,12 @@ Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software:
         
         <li>
             <a class="gblog-nav__entry " href="/techblog/tags/debian/">debian</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/home-automation/">home automation</a>
         </li>
         
         
@@ -279,7 +291,7 @@ Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software:
 <li>A wildcard certificate covering <em>*.cozy.example.com</em> (CN) and <em>cozy.example.com</em> (SAN) is needed</li>
 </ul>
 <p>According to the documentation, the domain zone should be configured like this:</p>
-<pre><code>   &lt;instance&gt; 1h IN A &lt;my external IP&gt; 
+<pre tabindex="0"><code>   &lt;instance&gt; 1h IN A &lt;my external IP&gt; 
    *.&lt;instance&gt; 1h IN CNAME &lt;instance&gt;
 </code></pre><p>I use cloudflare for DNS configuration.</p>
 <p>TLS certificate issuance, wildcard certificates and reverse proxy are requirements which must be fullfilled by the K8s cluster (see next section).</p>
@@ -330,31 +342,31 @@ Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software:
 <p>See my <a href="https://github.com/eramons/kubecozy/blob/master/config/cozy.yaml">cozy.yaml</a></p>
 <p>Let&rsquo;s go over the most important configuration settings:</p>
 <div class="gblog-post__anchorwrap"><h4 id="service-hosts--port">Service hosts &amp; port<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#service-hosts--port" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Service hosts &amp; port" href="#service-hosts--port"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
-<pre><code>host: 0.0.0.0 
+<pre tabindex="0"><code>host: 0.0.0.0 
 port: 8080
 </code></pre><p>The bind address and the port where cozy-stack will listen for connections. Important to use 0.0.0.0 and NOT localhost, otherwise the application will only bind to 127.0.0.1.</p>
 <div class="gblog-post__anchorwrap"><h4 id="admin-interface">Admin interface<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#admin-interface" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Admin interface" href="#admin-interface"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
-<pre><code>admin:
+<pre tabindex="0"><code>admin:
   host: localhost 
   port: 6060
   secret_filename: cozy-admin-passphrase
 </code></pre><p>The admin interface to send requests to cozy-stack. The cozy admin password is stored encrypted in the filesystem. It must be generated beforehand using the cozy-stack binary (see K8s configuration: secrets).</p>
 <div class="gblog-post__anchorwrap"><h4 id="database">Database<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#database" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Database" href="#database"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
-<pre><code>couchdb:
+<pre tabindex="0"><code>couchdb:
   url: http://{{.Env.COUCHDB_USERNAME}}:{{.Env.COUCHDB_PASSPHRASE}}@couchdb:5984/
 </code></pre><p>The Couchdb stores the cozy application data.</p>
 <p>The environment variables must be provided later in the cozy-stack deployment manifest.</p>
 <div class="gblog-post__anchorwrap"><h4 id="storage">Storage<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#storage" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Storage" href="#storage"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
-<pre><code>fs:
+<pre tabindex="0"><code>fs:
   url: file://localhost/var/lib/cozy
 </code></pre><p>Filesystem path for the storage of user data: photos, documents, etc. Later we&rsquo;ll see on this path a nfs share folder will be mounted.</p>
 <div class="gblog-post__anchorwrap"><h4 id="vault">Vault<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#vault" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Vault" href="#vault"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
-<pre><code>vault:
+<pre tabindex="0"><code>vault:
   credentials_encryptor_key: /etc/cozy/keys/vault.enc
   credentials_decryptor_key: /etc/cozy/keys/vault.dec
 </code></pre><p>Cozy encrypts user credentials. The generation of the encryption and decryption keys must be done before the cozy-stack is started (see K8s configuration: secrets).</p>
 <div class="gblog-post__anchorwrap"><h4 id="smtp-server">SMTP Server<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#smtp-server" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor SMTP Server" href="#smtp-server"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
-<pre><code>mail:
+<pre tabindex="0"><code>mail:
   host: smtp 
   port: 1025 
   disable_tls: true 
@@ -385,7 +397,7 @@ port: 8080
 <li>The application will be executed as <em>cozy</em> user (and therefore NOT as root)</li>
 </ul>
 <p>Once ready, I build the image and push it to dockerhub:</p>
-<pre><code>docker login
+<pre tabindex="0"><code>docker login
 docker image build -t eramon/cozy-stack .
 docker push eramon/cozy-stack
 </code></pre><p><em>LATER: instead of pushing the image manually, I should configure dockerhub and github for automatic building of the docker image when a commit to the Dockerfile is done.</em></p>
@@ -414,28 +426,28 @@ docker push eramon/cozy-stack
 <p>Kubernetes <strong>Secrets</strong> let you store and manage sensitive information, such as passwords, tokens and keys.</p>
 <div class="gblog-post__anchorwrap"><h4 id="421-admin-passphrase">4.2.1 admin passphrase<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#421-admin-passphrase" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.2.1 admin passphrase" href="#421-admin-passphrase"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>The <em>cozy-stack</em> binary is necessary for generate the admin password. However my cozy-stack image executes <em>cozy serve</em> at the end, what does not work before generating the admin password. The solution was to run the docker image overriding the default CMD to generate the admin passphrase instead starting serve, mounting the new generated passphrase to an empty file on the host:</p>
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ touch cozy-admin-passphrase
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/kubernetes$ touch cozy-admin-passphrase
 eramon@caipirinha:~/dev/kubernetes$ docker run --rm -it -p 8080:8080 -v /home/eramon/dev/kubernetes/cozy-admin-passphrase:/home/cozy/cozy-admin-passphrase eramon/cozy-stack cozy-stack config passwd cozy-admin-passphrase
 Hashed passphrase will be written in /home/cozy/cozy-admin-passphrase
 Passphrase: 
 Confirmation:
 </code></pre><p>Then I created the K8s secret:</p>
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-admin-passphrase-secret --from-file=cozy-admin-passphrase
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-admin-passphrase-secret --from-file=cozy-admin-passphrase
 secret/cozy-admin-passphrase-secret created
 </code></pre><p>This secret will be mounted afterwards in the expected location on the <em>cozy-stack</em> pod, via the deployment manifest.</p>
 <div class="gblog-post__anchorwrap"><h4 id="422-vault-keys">4.2.2 vault keys<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#422-vault-keys" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.2.2 vault keys" href="#422-vault-keys"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>I followed the same procedure to generate the vault keys</p>
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ docker run --rm -it -p 8080:8080 -v /home/eramon/dev/kubernetes/vault:/home/cozy/vault eramon/cozy-stack cozy-stack config gen-keys /home/cozy/vault
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/kubernetes$ docker run --rm -it -p 8080:8080 -v /home/eramon/dev/kubernetes/vault:/home/cozy/vault eramon/cozy-stack cozy-stack config gen-keys /home/cozy/vault
 keyfiles written in:
   /home/cozy/vault.enc
   /home/cozy/vault.dec
 </code></pre><p>Generate the K8s secret for the vault keys:</p>
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-vault-secret --from-file=vault/vault.enc --from-file=vault/vault.dec
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic cozy-vault-secret --from-file=vault/vault.enc --from-file=vault/vault.dec
 secret/cozy-vault-secret created
 </code></pre><p>This secret will be mounted afterwards in the configured location on the <em>cozy-stack</em> pod, via the deployment manifest.</p>
 <div class="gblog-post__anchorwrap"><h4 id="423-couchdb-credentials">4.2.3 couchdb credentials<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#423-couchdb-credentials" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.2.3 couchdb credentials" href="#423-couchdb-credentials"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>I generated a secret for the couchdb username and password:</p>
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ echo -n &quot;admin&quot; &gt; dbusername
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/kubernetes$ echo -n &#34;admin&#34; &gt; dbusername
 eramon@caipirinha:~/dev/kubernetes$ echo -n `pwgen -s -1 16` &gt; dbpassphrase 
 eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic db-secret --from-file=dbusername --from-file=dbpassphrase
 </code></pre><p>This secret must be used to set the environment variables in the couchdb and cozy-stack deployment afterwards.</p>
@@ -448,7 +460,7 @@ eramon@caipirinha:~/dev/kubernetes$ kubectl create secret generic db-secret --fr
 <div class="gblog-post__anchorwrap"><h3 id="432-configmapgenerator">4.3.2. ConfigMapGenerator<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#432-configmapgenerator" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.3.2. ConfigMapGenerator" href="#432-configmapgenerator"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>As mentioned above, I decided to use a config file for rather than having flags passed as arguments. The file <em>cozy.yaml</em> would be included in a config map and mounted under <em>/etc/cozy</em> in the <em>cozy-stack</em> container.</p>
 <p>To generate the config map, I directly include it in the resource list of kustomization.yaml:</p>
-<pre><code># ConfigMaps
+<pre tabindex="0"><code># ConfigMaps
 configMapGenerator:
 - name: cozy-config-map
   files:
@@ -513,21 +525,21 @@ configMapGenerator:
 <p><strong>Kustomize</strong> introduces a template-free way to customize application configuration and it&rsquo;s built into the <em>kubectl</em> command.</p>
 <p>The <a href="https://github.com/eramons/kubecozy/blob/master/kustomization.yaml">kustomization.yaml</a> file includes all manifests and config files:</p>
 <p>To deploy everything the first time, or after any configuration changes to the cluster or to the application, it&rsquo;s enough to execute:</p>
-<pre><code>kubectl apply -k .
+<pre tabindex="0"><code>kubectl apply -k .
 </code></pre><div class="gblog-post__anchorwrap"><h2 id="5-cozy-instance">5. Cozy Instance<a data-clipboard-text="https://eramons.github.io/techblog/post/cozy/#5-cozy-instance" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5. Cozy Instance" href="#5-cozy-instance"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>The Dockerfile includes commands for downloading the latest cozy-stack binary, create directories, create a cozy user, set permissions and finally start <em>cozy-stack serve</em>. The creation of the instances must be done manually after deployment, using the binary. The creation of the instances is not part of the image build.</p>
 <p>For executing the cozy-stack binary to create my cozy instance, I logged into the running container:</p>
-<pre><code>kubectl exec -it cozy-stack-b6dbd5db8-m58dt /bin/bash
+<pre tabindex="0"><code>kubectl exec -it cozy-stack-b6dbd5db8-m58dt /bin/bash
 </code></pre><p>Then I created a new cozy-stack instance:</p>
-<pre><code>cozy@cozy-stack-b6dbd5db8-4j2fw:~$ cozy-stack instances add --passphrase cozy --apps home,drive,photos,settings cozy.example.com     
+<pre tabindex="0"><code>cozy@cozy-stack-b6dbd5db8-4j2fw:~$ cozy-stack instances add --passphrase cozy --apps home,drive,photos,settings cozy.example.com     
 Password:****
 Instance created with success for domain cozy.example.com
 Password:****
 </code></pre><p><em>NOTE: another way:</em></p>
-<pre><code>kubectl exec -it &lt;pod&gt; cozy-stack instances add &lt;arguments&gt;
+<pre tabindex="0"><code>kubectl exec -it &lt;pod&gt; cozy-stack instances add &lt;arguments&gt;
 </code></pre><p><em>NOTE: actually the use of kubectl exec is discouraged. The &ldquo;K8s way&rdquo; would be to use &ldquo;Custom Resource Definition&rdquo; for the creation of the cozy instance</em></p>
 <p>Show running instances:</p>
-<pre><code>cozy@cozy-stack-b6dbd5db8-4j2fw:~$ cozy-stack instances ls
+<pre tabindex="0"><code>cozy@cozy-stack-b6dbd5db8-4j2fw:~$ cozy-stack instances ls
 Password:****
 cozy.example.com  en  unlimited  onboarded  v27  cozyf55261b8a5b88690387587c7af0bb8af  cozyf55261b8a5b88690387587c7af0bb8af
 </code></pre><p>After this, I was able to connect to my cozy applications under following urls:</p>

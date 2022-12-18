@@ -115,6 +115,12 @@
         
         
         <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/asahi/">asahi</a>
+        </li>
+        
+        
+        
+        <li>
             <a class="gblog-nav__entry " href="/techblog/tags/coreboot/">coreboot</a>
         </li>
         
@@ -128,6 +134,12 @@
         
         <li>
             <a class="gblog-nav__entry " href="/techblog/tags/debian/">debian</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/home-automation/">home automation</a>
         </li>
         
         
@@ -165,6 +177,78 @@
     
 
     
+    
+    <article class="gblog-post">
+        <header class="gblog-post__header">
+            <h1><a href="/techblog/post/unifi/">Unifi Controller on K3s</a></h1>
+        </header>
+
+        <section class="gblog-markdown">
+            Goal:
+Run the unifi controller as container on my home K3s cluster.
+Introduction The synology D916+ can run a docker application packed in a single container, which I found quite convenient to host a couple of applications in my home network:
+The unifi controller, to manage our two Unifi Access Points The Logitech Media Server - yes, I still own several squeezeboxes I wouldn&rsquo;t change for anything :D Home Assistant Planning to add further applications - and having in mind a setup where the logs from some of the home applications are fed into a elasticsearch cluster later - I decided to move them to Kubernetes, which it meant to reactivate my K3s cluster, which I had installed on a Raspberry Pi 4 a while ago - see my previous post:
+        </section>
+        <div class="gblog-post__readmore">
+            
+            <a class="flex-inline align-center fake-link" title="Read full post" href="/techblog/post/unifi/">Read full post</a>
+            
+        </div>
+
+        <footer class="gblog-post__footer">
+            <span class="no-wrap">
+                <svg class="icon date"><use xlink:href="#date"></use></svg>
+                <span class="gblog-post__tag">
+                    <time datetime="2022-10-26T10:00:00&#43;02:00">
+                        
+                        Oct 26, 2022
+                    </time>
+                </span>
+            </span>
+
+            <span class="no-wrap">
+                <svg class="icon timer"><use xlink:href="#timer"></use></svg>
+                <span class="gblog-post__tag">11 min read</span>
+            </span>
+
+            
+
+            
+            
+
+            
+            
+            
+                
+                
+                    
+                    <span class="no-wrap">
+                    <svg class="icon bookmarks"><use xlink:href="#bookmarks"></use></svg>
+                    
+<span class="gblog-post__tag gblog-button">
+    <a class="gblog-button__link" href="/techblog/tags/home-automation/" title="All posts tagged with 'home automation'">home automation</a>
+</span>
+
+                    </span>
+                    
+                
+                
+            
+                
+                
+                    
+                    
+<span class="gblog-post__tag gblog-button">
+    <a class="gblog-button__link" href="/techblog/tags/kubernetes/" title="All posts tagged with 'kubernetes'">kubernetes</a>
+</span>
+
+                    
+                
+                
+            
+            
+        </footer>
+    </article>
     
     <article class="gblog-post">
         <header class="gblog-post__header">
@@ -334,7 +418,7 @@ Deploy cozy on my homemade kubernetes cluster
 The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
 I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
 Cozy is a personal, free and self-hostable cloud platform, written in Go.
-Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1.
+Milestones Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it 1.
         </section>
         <div class="gblog-post__readmore">
             
@@ -478,7 +562,7 @@ In particular I had the issue of the internal host resolution. My internet box w
             Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
+Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage 1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.
         </section>
         <div class="gblog-post__readmore">
             

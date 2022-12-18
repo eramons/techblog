@@ -6,7 +6,34 @@
     <description>Recent content in Tags on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2017-2021 E. Ramon</copyright>
-    <lastBuildDate>Tue, 27 Apr 2021 09:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Oct 2022 10:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>home automation</title>
+      <link>https://eramons.github.io/techblog/tags/home-automation/</link>
+      <pubDate>Wed, 26 Oct 2022 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/home-automation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubernetes</title>
+      <link>https://eramons.github.io/techblog/tags/kubernetes/</link>
+      <pubDate>Wed, 26 Oct 2022 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>asahi</title>
+      <link>https://eramons.github.io/techblog/tags/asahi/</link>
+      <pubDate>Sat, 01 Oct 2022 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/tags/asahi/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>coreboot</title>
       <link>https://eramons.github.io/techblog/tags/coreboot/</link>
@@ -22,15 +49,6 @@
       <pubDate>Thu, 07 Jan 2021 09:00:00 +0200</pubDate>
       
       <guid>https://eramons.github.io/techblog/tags/e/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>kubernetes</title>
-      <link>https://eramons.github.io/techblog/tags/kubernetes/</link>
-      <pubDate>Thu, 07 Jan 2021 09:00:00 +0200</pubDate>
-      
-      <guid>https://eramons.github.io/techblog/tags/kubernetes/</guid>
       <description></description>
     </item>
     

@@ -38,8 +38,8 @@ Give an old Lenovo Thinkpad W500 a second life featuring Coreboot and Ubuntu
 My partner replaced his laptop already two years and half ago, buying a beautiful brand-new Lenovo Thinkpad T480s. The old machine, a Lenovo Thinkpad W500 - heavier and bulkier and a lot less pretty - wasn&rsquo;t getting any further updates for Windows 7 and it was painfully slow, rarely being used. Furthermore, the machine was overheating and the battery was almost dead." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://eramons.github.io/techblog/post/thinkpadw500/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2021-04-27T09:00:00&#43;02:00" />
-<meta property="article:modified_time" content="2021-04-27T09:00:00&#43;02:00" />
+<meta property="article:published_time" content="2021-04-27T09:00:00+02:00" />
+<meta property="article:modified_time" content="2021-04-27T09:00:00+02:00" />
 
 
 <meta name="twitter:card" content="summary"/>
@@ -166,6 +166,12 @@ My partner replaced his laptop already two years and half ago, buying a beautifu
         
         
         <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/asahi/">asahi</a>
+        </li>
+        
+        
+        
+        <li>
             <a class="gblog-nav__entry " href="/techblog/tags/coreboot/">coreboot</a>
         </li>
         
@@ -179,6 +185,12 @@ My partner replaced his laptop already two years and half ago, buying a beautifu
         
         <li>
             <a class="gblog-nav__entry " href="/techblog/tags/debian/">debian</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/home-automation/">home automation</a>
         </li>
         
         
@@ -272,30 +284,30 @@ My partner replaced his laptop already two years and half ago, buying a beautifu
 <p><em>NOTE: in the blogs I mentioned before, the referenced mainboards featured a 16-pin chip. Since they were playing with exactly the same laptop than me, I thought that would be the case for me as well. So I ordered a 16-pin clip and let the project on hold, mainly waiting for the clip to arrive. Funny fact I discovered only after dissasembling: my mainboard had a 8-pin chip!</em></p>
 <div class="gblog-post__anchorwrap"><h3 id="12-rom-size">1.2. ROM Size<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#12-rom-size" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.2. ROM Size" href="#12-rom-size"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>After booting from the Live Ubuntu USB drive, run the following to find out the ROM size:</p>
-<pre><code>ubuntu@ubuntu:~$ dmidecode | grep ROM\ Size
+<pre tabindex="0"><code>ubuntu@ubuntu:~$ dmidecode | grep ROM\ Size
         ROM Size: 4096 kB
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="13-use-flashrom-internally">1.3 Use flashrom internally<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#13-use-flashrom-internally" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.3 Use flashrom internally" href="#13-use-flashrom-internally"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Before dissasembling the machine, find out what can be done accessing the chip internally i.e. which read/write permissions the different regions have.</p>
 <p>Re-boot with the Live Ubuntu USB stick.</p>
 <p><strong>Important: when the live CD is starting, press TAB. Modify the boot options to add <em>nopat</em> and <em>iomem=relaxed</em>.</strong></p>
 <p>After booting, verify that both options were correctly set:</p>
-<pre><code>ubuntu@ubuntu:~/ cat /proc/cmdline
+<pre tabindex="0"><code>ubuntu@ubuntu:~/ cat /proc/cmdline
 ... iomem=relaxed nopat ...
 </code></pre><p>Install flashrom. Flashrom is not available for ubuntu as a package - it must be built first. Install git and build dependencies:</p>
-<pre><code>ubuntu@ubuntu:~/flashrom$ sudo apt-get install git build-essential libpci-dev libusb-1.0
+<pre tabindex="0"><code>ubuntu@ubuntu:~/flashrom$ sudo apt-get install git build-essential libpci-dev libusb-1.0
 </code></pre><p>Clone flashrom repository, compile and make executable:</p>
-<pre><code>ubuntu@ubuntu:~/ git clone https://review.coreboot.org/flashrom.git
+<pre tabindex="0"><code>ubuntu@ubuntu:~/ git clone https://review.coreboot.org/flashrom.git
 ubuntu@ubuntu:~/ cd flashrom
 ubuntu@ubuntu:~/flashrom$ make
 ubuntu@ubuntu:~/flashrom$ sudo cp flashrom /usr/local/bin/
 ubuntu@ubuntu:~/flashrom$ sudo chmod +x /usr/local/bin/flashrom
 </code></pre><p>Try to access the chip internally using flashrom:</p>
-<pre><code>ubuntu@ubuntu:~/w500$ sudo ./flashrom -p internal
+<pre tabindex="0"><code>ubuntu@ubuntu:~/w500$ sudo ./flashrom -p internal
 flashrom v1.2-167-g6cdde54 on Linux 5.4.0-26-generic (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
-Found chipset &quot;Intel ICH9M&quot;.
+Found chipset &#34;Intel ICH9M&#34;.
 Enabling flash write... SPI Configuration is locked down.
 FREG0: Flash Descriptor region (0x00000000-0x00000fff) is read-only.
 FREG2: Management Engine region (0x00001000-0x001f5fff) is locked.
@@ -303,14 +315,14 @@ Not all flash regions are freely accessible by flashrom. This is most likely
 due to an active ME. Please see https://flashrom.org/ME for details.
 PR0: Warning: 0x003e0000-0x01ffffff is read-only.
 At least some flash regions are read protected. You have to use a flash
-layout and include only accessible regions. For write operations, you'll
+layout and include only accessible regions. For write operations, you&#39;ll
 additionally need the --noverify-all switch. See manpage for more details.
 OK.
-Found Macronix flash chip &quot;MX25L3205(A)&quot; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
-Found Macronix flash chip &quot;MX25L3205D/MX25L3208D&quot; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
-Found Macronix flash chip &quot;MX25L3206E/MX25L3208E&quot; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
-Found Macronix flash chip &quot;MX25L3273E&quot; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
-Multiple flash chip definitions match the detected chip(s): &quot;MX25L3205(A)&quot;, &quot;MX25L3205D/MX25L3208D&quot;, &quot;MX25L3206E/MX25L3208E&quot;, &quot;MX25L3273E&quot;
+Found Macronix flash chip &#34;MX25L3205(A)&#34; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip &#34;MX25L3205D/MX25L3208D&#34; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip &#34;MX25L3206E/MX25L3208E&#34; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip &#34;MX25L3273E&#34; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Multiple flash chip definitions match the detected chip(s): &#34;MX25L3205(A)&#34;, &#34;MX25L3205D/MX25L3208D&#34;, &#34;MX25L3206E/MX25L3208E&#34;, &#34;MX25L3273E&#34;
 Please specify which chip definition to use with the -c &lt;chipname&gt; option.
 </code></pre><p>Basing on the output:</p>
 <ul>
@@ -322,12 +334,12 @@ Please specify which chip definition to use with the -c &lt;chipname&gt; option.
 <p>According to the last point, it is possible to make a backup of the original bios region without diassembling.</p>
 <p><em>NOTE: actually to do so we need to know the exact chip definition, what we theoretically do not know before proceeding with the disassembling. For that I relied on the information I found in other blog posts. See references.</em></p>
 <p>So I read the bios region:</p>
-<pre><code>ubuntu@ubuntu:~/w500$ sudo ./flashrom --ifd -c &quot;MX25L3205D/MX25L3208D&quot; -p internal -i bios -r bios_orig.rom
+<pre tabindex="0"><code>ubuntu@ubuntu:~/w500$ sudo ./flashrom --ifd -c &#34;MX25L3205D/MX25L3208D&#34; -p internal -i bios -r bios_orig.rom
 flashrom v1.2-167-g6cdde54 on Linux 5.4.0-26-generic (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
-Found chipset &quot;Intel ICH9M&quot;.
+Found chipset &#34;Intel ICH9M&#34;.
 Enabling flash write... SPI Configuration is locked down.
 FREG0: Flash Descriptor region (0x00000000-0x00000fff) is read-only.
 FREG2: Management Engine region (0x00001000-0x001f5fff) is locked.
@@ -335,12 +347,12 @@ Not all flash regions are freely accessible by flashrom. This is most likely
 due to an active ME. Please see https://flashrom.org/ME for details.
 PR0: Warning: 0x003e0000-0x01ffffff is read-only.
 At least some flash regions are read protected. You have to use a flash
-layout and include only accessible regions. For write operations, you'll
+layout and include only accessible regions. For write operations, you&#39;ll
 additionally need the --noverify-all switch. See manpage for more details.
 OK.
-Found Macronix flash chip &quot;MX25L3205D/MX25L3208D&quot; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip &#34;MX25L3205D/MX25L3208D&#34; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
 Reading ich descriptor... done.
-Using region: &quot;bios&quot;.
+Using region: &#34;bios&#34;.
 Reading flash... done.
 </code></pre><p>A couple of clarifications about this command:</p>
 <ul>
@@ -382,80 +394,79 @@ Reading flash... done.
 <div class="gblog-post__anchorwrap"><h3 id="23-troubleshooting">2.3 Troubleshooting<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#23-troubleshooting" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.3 Troubleshooting" href="#23-troubleshooting"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Since I needed several attempts to make this work and the information might be useful to others, I&rsquo;m including the failed attempts and the reasons behind them in this section. If not interested, just skip to <em>2.4. Success!</em>.</p>
 <p>If not installed yet, install flashrom:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500$ sudo apt-get install flashrom
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500$ sudo apt-get install flashrom
 </code></pre><p>Now connect the clip to the chip, taking care of having the red wire connected to pin number 1, as explained in the last section.</p>
 <p><img src="/techblog/img/w500/clip_on_chip.jpg" alt="Clip on chip"></p>
 <p>First try: executing flashrom with just the programmer parameter should return a list of the chip specifications matching the detected chip. Well, that did not happen:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500$ sudo flashrom --programmer ch341a_spi
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500$ sudo flashrom --programmer ch341a_spi
 flashrom v1.2 on Linux 5.6.0-2-amd64 (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
-Couldn't open device 1a86:5512.
+Couldn&#39;t open device 1a86:5512.
 Error: Programmer initialization failed.
 </code></pre><p>The problem was that I have removed the jumper from the programmer, which binds the two most external pins on the upper side together. Don&rsquo;t remove it or otherwise the spi programmer won&rsquo;t be able to read the chip! How did I find out? As soon as I decided to try with another SPI programmer - I had two of them - and saw the same jumper I had removed in the same place.</p>
 <p><em>NOTE: first I thought the problem was my laptop i.e. the kernel module ch341 preventing the programmer to work correctly. I added &ldquo;blacklist ch341&rdquo; to <em>/etc/modprobe.d/ch341.conf</em> and removed the module manually with rmmod, which prevented the module from loading. However, after retrying the flashrom command I saw no difference whatsoever, so that wasn&rsquo;t the problem. At least not the only one.</em></p>
 <p>With the jumper on, I tried again, this time I got another error:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500$ sudo flashrom -p ch341a_spi
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500$ sudo flashrom -p ch341a_spi
 flashrom v1.2-230-gc193fbd on Linux 5.6.0-2-amd64 (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
 No EEPROM/flash device found.
-Note: flashrom can never write if the flash chip isn't found automatically.
+Note: flashrom can never write if the flash chip isn&#39;t found automatically.
 </code></pre><p>At this point, I tried and re-tried and checked the wiring and the grasp of the clip - alternating both spi programmers - but nothing was working. I thought I had broken the chip during trying. Just before giving up, I decided to start with a working scenario and move progressively towards the setup I needed.</p>
 <p>To set up this initial working situation, I was going to read the rom chip from my - productive - laptop, the Librem13v1. I found the specifications of the chip and saw that the pin distribution was the same as the one for the W500 chip. So I removed the back of the laptop. Luckily, on the Librem the rom chip is easily accessible with just removing the back side - 12 screws only!</p>
 <p>I installed flashrom on my old desktop PC running Ubuntu (since the flashrom I was using before was the one on the laptop whose chip I was trying to read). I connected the clip to the chip, exactly as before, inserted the programmer in the PC and ran the same flashrom command:</p>
-<pre><code>eramon@whisky:~$ sudo flashrom -p ch341a_spi
+<pre tabindex="0"><code>eramon@whisky:~$ sudo flashrom -p ch341a_spi
 flashrom v1.2-230-gc193fbd on Linux 5.4.0-58-generic (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
-Found Macronix flash chip &quot;MX25L6405&quot; (8192 kB, SPI) on ch341a_spi.
-Found Macronix flash chip &quot;MX25L6405D&quot; (8192 kB, SPI) on ch341a_spi.
-Found Macronix flash chip &quot;MX25L6406E/MX25L6408E&quot; (8192 kB, SPI) on ch341a_spi.
-Found Macronix flash chip &quot;MX25L6436E/MX25L6445E/MX25L6465E/MX25L6473E/MX25L6473F&quot; (8192 kB, SPI) on ch341a_spi.
-Multiple flash chip definitions match the detected chip(s): &quot;MX25L6405&quot;, &quot;MX25L6405D&quot;, &quot;MX25L6406E/MX25L6408E&quot;, &quot;MX25L6436E/MX25L6445E/MX25L6465E/MX25L6473E/MX25L6473F&quot;
+Found Macronix flash chip &#34;MX25L6405&#34; (8192 kB, SPI) on ch341a_spi.
+Found Macronix flash chip &#34;MX25L6405D&#34; (8192 kB, SPI) on ch341a_spi.
+Found Macronix flash chip &#34;MX25L6406E/MX25L6408E&#34; (8192 kB, SPI) on ch341a_spi.
+Found Macronix flash chip &#34;MX25L6436E/MX25L6445E/MX25L6465E/MX25L6473E/MX25L6473F&#34; (8192 kB, SPI) on ch341a_spi.
+Multiple flash chip definitions match the detected chip(s): &#34;MX25L6405&#34;, &#34;MX25L6405D&#34;, &#34;MX25L6406E/MX25L6408E&#34;, &#34;MX25L6436E/MX25L6445E/MX25L6465E/MX25L6473E/MX25L6473F&#34;
 Please specify which chip definition to use with the -c &lt;chipname&gt; option.
 </code></pre><p>So the programmer was working correctly, the wiring was right and flashrom on the ubuntu PC were working correctly. Next step would be to try the same setup changing the clip to the w500 board.</p>
 <div class="gblog-post__anchorwrap"><h3 id="24-success">2.4. Success!<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#24-success" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.4. Success!" href="#24-success"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Connecting the clip to the chip on the w500 motherboard and the spi programmer to the ubuntu PC in the same way I just did with the librem, I tried again:</p>
-<pre><code>eramon@whisky:~$ sudo flashrom -p ch341a_spi
+<pre tabindex="0"><code>eramon@whisky:~$ sudo flashrom -p ch341a_spi
 [sudo] password for eramon: 
 flashrom v1.2-230-gc193fbd on Linux 5.4.0-58-generic (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
-Found Macronix flash chip &quot;MX25L3205(A)&quot; (4096 kB, SPI) on ch341a_spi.
-Found Macronix flash chip &quot;MX25L3205D/MX25L3208D&quot; (4096 kB, SPI) on ch341a_spi.
-Found Macronix flash chip &quot;MX25L3206E/MX25L3208E&quot; (4096 kB, SPI) on ch341a_spi.
-Found Macronix flash chip &quot;MX25L3273E&quot; (4096 kB, SPI) on ch341a_spi.
-Multiple flash chip definitions match the detected chip(s): &quot;MX25L3205(A)&quot;, &quot;MX25L3205D/MX25L3208D&quot;, &quot;MX25L3206E/MX25L3208E&quot;, &quot;MX25L3273E&quot;
+Found Macronix flash chip &#34;MX25L3205(A)&#34; (4096 kB, SPI) on ch341a_spi.
+Found Macronix flash chip &#34;MX25L3205D/MX25L3208D&#34; (4096 kB, SPI) on ch341a_spi.
+Found Macronix flash chip &#34;MX25L3206E/MX25L3208E&#34; (4096 kB, SPI) on ch341a_spi.
+Found Macronix flash chip &#34;MX25L3273E&#34; (4096 kB, SPI) on ch341a_spi.
+Multiple flash chip definitions match the detected chip(s): &#34;MX25L3205(A)&#34;, &#34;MX25L3205D/MX25L3208D&#34;, &#34;MX25L3206E/MX25L3208E&#34;, &#34;MX25L3273E&#34;
 Please specify which chip definition to use with the -c &lt;chipname&gt; option.
-
 </code></pre><p><img src="/techblog/img/w500/success_edited.jpg" alt="SPI"></p>
 <p>This time it worked! The programmer was able to read the rom and found several matching chip definitions, among them &ldquo;MX25L3205D/MX25L3208D&rdquo;, which was the expected one.</p>
 <p>I re-assembled my Librem again, putting in place all its 12 little screws. I booted and after some more re-tries with flashrom and the programmer I was able to obtain the same result as with the ubuntu PC. Apparently one of the USB ports on the laptop had an issue. In addition the grasp of the clip on the chip wasn&rsquo;t very good. All these things together made the initial try and error difficult. But now I was able to read the chip using flashrom on either of the two machines.</p>
 <p><em>NOTE: one thing which would have helped if I had known is that both little red leds on the programmer, at either sides of the USB connector, must be lighting. If not, the connection is not good.</em></p>
 <div class="gblog-post__anchorwrap"><h3 id="25-full-backup-of-the-existing-firmware">2.5. Full backup of the existing firmware<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#25-full-backup-of-the-existing-firmware" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.5. Full backup of the existing firmware" href="#25-full-backup-of-the-existing-firmware"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Run flashrom to backup the existing firmware (bios):</p>
-<pre><code>eramon@whisky:~$ sudo flashrom -p ch341a_spi -c MX25L3205D/MX25L3208D -r w500_1.rom
+<pre tabindex="0"><code>eramon@whisky:~$ sudo flashrom -p ch341a_spi -c MX25L3205D/MX25L3208D -r w500_1.rom
 flashrom v1.2-230-gc193fbd on Linux 5.4.0-58-generic (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
-Found Macronix flash chip &quot;MX25L3205D/MX25L3208D&quot; (4096 kB, SPI) on ch341a_spi.
+Found Macronix flash chip &#34;MX25L3205D/MX25L3208D&#34; (4096 kB, SPI) on ch341a_spi.
 Reading flash... done.
 </code></pre><p>Do it twice, so we can compare the image checksums afterwards:</p>
-<pre><code>eramon@whisky:~$ sudo flashrom -p ch341a_spi -c MX25L3205D/MX25L3208D -r w500_2.rom
+<pre tabindex="0"><code>eramon@whisky:~$ sudo flashrom -p ch341a_spi -c MX25L3205D/MX25L3208D -r w500_2.rom
 flashrom v1.2-230-gc193fbd on Linux 5.4.0-58-generic (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
-Found Macronix flash chip &quot;MX25L3205D/MX25L3208D&quot; (4096 kB, SPI) on ch341a_spi.
+Found Macronix flash chip &#34;MX25L3205D/MX25L3208D&#34; (4096 kB, SPI) on ch341a_spi.
 Reading flash... done.
 </code></pre><p>Make sure the image is not corrupt, comparing the checksum of both results:</p>
-<pre><code>eramon@whisky:~$ sha1sum w500*.rom
+<pre tabindex="0"><code>eramon@whisky:~$ sha1sum w500*.rom
 f3e162e9400f63d36fc7d9f7e003542be874cec5  w500_1.rom
 f3e162e9400f63d36fc7d9f7e003542be874cec5  w500_2.rom
 </code></pre><p>Looking good so far.</p>
@@ -465,17 +476,17 @@ f3e162e9400f63d36fc7d9f7e003542be874cec5  w500_2.rom
 <div class="gblog-post__anchorwrap"><h3 id="31-source-and-tools">3.1. Source and tools<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#31-source-and-tools" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.1. Source and tools" href="#31-source-and-tools"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>The libraries and tools needed to build coreboot were already installed on my laptop.</p>
 <p>Pull the latest version of coreboot and update submodules:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500$ git clone https://review.coreboot.org/coreboot
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500$ git clone https://review.coreboot.org/coreboot
 eramon@caipirinha:~/dev/thinkpadw500$ cd coreboot
 eramon@caipirinha:~/dev/thinkpadw500$ git submodule update --init --checkout
 </code></pre><p>The last step checks out a subrepository on the <em>3rdparty</em> directory.</p>
 <p>Build the cross-compiler (all architectures):</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ make crossgcc CPUS=4
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ make crossgcc CPUS=4
 
 Building toolchain using 4 thread(s).
 Target architecture is i386-elf
 </code></pre><p>Build ifdtool:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ cd util
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ cd util
 eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/ifdtool$ make
 eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/ifdtool$ cd ..
 </code></pre><p>idftool is a program to extract and dump Intel Firmware Descriptor information.</p>
@@ -493,7 +504,7 @@ eramon@caipirinha:~/dev/thinkpadw500/coreboot/util/ifdtool$ cd ..
 <li>Intel Management Engine (me.bin)</li>
 </ul>
 <p>Use ifdtool to extract the flash regions from the rom image:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo ./util/ifdtool/ifdtool -x ../w500_1.rom 
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo ./util/ifdtool/ifdtool -x ../w500_1.rom 
 [sudo] password for eramon: 
 File ../w500_1.rom is 4194304 bytes
   Flash Region 0 (Flash Descriptor): 00000000 - 00000fff 
@@ -501,9 +512,8 @@ File ../w500_1.rom is 4194304 bytes
   Flash Region 2 (Intel ME): 00001000 - 001f5fff 
   Flash Region 3 (GbE): 001f6000 - 001f7fff 
   Flash Region 4 (Platform Data): 001f8000 - 001fffff 
-
 </code></pre><p>Idftool extracts the different flash regions to binary files:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ ls -la *.bin
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ ls -la *.bin
 -rw-r--r-- 1 root root    4096 Apr 28 12:13 flashregion_0_flashdescriptor.bin
 -rw-r--r-- 1 root root 2097152 Apr 28 12:13 flashregion_1_bios.bin
 -rw-r--r-- 1 root root 2052096 Apr 28 12:13 flashregion_2_intel_me.bin
@@ -511,7 +521,7 @@ File ../w500_1.rom is 4194304 bytes
 -rw-r--r-- 1 root root   32768 Apr 28 12:13 flashregion_4_platform_data.bin
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="34-config">3.4 Config<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#34-config" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.4 Config" href="#34-config"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Once the sources, tools and binaries are available, configure build-time options of coreboot.</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ make menuconfig
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ make menuconfig
 </code></pre><p>We need to tell the compiler where to find the binary blobs:</p>
 <ul>
 <li>
@@ -544,36 +554,36 @@ File ../w500_1.rom is 4194304 bytes
 </ul>
 <p>Save and exit. The configuration is saved to <em>.config</em></p>
 <p>Under the <em>Chipset</em> menu, we just saw where the binary files must be located:</p>
-<pre><code>3rdparty/blobs/mainboard/$(MAINBOARDDIR)/descriptor.bin
+<pre tabindex="0"><code>3rdparty/blobs/mainboard/$(MAINBOARDDIR)/descriptor.bin
 3rdparty/blobs/mainboard/$(MAINBOARDDIR)/me.bin
 3rdparty/blobs/mainboard/$(MAINBOARDDIR)/gbe.bin
 </code></pre><p>The value of <em>$(MAINBOARDDIR)</em> could be find in the .config file:</p>
-<pre><code>CONFIG_MAINBOARD_DIR=&quot;lenovo/t400&quot;
+<pre tabindex="0"><code>CONFIG_MAINBOARD_DIR=&#34;lenovo/t400&#34;
 </code></pre><p>Create the directory and copy the files to the right location:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ mkdir -p 3rdparty/blobs/mainboard/lenovo/t400
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ mkdir -p 3rdparty/blobs/mainboard/lenovo/t400
 eramon@caipirinha:~/dev/thinkpadw500/coreboot$ cp flashregion_0_flashdescriptor.bin 3rdparty/blobs/mainboard/lenovo/t400/descriptor.bin
 eramon@caipirinha:~/dev/thinkpadw500/coreboot$ cp flashregion_2_intel_me.bin 3rdparty/blobs/mainboard/lenovo/t400/me.bin
 eramon@caipirinha:~/dev/thinkpadw500/coreboot$ cp flashregion_3_gbe.bin 3rdparty/blobs/mainboard/lenovo/t400/gbe.bin
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="35-build">3.5 Build<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#35-build" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.5 Build" href="#35-build"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Build coreboot:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ make
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ make
 </code></pre><p>After successfully build we had the image ready to be flashed:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ ls -la build/coreboot.rom 
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ ls -la build/coreboot.rom 
 -rw-r--r-- 1 eramon eramon 4194304 Apr 28 13:15 build/coreboot.rom
 </code></pre><div class="gblog-post__anchorwrap"><h2 id="4-flash-coreboot">4. Flash Coreboot<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#4-flash-coreboot" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4. Flash Coreboot" href="#4-flash-coreboot"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>Flash coreboot:</p>
-<pre><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo flashrom -p ch341a_spi -c MX25L3205D/MX25L3208D -w build/coreboot.rom
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/thinkpadw500/coreboot$ sudo flashrom -p ch341a_spi -c MX25L3205D/MX25L3208D -w build/coreboot.rom
 flashrom v1.2-230-gc193fbd on Linux 5.6.0-2-amd64 (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
-Found Macronix flash chip &quot;MX25L3205D/MX25L3208D&quot; (4096 kB, SPI) on ch341a_spi.
+Found Macronix flash chip &#34;MX25L3205D/MX25L3208D&#34; (4096 kB, SPI) on ch341a_spi.
 Reading old flash chip contents... done.
 Erasing and writing flash chip... Erase/write done.
 Verifying flash... VERIFIED.
 </code></pre><p>The last line said VERIFIED so the custom coreboot image had been successfully flashed to the device.</p>
 <p>After flashing, read the new image from the chip twice and compare their checksums with the one of <em>build/coreboot.rom</em>:</p>
-<pre><code>147b8e4183e0d1605c60a64f65e0d21124f9ce0d  coreboot.rom
+<pre tabindex="0"><code>147b8e4183e0d1605c60a64f65e0d21124f9ce0d  coreboot.rom
 147b8e4183e0d1605c60a64f65e0d21124f9ce0d  w500_coreboot_1.rom
 147b8e4183e0d1605c60a64f65e0d21124f9ce0d  w500_coreboot_2.rom
 </code></pre><p>The checksums matched, at least I was positive that the flashed image was exactly the same one I had built.</p>
@@ -593,7 +603,7 @@ Verifying flash... VERIFIED.
 </ul>
 <p><img src="/techblog/img/w500/minimal_edited.jpg" alt="Minimal"></p>
 <p>The result: after powering on the &ldquo;machine&rdquo;, following nice words greeted me on the screen:</p>
-<pre><code>SeaBIOS (version rel/1.14.0-0-g155821a)
+<pre tabindex="0"><code>SeaBIOS (version rel/1.14.0-0-g155821a)
 Machine UUID df574981-504b-11cb-9973-fe56060fbf6e
 
 Press ESC for boot menu.
@@ -626,19 +636,19 @@ No bootable device. Retrying in 60 seconds.
 <p><em>NOTE: how convenient that the Thinkwpad W500 has THREE usb ports :)</em></p>
 <p>Boot from the external drive. This time there was no temperature warning, so the thermal grease was doing its job properly. Download and build flashrom from source (as described in <em>1.3. Use Flashrom internally</em>).</p>
 <p>Run flashrom with the internal programmer:</p>
-<pre><code>ubuntu@ubuntu:~$ sudo flashrom -p internal 
+<pre tabindex="0"><code>ubuntu@ubuntu:~$ sudo flashrom -p internal 
 flashrom v1.2-292-gb81dbc5 on Linux 5.4.0-42-generic (x86_64)
 flashrom is free software, get the source code at https://flashrom.org
 
 Using clock_gettime for delay loops (clk_id: 1, resolution: 1ns).
 coreboot table found at 0x7d76e000.
-Found chipset &quot;Intel ICH9M&quot;.
+Found chipset &#34;Intel ICH9M&#34;.
 Enabling flash write... OK.
-Found Macronix flash chip &quot;MX25L3205(A)&quot; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
-Found Macronix flash chip &quot;MX25L3205D/MX25L3208D&quot; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
-Found Macronix flash chip &quot;MX25L3206E/MX25L3208E&quot; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
-Found Macronix flash chip &quot;MX25L3233F/MX25L3273E&quot; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
-Multiple flash chip definitions match the detected chip(s): &quot;MX25L3205(A)&quot;, &quot;MX25L3205D/MX25L3208D&quot;, &quot;MX25L3206E/MX25L3208E&quot;, &quot;MX25L3233F/MX25L3273E&quot;
+Found Macronix flash chip &#34;MX25L3205(A)&#34; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip &#34;MX25L3205D/MX25L3208D&#34; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip &#34;MX25L3206E/MX25L3208E&#34; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Found Macronix flash chip &#34;MX25L3233F/MX25L3273E&#34; (4096 kB, SPI) mapped at physical address 0x00000000ffc00000.
+Multiple flash chip definitions match the detected chip(s): &#34;MX25L3205(A)&#34;, &#34;MX25L3205D/MX25L3208D&#34;, &#34;MX25L3206E/MX25L3208E&#34;, &#34;MX25L3233F/MX25L3273E&#34;
 Please specify which chip definition to use with the -c &lt;chipname&gt; option.
 </code></pre><p>Comparing this output with the first one at the beginning of this post, we see the write protection is gone. From now one, we&rsquo;ll be able to flash a complete image to the chip without disassembling.</p>
 <div class="gblog-post__anchorwrap"><h3 id="53-complete-re-assembling">5.3. Complete re-assembling<a data-clipboard-text="https://eramons.github.io/techblog/post/thinkpadw500/#53-complete-re-assembling" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5.3. Complete re-assembling" href="#53-complete-re-assembling"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>

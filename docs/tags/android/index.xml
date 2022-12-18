@@ -16,7 +16,7 @@
       <description>Goal:
 Rely on the /e platform for private cloud self-hosting and as android operating system
 /e is a mobile ecosystem that:
- is open source is presented as an environment which values privacy is un-googled but still compatible with android apps  The /e/ ROM is a fork of Android (more precisely from LineageOS).
+is open source is presented as an environment which values privacy is un-googled but still compatible with android apps The /e/ ROM is a fork of Android (more precisely from LineageOS).
 The /e/ cloud includes several applications and it’s built upon NextCloud, Postfix, Dovecot and OnlyOffice. It’s been integrated to offer a single login identity in /e/OS as well as online, where users can retrieve their data from the ecloud global services.</description>
     </item>
     
@@ -29,8 +29,8 @@ The /e/ cloud includes several applications and it’s built upon NextCloud, Pos
       <description>Radxa Rock 2 Square is a Rockchip RK3288 based solution.
 Available images
 The available images run with:
- A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel.  The goal is to get a pure Debian distribution up and running on the board:
- Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:</description>
+A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel. The goal is to get a pure Debian distribution up and running on the board:
+Debian u-boot Debian armhf linux-image kernel Pure Debian root file system For this small project, we have two Radxa Rock 2 Square boards:</description>
     </item>
     
   </channel>

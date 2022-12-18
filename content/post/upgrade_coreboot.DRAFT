@@ -1,0 +1,92 @@
++++
+math = true
+date = "2021-05-12T09:00:00+02:00"
+title = "WIP Upgrade Coreboot on the Librem 13 v.1"
+tags = ["coreboot"]
+highlight = true
+
+[header]
+  caption = ""
+  image = ""
+
++++
+
+__DISCLAIMER: try this at your own risk!__
+
+__Goal:__
+_Have a fully working coreboot on the librem 13v1_
+
+Purism manufactures the Librem personal computing devices with a focus on software freedom, computer security, and Internet privacy. As I first heard of this in late 2016, I ordered a Librem 13, which is a nice, lightweight, intel-based high-end laptop which was supposed to run without need of installing propietary software or firmware. 
+
+Unfortunately the first laptops were shipped with propietary firmware, with the promise it would be possible and easy to upgrade them to coreboot soon. 
+
+Around two years ago I first flashed and then built and flashed coreboot on my librem (see [Install Coreboot]({{< ref "/post/coreboot_librem" >}}) and 
+[Build Coreboot]({{< ref "/post/build_coreboot" >}})
+). The installation succeeded, but after a cool reboot the wifi stopped working. I have been switching back and forth between self-built coreboot images and the original propietary firmware since then. I kept hoping at some point a coreboot update would solve the issue.
+
+_NOTE: good thing the librem has a gigabit ethernet port ;)_
+
+I asked the purism support for a hint about how to solve this problem, they provided a website pointint to a link with a script which was supposed to build and flash a working coreboot on the librem. I'm more a _do it yourself_ kind of person, however trying out the script seemed like a good starting point. 
+
+Tasks:
+
+1. Try out the purism script 
+
+
+## 1. Purism Librem coreboot Utility 
+
+I went to the website it was recommended to me, downloaded the script and ran it:
+```
+eramon@caipirinha:~/dev/purism/updates$ wget https://source.puri.sm/coreboot/utility/raw/master/coreboot_util.sh -O coreboot_util.sh
+eramon@caipirinha:~/dev/purism/updates$ sudo bash ./coreboot_util.sh
+```
+
+Several options appear:
+```
+################################################
+##       Purism Librem coreboot Utility         
+################################################
+#  
+#  1) Update firmware using precompiled image
+#  2) Build firmware update from source
+#  3) Modify default boot order
+#  4) Set device serial number
+#  
+################################################
+  
+Enter your choice (1-4) or Q to quit: 
+```
+
+Select number 2. Afterwards when prompted to choose the device type, select _1 - Librem 13 v1_
+
+After a while, the build is completed and the verification successfull:
+```
+Finished building coreboot for Librem 13v1
+
+Built coreboot image hash matches expected reproducible build hash
+
+Do you want to flash the coreboot update now (y/N) ?  y
+
+Checking for usable version of flashrom
+Found built-in flashrom version v1.2-230-gc193fbd
+
+coreboot flashing in progress. Do NOT interrupt this process.
+
+Initializing internal Flash Programmer
+Reading old flash contents. Please wait...
+Total flash size : 8388608 bytes
+Flashing: [##################################################] (100%)
+Verifying flash contents. Please wait...
+The flash contents were verified and the image was flashed correctly.
+
+
+You must reboot for the coreboot update to take effect.
+
+Reboot now? (y/N) ? 
+```
+
+Select, yes, reboot.
+
+## Links
+
+[Purism/Coreboot](https://puri.sm/projects/coreboot)

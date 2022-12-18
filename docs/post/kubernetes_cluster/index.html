@@ -13,7 +13,7 @@
     <meta name="description" content="Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.">
+Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage 1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.">
 
 
 
@@ -37,11 +37,11 @@ Tasks:
 <meta property="og:description" content="Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this." />
+Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage 1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://eramons.github.io/techblog/post/kubernetes_cluster/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2020-03-21T15:00:00&#43;02:00" />
-<meta property="article:modified_time" content="2020-03-21T15:00:00&#43;02:00" />
+<meta property="article:published_time" content="2020-03-21T15:00:00+02:00" />
+<meta property="article:modified_time" content="2020-03-21T15:00:00+02:00" />
 
 
 <meta name="twitter:card" content="summary"/>
@@ -49,7 +49,7 @@ Tasks:
 <meta name="twitter:description" content="Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this."/>
+Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&rsquo;s Encrypt) Storage 1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this."/>
 
 
     <link rel="preload" as="font" href="/techblog/fonts/Metropolis.woff2" type="font/woff2" crossorigin="anonymous">
@@ -90,7 +90,7 @@ Tasks:
     "name": "Home-made K8s Cluster",
     "headline": "Home-made K8s Cluster",
     "alternativeHeadline": "",
-    "description": "Goal:\nSet up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker\nTasks:\n Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let\u0026rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.",
+    "description": "Goal:\nSet up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker\nTasks:\nFind old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let\u0026rsquo;s Encrypt) Storage 1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.",
     "inLanguage": "en",
     "isFamilyFriendly": "true",
     "mainEntityOfPage": {
@@ -169,6 +169,12 @@ Tasks:
         
         
         <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/asahi/">asahi</a>
+        </li>
+        
+        
+        
+        <li>
             <a class="gblog-nav__entry " href="/techblog/tags/coreboot/">coreboot</a>
         </li>
         
@@ -182,6 +188,12 @@ Tasks:
         
         <li>
             <a class="gblog-nav__entry " href="/techblog/tags/debian/">debian</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/home-automation/">home automation</a>
         </li>
         
         
@@ -277,30 +289,30 @@ Tasks:
 <p>Download Ubuntu Server 18.04.4 LTS from <a href="https://ubuntu.com/download/server">https://ubuntu.com/download/server</a></p>
 <p>For the MacMini, I just created a bootable USB.</p>
 <p>Insert an USB drive and find out which device is it mapped to:</p>
-<pre><code>sudo dmesg |grep sd
+<pre tabindex="0"><code>sudo dmesg |grep sd
 ...
 [24400.755280] sd 4:0:0:0: [sdb] Attached SCSI disk
 [24406.001628] EXT4-fs (sdb1): mounted filesystem with ordered data mode. Opts: (null)
 [39200.249434] sd 4:0:0:0: [sdb] 31266816 512-byte logical blocks: (16.0 GB/14.9 GiB)
 ...
 </code></pre><p>It was /dev/sdb. So I copied the downloaded image to the USB drive:</p>
-<pre><code>sudo dd if=ubuntu-18.04.4-live-server-amd64.iso of=/dev/sdb
+<pre tabindex="0"><code>sudo dd if=ubuntu-18.04.4-live-server-amd64.iso of=/dev/sdb
 </code></pre><p>For the old PC, I had to burn a DVD, since it was so old it did not even boot from USB. For that I borrowed a quite old Windows laptop which still had a DVD-drive. I burned the ISO image using the Windows Disc Image Burner.</p>
 <p>After having the media prepared, I installed Ubuntu Server on both machines. In both cases, I chose &ldquo;Manual&rdquo; for setting up the disks and the partitions, using the whole disk.</p>
 <p>NOTE: swap is not supported. Either it must be omitted during installation, or it must be switched off afterwards:</p>
-<pre><code>sudo swapoff -a 
+<pre tabindex="0"><code>sudo swapoff -a 
 </code></pre><div class="gblog-post__anchorwrap"><h2 id="3-master-node">3. Master node<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#3-master-node" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3. Master node" href="#3-master-node"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <div class="gblog-post__anchorwrap"><h3 id="31-install-runtime">3.1. Install runtime<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#31-install-runtime" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.1. Install runtime" href="#31-install-runtime"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>I searched for a suitable container runtime to install, gettin two results which made sense for me:</p>
-<pre><code>eramon@caipirinha:~/dev/techblog$ apt-cache search docker.io
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/techblog$ apt-cache search docker.io
 containerd - open and reliable container runtime
 docker.io - Linux container runtime
 ...
 </code></pre><p>Although containerd would be enough, I installed docker.io since having the extra docker tools for debugging or whatever might be useful later:</p>
-<pre><code>sudo apt-get install docker.io
+<pre tabindex="0"><code>sudo apt-get install docker.io
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="32-install-kubernetes-software">3.2. Install kubernetes software<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#32-install-kubernetes-software" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.2. Install kubernetes software" href="#32-install-kubernetes-software"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>Install kubeadm, kubectl and kubelet</p>
-<pre><code>sudo apt-get update
+<pre tabindex="0"><code>sudo apt-get update
 sudo apt-get install -y apt-transport-https curl
 
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -312,11 +324,11 @@ sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 </code></pre><p>kubelet, kubeadm and kubectl are set on hold (to avoid automatic updates, I think)</p>
 <p>After installation, restarting kubelet is required;</p>
-<pre><code>sudo systemctl daemon-reload
+<pre tabindex="0"><code>sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="33-initialise-master-node">3.3 Initialise master node<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#33-initialise-master-node" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.3 Initialise master node" href="#33-initialise-master-node"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>The goal was to set up a single control-plane cluster with kubeadm.</p>
-<pre><code>sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+<pre tabindex="0"><code>sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ...
 
 Your Kubernetes control-plane has initialized successfully!
@@ -328,25 +340,24 @@ To start using your cluster, you need to run the following as a regular user:
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 You should now deploy a pod network to the cluster.
-Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:
+Run &#34;kubectl apply -f [podnetwork].yaml&#34; with one of the options listed at:
   https://kubernetes.io/docs/concepts/cluster-administration/addons/
 
 Then you can join any number of worker nodes by running the following on each as root:
 
 kubeadm join 192.168.1.129:6443 --token jn333p.q9hskm01cs12iak7 \
     --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9
-
 </code></pre><p>To make kubectl work for your non-root user, run these commands, which are also part of the kubeadm init output:</p>
-<pre><code>eramon@pacharan:~$ sudo mkdir -p $HOME/.kube
+<pre tabindex="0"><code>eramon@pacharan:~$ sudo mkdir -p $HOME/.kube
 eramon@pacharan:~$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 eramon@pacharan:~$ sudo chown eramon:eramon .kube/config
 </code></pre><p>After these steps, looking at the output of kubectl cluster-info we see kubectl is interacting with our new cluster:</p>
-<pre><code>eramon@pacharan:~$ kubectl cluster-info
+<pre tabindex="0"><code>eramon@pacharan:~$ kubectl cluster-info
 Kubernetes master is running at https://192.168.1.129:6443
 KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="34-install-a-pod-network-add-on">3.4 Install a Pod network add-on<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#34-install-a-pod-network-add-on" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3.4 Install a Pod network add-on" href="#34-install-a-pod-network-add-on"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>As the output of kubeadm said, we must deploy a pod network to the cluster, so the pods can communicate with each other.</p>
-<pre><code>eramon@pacharan:~$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+<pre tabindex="0"><code>eramon@pacharan:~$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 podsecuritypolicy.policy/psp.flannel.unprivileged created
 clusterrole.rbac.authorization.k8s.io/flannel created
 clusterrolebinding.rbac.authorization.k8s.io/flannel created
@@ -358,7 +369,7 @@ daemonset.apps/kube-flannel-ds-arm created
 daemonset.apps/kube-flannel-ds-ppc64le created
 daemonset.apps/kube-flannel-ds-s390x created
 </code></pre><p>Show all pods from all namespaces:</p>
-<pre><code>eramon@pacharan:~$ kubectl get pods --all-namespaces
+<pre tabindex="0"><code>eramon@pacharan:~$ kubectl get pods --all-namespaces
 NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE
 kube-system   coredns-6955765f44-597bj           1/1     Running   0          160m
 kube-system   coredns-6955765f44-ctwvs           1/1     Running   0          160m
@@ -374,10 +385,10 @@ kube-system   kube-scheduler-pacharan            1/1     Running   0          16
 <p>I followed exactly the same process described in 3.1 and 3.2 to install the container runtime and the kubernetes software on the worker node.</p>
 <div class="gblog-post__anchorwrap"><h3 id="42-join-the-cluster">4.2 Join the cluster<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#42-join-the-cluster" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 4.2 Join the cluster" href="#42-join-the-cluster"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>First enable docker.service (otherwise kubeadm join shows a warning):</p>
-<pre><code>eramon@whisky:~$ sudo systemctl enable docker.service
+<pre tabindex="0"><code>eramon@whisky:~$ sudo systemctl enable docker.service
 Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /lib/systemd/system/docker.service.
 </code></pre><p>Since more than 24 hours elapsed between the kubeadm init and the join command, I created a new token:</p>
-<pre><code>eramon@pacharan:~$ kubeadm token create
+<pre tabindex="0"><code>eramon@pacharan:~$ kubeadm token create
 W0321 15:00:44.641034   18998 validation.go:28] Cannot validate kube-proxy config - no validator is available
 W0321 15:00:44.641111   18998 validation.go:28] Cannot validate kubelet config - no validator is available
 qon04q.9lwkz7i4pixr46q6
@@ -385,15 +396,15 @@ eramon@pacharan:~$ kubeadm token list
 TOKEN                     TTL         EXPIRES                USAGES                   DESCRIPTION                                                EXTRA GROUPS
 qon04q.9lwkz7i4pixr46q6   23h         2020-03-22T15:00:44Z   authentication,signing   &lt;none&gt;                                                     system:bootstrappers:kubeadm:default-node-token
 </code></pre><p>Join worker node by running the following as root:</p>
-<pre><code>root@whisky:/home/eramon# kubeadm join 192.168.1.129:6443 --token qon04q.9lwkz7i4pixr46q6 --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9
+<pre tabindex="0"><code>root@whisky:/home/eramon# kubeadm join 192.168.1.129:6443 --token qon04q.9lwkz7i4pixr46q6 --discovery-token-ca-cert-hash sha256:0966963ed31ac9d898e3d49d154e2f6ed78931f356af5d6c35616ee75585c2f9
 W0321 15:03:52.406236   29903 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
 [preflight] Running pre-flight checks
-        [WARNING IsDockerSystemdCheck]: detected &quot;cgroupfs&quot; as the Docker cgroup driver. The recommended driver is &quot;systemd&quot;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+        [WARNING IsDockerSystemdCheck]: detected &#34;cgroupfs&#34; as the Docker cgroup driver. The recommended driver is &#34;systemd&#34;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
 [preflight] Reading configuration from the cluster...
-[preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
-[kubelet-start] Downloading configuration for the kubelet from the &quot;kubelet-config-1.17&quot; ConfigMap in the kube-system namespace
-[kubelet-start] Writing kubelet configuration to file &quot;/var/lib/kubelet/config.yaml&quot;
-[kubelet-start] Writing kubelet environment file with flags to file &quot;/var/lib/kubelet/kubeadm-flags.env&quot;
+[preflight] FYI: You can look at this config file with &#39;kubectl -n kube-system get cm kubeadm-config -oyaml&#39;
+[kubelet-start] Downloading configuration for the kubelet from the &#34;kubelet-config-1.17&#34; ConfigMap in the kube-system namespace
+[kubelet-start] Writing kubelet configuration to file &#34;/var/lib/kubelet/config.yaml&#34;
+[kubelet-start] Writing kubelet environment file with flags to file &#34;/var/lib/kubelet/kubeadm-flags.env&#34;
 [kubelet-start] Starting the kubelet
 [kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
 
@@ -401,9 +412,9 @@ This node has joined the cluster:
 * Certificate signing request was sent to apiserver and a response was received.
 * The Kubelet was informed of the new secure connection details.
 
-Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+Run &#39;kubectl get nodes&#39; on the control-plane to see this node join the cluster.
 </code></pre><p>As instructed by the output of the last command, we take a look at the nodes:</p>
-<pre><code>eramon@pacharan:~$ kubectl get nodes
+<pre tabindex="0"><code>eramon@pacharan:~$ kubectl get nodes
 NAME       STATUS   ROLES    AGE     VERSION
 pacharan   Ready    master   3d3h    v1.17.4
 whisky     Ready    &lt;none&gt;   6m15s   v1.17.4
@@ -413,7 +424,7 @@ whisky     Ready    &lt;none&gt;   6m15s   v1.17.4
 <div class="gblog-post__anchorwrap"><h3 id="51-install-kubectl">5.1. Install kubectl<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#51-install-kubectl" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5.1. Install kubectl" href="#51-install-kubectl"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p><em>On the client machine</em></p>
 <p>Download binary and install kubectl on the client machine:</p>
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/kubernetes$ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100 41.4M  100 41.4M    0     0  5681k      0  0:00:07  0:00:07 --:--:-- 5877k
@@ -421,21 +432,20 @@ whisky     Ready    &lt;none&gt;   6m15s   v1.17.4
 eramon@caipirinha:~/dev/kubernetes$ chmod +x kubectl 
 
 eramon@caipirinha:~/dev/kubernetes$ sudo mv kubectl /usr/local/bin/kubectl
-
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="52-grant-access-to-the-cluster-api-for-the-client-machine">5.2. Grant access to the cluster API for the client machine<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#52-grant-access-to-the-cluster-api-for-the-client-machine" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 5.2. Grant access to the cluster API for the client machine" href="#52-grant-access-to-the-cluster-api-for-the-client-machine"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>I just copied the kube configuration from the Master node to my laptop.</p>
 <p><em>NOTE: Not sure if this is exactly best practice.</em></p>
 <p>The file is located here:</p>
-<pre><code>eramon@pacharan:~$ ls -la /home/eramon/.kube/config 
+<pre tabindex="0"><code>eramon@pacharan:~$ ls -la /home/eramon/.kube/config 
 -rw------- 1 eramon eramon 5449 Mar 18 14:42 /home/eramon/.kube/config
 </code></pre><p>After copying the file to the same location on the client machine, I saw my laptop had access to the Kubernetes API on the server via kubectl:</p>
-<pre><code>eramon@caipirinha:~$ kubectl cluster-info
+<pre tabindex="0"><code>eramon@caipirinha:~$ kubectl cluster-info
 Kubernetes master is running at https://192.168.1.129:6443
 KubeDNS is running at https://192.168.1.129:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 </code></pre><div class="gblog-post__anchorwrap"><h2 id="6-install-helm">6. Install helm<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#6-install-helm" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6. Install helm" href="#6-install-helm"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>Helm is a tool for managing Kubernetes packages called <em>charts</em>. The chart is a bundle of information necessary to create an instance of a Kubernetes application.</p>
 <p>Downloaded latest helm:</p>
-<pre><code>eramon@caipirinha:~/dev/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/helm$ wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
 --2020-03-22 13:12:45--  https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
 Resolving get.helm.sh (get.helm.sh)... 2606:2800:233:1cb7:261b:1f9c:2074:3c, 152.199.21.175
 Connecting to get.helm.sh (get.helm.sh)|2606:2800:233:1cb7:261b:1f9c:2074:3c|:443... connected.
@@ -447,7 +457,7 @@ helm-v3.1.2-linux-amd64. 100%[==================================&gt;]  11.70M  2
 
 2020-03-22 13:12:51 (2.53 MB/s) - ‘helm-v3.1.2-linux-amd64.tar.gz’ saved [12269190/12269190]
 </code></pre><p>Unzip it and instal binary:</p>
-<pre><code>eramon@caipirinha:~/dev/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/helm$ tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
 linux-amd64/
 linux-amd64/helm
 linux-amd64/README.md
@@ -455,15 +465,15 @@ linux-amd64/LICENSE
 
 eramon@caipirinha:~/dev/helm$ sudo mv linux-amd64/helm /usr/local/bin/helm
 </code></pre><p>Invoke helm to make sure it&rsquo;s working:</p>
-<pre><code>eramon@caipirinha:~$ helm version
-version.BuildInfo{Version:&quot;v3.1.2&quot;, GitCommit:&quot;d878d4d45863e42fd5cff6743294a11d28a9abce&quot;, GitTreeState:&quot;clean&quot;, GoVersion:&quot;go1.13.8&quot;}
+<pre tabindex="0"><code>eramon@caipirinha:~$ helm version
+version.BuildInfo{Version:&#34;v3.1.2&#34;, GitCommit:&#34;d878d4d45863e42fd5cff6743294a11d28a9abce&#34;, GitTreeState:&#34;clean&#34;, GoVersion:&#34;go1.13.8&#34;}
 </code></pre><p>Once Helm is ready, add the official &ldquo;Helm stable charts&rdquo; chart repository:</p>
-<pre><code>eramon@caipirinha:~$ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-&quot;stable&quot; has been added to your repositories
+<pre tabindex="0"><code>eramon@caipirinha:~$ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+&#34;stable&#34; has been added to your repositories
 </code></pre><div class="gblog-post__anchorwrap"><h2 id="7-install-nginx-ingress">7 Install nginx ingress<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#7-install-nginx-ingress" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 7 Install nginx ingress" href="#7-install-nginx-ingress"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>My cluster needed an ingress controller in order to listen and serve connection requests.</p>
 <p>Since I&rsquo;m working with a home-made cluster installed directly on physical machines running on my home network, the default nginx-ingress configuration won&rsquo;t work for me. On a home configuration there is no load balancer on-demand as with a cloud provider.</p>
-<p>Taking a &ldquo;bare-metal' cluster configuration as a reference, this is the setup for my ingress controller:</p>
+<p>Taking a &ldquo;bare-metal&rsquo; cluster configuration as a reference, this is the setup for my ingress controller:</p>
 <ul>
 <li><em>kind=DaemonSet</em>: deploy the ingress controler on every node</li>
 <li><em>hostNetwork=true</em>: the nginx daemonset runs on the host namespace</li>
@@ -471,7 +481,7 @@ version.BuildInfo{Version:&quot;v3.1.2&quot;, GitCommit:&quot;d878d4d45863e42fd5
 <li><em>admisionWebhooks.enabled=false</em>: we don&rsquo;t want to have ingress admission webhooks</li>
 </ul>
 <p>Install nginx-ingress using helm:</p>
-<pre><code>helm install mynginx1 stable/nginx-ingress \
+<pre tabindex="0"><code>helm install mynginx1 stable/nginx-ingress \
 	--set controller.admisionWebhooks.enabled=false \
 	--set controller.service.enabled=false \
 	--set controller.hostNetwork=true \
@@ -479,10 +489,10 @@ version.BuildInfo{Version:&quot;v3.1.2&quot;, GitCommit:&quot;d878d4d45863e42fd5
 </code></pre><div class="gblog-post__anchorwrap"><h2 id="8-install-cert-manager">8 Install cert-manager<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#8-install-cert-manager" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 8 Install cert-manager" href="#8-install-cert-manager"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>The issuance, renewal and configuration of TLS server certificates for web applications deployed in the cluster can be automated with Let&rsquo;s Encrypt and cert-manager.</p>
 <p>Install cert-manager from manifest (rather as using helm):</p>
-<pre><code>eramon@caipirinha:~/dev/kubernetes$ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.3/cert-manager.yaml
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/kubernetes$ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.3/cert-manager.yaml
 </code></pre><p>The cert-manager is installed in an own new namespace called <em>cert-manager</em>.</p>
 <p>To make sure cert-manager was installed correctly, list the pods on the namespace:</p>
-<pre><code>eramon@caipirinha:~/dev/techblog$ kubectl get pods -n cert-manager
+<pre tabindex="0"><code>eramon@caipirinha:~/dev/techblog$ kubectl get pods -n cert-manager
 NAME                                      READY   STATUS    RESTARTS   AGE
 cert-manager-77fcb5c94-dfgjm              1/1     Running   0          58m
 cert-manager-cainjector-8fff85c75-nmmhn   1/1     Running   0          58m
@@ -499,13 +509,13 @@ cert-manager-webhook-54647cbd5-w4fkr      1/1     Running   0          58m
 <p>Setting up the NFS share on the Synology NAS was quite straightforward.</p>
 <div class="gblog-post__anchorwrap"><h3 id="102-install-nfs-common">10.2 Install nfs-common<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#102-install-nfs-common" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 10.2 Install nfs-common" href="#102-install-nfs-common"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>I installed nfs-common on my worker node:</p>
-<pre><code>sudo apt-get install nfs-common
+<pre tabindex="0"><code>sudo apt-get install nfs-common
 </code></pre><p>With this, the worker will be able to nfs-mount folders on my NAS as persistent volumes for the pods.</p>
 <p><em>Note: not sure if this is best practice. I guess for productive setups required software is installed on each node automatically.</em></p>
 <div class="gblog-post__anchorwrap"><h3 id="103-persistent-volume">10.3 Persistent Volume<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#103-persistent-volume" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 10.3 Persistent Volume" href="#103-persistent-volume"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>After the NFS share was available on my NAS, I wrote manifests for persistent nfs volumes. I created a dedicated persistent volume for each application.</p>
 <p>The manifest reference the hostname or IP of the NFS server and the path to the share:</p>
-<pre><code>apiVersion: v1
+<pre tabindex="0"><code>apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: synology-nfs
@@ -522,10 +532,10 @@ spec:
 <div class="gblog-post__anchorwrap"><h2 id="appendix-open-points">Appendix. Open points:<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#appendix-open-points" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Appendix. Open points:" href="#appendix-open-points"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <div class="gblog-post__anchorwrap"><h3 id="warning">Warning<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#warning" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Warning" href="#warning"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>In both master and worker, I get this warning:</p>
-<pre><code>[WARNING IsDockerSystemdCheck]: detected &quot;cgroupfs&quot; as the Docker cgroup driver. The recommended driver is &quot;systemd&quot;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
+<pre tabindex="0"><code>[WARNING IsDockerSystemdCheck]: detected &#34;cgroupfs&#34; as the Docker cgroup driver. The recommended driver is &#34;systemd&#34;. Please follow the guide at https://kubernetes.io/docs/setup/cri/
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="warning-1">Warning<a data-clipboard-text="https://eramons.github.io/techblog/post/kubernetes_cluster/#warning-1" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Warning" href="#warning-1"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>When running kubeadm init and when creating a new token, I got warnings on the output:</p>
-<pre><code>eramon@pacharan:~$ kubeadm token create
+<pre tabindex="0"><code>eramon@pacharan:~$ kubeadm token create
 W0321 15:16:13.144929   25354 validation.go:28] Cannot validate kube-proxy config - no validator is available
 W0321 15:16:13.145003   25354 validation.go:28] Cannot validate kubelet config - no validator is available
 4w2xrh.i1phnkxkzz7ja5fi

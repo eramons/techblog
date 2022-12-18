@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>home automation on Small Technical Blog</title>
+    <link>https://eramons.github.io/techblog/tags/home-automation/</link>
+    <description>Recent content in home automation on Small Technical Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>&amp;copy; 2017-2021 E. Ramon</copyright>
+    <lastBuildDate>Wed, 26 Oct 2022 10:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/home-automation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Unifi Controller on K3s</title>
+      <link>https://eramons.github.io/techblog/post/unifi/</link>
+      <pubDate>Wed, 26 Oct 2022 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/unifi/</guid>
+      <description>Goal:
+Run the unifi controller as container on my home K3s cluster.
+Introduction The synology D916+ can run a docker application packed in a single container, which I found quite convenient to host a couple of applications in my home network:
+The unifi controller, to manage our two Unifi Access Points The Logitech Media Server - yes, I still own several squeezeboxes I wouldn&amp;rsquo;t change for anything :D Home Assistant Planning to add further applications - and having in mind a setup where the logs from some of the home applications are fed into a elasticsearch cluster later - I decided to move them to Kubernetes, which it meant to reactivate my K3s cluster, which I had installed on a Raspberry Pi 4 a while ago - see my previous post:</description>
+    </item>
+    
+  </channel>
+</rss>

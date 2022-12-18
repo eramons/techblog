@@ -26,7 +26,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
     
 
 
-    <title>Asahi Linux kernel with u-root on Macbook | Small Technical Blog</title>
+    <title>Linuxboot with Asahi Linux Kernel on Macbook | Small Technical Blog</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/techblog/favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/techblog/favicon/favicon-32x32.png">
@@ -34,7 +34,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
 
     
 
-    <meta property="og:title" content="Asahi Linux kernel with u-root on Macbook" />
+    <meta property="og:title" content="Linuxboot with Asahi Linux Kernel on Macbook" />
 <meta property="og:description" content="Goal:
 Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook
 At some point I encountered myself with a Macbook Air booting Asahi&rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.
@@ -47,7 +47,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
 
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Asahi Linux kernel with u-root on Macbook"/>
+<meta name="twitter:title" content="Linuxboot with Asahi Linux Kernel on Macbook"/>
 <meta name="twitter:description" content="Goal:
 Boot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook
 At some point I encountered myself with a Macbook Air booting Asahi&rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.
@@ -90,8 +90,8 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
     "@context": "http://schema.org",
     "@type": "BlogPosting",
     "articleSection": "post",
-    "name": "Asahi Linux kernel with u-root on Macbook",
-    "headline": "Asahi Linux kernel with u-root on Macbook",
+    "name": "Linuxboot with Asahi Linux Kernel on Macbook",
+    "headline": "Linuxboot with Asahi Linux Kernel on Macbook",
     "alternativeHeadline": "",
     "description": "Goal:\nBoot an Asahi Linux kernel and an u-root initramfs on a water-damaged Apple-Silicon Macbook\nAt some point I encountered myself with a Macbook Air booting Asahi\u0026rsquo;s m1n1 in proxy mode, without being able to boot MacOS or doing anything else with it, since the power button was fatally damaged.\nIntroduction Why did I buy a Macbook and how I accidentally destroyed it\nEven if I definitely am a Linux-kind-of-person, I got myself an entry-level MacBook Air M1 which should fullfill the following purposes:",
     "inLanguage": "en",
@@ -119,7 +119,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/asahi\/",
-    "wordCount" : "1599",
+    "wordCount" : "1645",
     "genre" : [ "asahi" ]
 }
 </script>
@@ -235,7 +235,7 @@ Even if I definitely am a Linux-kind-of-person, I got myself an entry-level MacB
             
             
 
-            <h1>Asahi Linux kernel with u-root on Macbook</h1>
+            <h1>Linuxboot with Asahi Linux Kernel on Macbook</h1>
             
             <div class="gblog-post__meta">
                 <span class="no-wrap">
@@ -306,16 +306,19 @@ The good news: I had some fun ahead of me: I had installed the m1n1 proxy on the
 <div class="gblog-post__anchorwrap"><h3 id="1-on-the-mac">1. On the Mac<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#1-on-the-mac" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1. On the Mac" href="#1-on-the-mac"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <div class="gblog-post__anchorwrap"><h4 id="11-partition-the-ssd-and-install-m1n1">1.1 Partition the SSD and install m1n1<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#11-partition-the-ssd-and-install-m1n1" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.1 Partition the SSD and install m1n1" href="#11-partition-the-ssd-and-install-m1n1"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>Following the instructions on the wiki, I prepared the partitions and install m1n1:</p>
-<p><em>TODO Find my notes to the partitioning</em></p>
+<p><em>TODO Find my notes about partitioning</em></p>
+<div class="gblog-post__anchorwrap"><h4 id="12-install-m1n1">1.2 Install m1n1<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#12-install-m1n1" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.2 Install m1n1" href="#12-install-m1n1"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
+<p><em>TODO Find my notes about running the asahi installer</em></p>
 <div class="gblog-post__anchorwrap"><h2 id="_after-the-damage_"><em>AFTER the damage</em><a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#_after-the-damage_" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor <em>AFTER the damage</em>" href="#_after-the-damage_"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>After the incident, the boot menu did not appear anymore when hold-pressing the power button, apparently it was also damaged. When booting the system the Asahi logo would greet me, followed for the m1n1 in proxy mode. I couldn&rsquo;t get anywhere else but there.</p>
-<p>At this point, what was intending to achieve? Even if it wasn&rsquo;t that clear to me how, the idea I got in mind was the following:</p>
+<p>At this point, what was I intending to achieve? Even if it wasn&rsquo;t that clear to me how, the idea I got in mind was the following:</p>
 <ul>
 <li>As I understood, booting Linux in a Silicon Mac works as follows: <em>m1n1 -&gt; bootloader -&gt; kernel -&gt; rootfs</em></li>
-<li>Bootloader: the Asahi project uses u-boot as the bootloader, here where I intended to do things a little differently: to follow Linuxboot approach using a (reduced) Asahi kernel with u-root as initramfs</li>
+<li>Bootloader: the Asahi project uses u-boot as the bootloader, here is where I intended to do things a little differently: to follow Linuxboot approach using a (reduced) Asahi kernel with u-root as initramfs</li>
 <li>Kernel: Asahi (relying in the .config of the ARCH distribution)</li>
 <li>Rootfs: Debian</li>
 </ul>
+<p>This was going to be a long journey, this post only covers my first tries with the booloader part.</p>
 <div class="gblog-post__anchorwrap"><h3 id="2-on-the-linux-laptop">2. On the linux laptop<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#2-on-the-linux-laptop" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2. On the linux laptop" href="#2-on-the-linux-laptop"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <div class="gblog-post__anchorwrap"><h4 id="21-build-m1n1">2.1. Build m1n1<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#21-build-m1n1" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 2.1. Build m1n1" href="#21-build-m1n1"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h4></div>
 <p>m1n1 is not just the bootloader installed on the Mac, is also a binary used on a host computer to send commands to the Mac when it&rsquo;s in Asahi Proxy Mode.</p>
@@ -335,7 +338,7 @@ eramon@caipirinha:~/dev/m1n1$ make
 <li>To have a working kernel config</li>
 </ul>
 <p><em>NOTE: I asked for a recommendation regarding which .config to use in the Asahi IRC channel</em></p>
-<p><em>NOTE: even if this config is the recommended one for the Asahi Linux distribution, it might be not the ideal choice to use it as a bootloader, following the linuxboot approach. The necessary modules should be included directly in the kernel.</em></p>
+<p><em>NOTE: even if this config is the recommended one for the Asahi Linux distribution, it might be not the ideal choice to use it in the bootloader stage. The necessary modules should be included directly in the kernel.</em></p>
 <p>To know which source code tag to build, I took a look inside the file <a href="https://github.com/AsahiLinux/PKGBUILDs/blob/main/linux-asahi/PKGBUILD">https://github.com/AsahiLinux/PKGBUILDs/blob/main/linux-asahi/PKGBUILD</a>:</p>
 <pre tabindex="0"><code>_rcver=5.19
 _asahirel=1
@@ -426,18 +429,18 @@ Terminal ready
 
 /# 
 </code></pre><p>With u-root we get a shell with a minimalistic set of commands.</p>
-<p>What next? From there, boot a linux kernel and mount a root system. That&rsquo;s a whole story on its own, so enough material for another blog post :)</p>
-<p>The first outcome was that the disk devices were not visible from the u-root environment, probably because the nvme controller was compiled as a module in the kernel configuration I had chosen.</p>
+<p>What next? From there, build and boot a linux kernel and build and mount a Debian rootfs. But that&rsquo;s a whole story on its own, enough material for an upcoming blog post :)</p>
+<p>The first outcome was that the disk devices were not visible from the u-root environment, probably because the nvme controller was compiled as a module in the kernel configuration I had chosen. So that would be the starting point for an eventual next chapter.</p>
 <div class="gblog-post__anchorwrap"><h3 id="links">Links:<a data-clipboard-text="https://eramons.github.io/techblog/post/asahi/#links" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Links:" href="#links"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
-<p><a href="https://github.com/AsahiLinux/m1n1">https://github.com/AsahiLinux/m1n1</a>
-<a href="https://github.com/AsahiLinux/docs/wiki/m1n1%3AUser-Guide">https://github.com/AsahiLinux/docs/wiki/m1n1%3AUser-Guide</a>
-<a href="https://github.com/AsahiLinux/PKGBUILDs/tree/main/linux-asahi">https://github.com/AsahiLinux/PKGBUILDs/tree/main/linux-asahi</a>
-<a href="https://github.com/AsahiLinux/linux">https://github.com/AsahiLinux/linux</a>
-<a href="https://github.com/AsahiLinux/docs/wiki/Devices">https://github.com/AsahiLinux/docs/wiki/Devices</a>
-<a href="https://go.dev/doc/install">https://go.dev/doc/install</a>
-<a href="https://www.linuxboot.org/">https://www.linuxboot.org/</a>
-<a href="https://github.com/linuxboot/book">https://github.com/linuxboot/book</a>
-<a href="https://github.com/u-root/u-root">https://github.com/u-root/u-root</a></p>
+<p><a href="https://github.com/AsahiLinux/m1n1">https://github.com/AsahiLinux/m1n1</a></p>
+<p><a href="https://github.com/AsahiLinux/docs/wiki/m1n1%3AUser-Guide">https://github.com/AsahiLinux/docs/wiki/m1n1%3AUser-Guide</a></p>
+<p><a href="https://github.com/AsahiLinux/PKGBUILDs/tree/main/linux-asahi">https://github.com/AsahiLinux/PKGBUILDs/tree/main/linux-asahi</a></p>
+<p><a href="https://github.com/AsahiLinux/linux">https://github.com/AsahiLinux/linux</a></p>
+<p><a href="https://github.com/AsahiLinux/docs/wiki/Devices">https://github.com/AsahiLinux/docs/wiki/Devices</a></p>
+<p><a href="https://go.dev/doc/install">https://go.dev/doc/install</a></p>
+<p><a href="https://www.linuxboot.org/">https://www.linuxboot.org/</a></p>
+<p><a href="https://github.com/linuxboot/book">https://github.com/linuxboot/book</a></p>
+<p><a href="https://github.com/u-root/u-root">https://github.com/u-root/u-root</a></p>
 
 
         </section>

@@ -1,7 +1,7 @@
 +++
 math = true
 date = "2022-10-01T10:00:00+02:00"
-title = "Asahi Linux kernel with u-root on Macbook"
+title = "Linuxboot with Asahi Linux Kernel on Macbook"
 tags = ["asahi"]
 highlight = true
 
@@ -62,18 +62,24 @@ _m1n1 is the bootloader developed by the Asahi Linux project to bridge the Apple
 
 Following the instructions on the wiki, I prepared the partitions and install m1n1:
 
-_TODO Find my notes to the partitioning_ 
+_TODO Find my notes about partitioning_ 
+
+#### 1.2 Install m1n1 
+
+_TODO Find my notes about running the asahi installer_
 
 ## _AFTER the damage_
 
 After the incident, the boot menu did not appear anymore when hold-pressing the power button, apparently it was also damaged. When booting the system the Asahi logo would greet me, followed for the m1n1 in proxy mode. I couldn't get anywhere else but there.
 
-At this point, what was intending to achieve? Even if it wasn't that clear to me how, the idea I got in mind was the following:
+At this point, what was I intending to achieve? Even if it wasn't that clear to me how, the idea I got in mind was the following:
 
  * As I understood, booting Linux in a Silicon Mac works as follows: _m1n1 -> bootloader -> kernel -> rootfs_
- * Bootloader: the Asahi project uses u-boot as the bootloader, here where I intended to do things a little differently: to follow Linuxboot approach using a (reduced) Asahi kernel with u-root as initramfs
+ * Bootloader: the Asahi project uses u-boot as the bootloader, here is where I intended to do things a little differently: to follow Linuxboot approach using a (reduced) Asahi kernel with u-root as initramfs
  * Kernel: Asahi (relying in the .config of the ARCH distribution)
  * Rootfs: Debian
+
+This was going to be a long journey, this post only covers my first tries with the booloader part.
 
 ### 2. On the linux laptop
 
@@ -106,7 +112,7 @@ I relied in the files of the ARCH Asahi Linux distribution:
 
 _NOTE: I asked for a recommendation regarding which .config to use in the Asahi IRC channel_ 
 
-_NOTE: even if this config is the recommended one for the Asahi Linux distribution, it might be not the ideal choice to use it as a bootloader, following the linuxboot approach. The necessary modules should be included directly in the kernel._
+_NOTE: even if this config is the recommended one for the Asahi Linux distribution, it might be not the ideal choice to use it in the bootloader stage. The necessary modules should be included directly in the kernel._
 
 To know which source code tag to build, I took a look inside the file https://github.com/AsahiLinux/PKGBUILDs/blob/main/linux-asahi/PKGBUILD:
 ```
@@ -250,19 +256,26 @@ If everything goes well, we should be greeted by the u-root logo in the serial c
 ```
 With u-root we get a shell with a minimalistic set of commands. 
 
-What next? From there, boot a linux kernel and mount a root system. That's a whole story on its own, so enough material for another blog post :)
+What next? From there, build and boot a linux kernel and build and mount a Debian rootfs. But that's a whole story on its own, enough material for an upcoming blog post :)
 
-The first outcome was that the disk devices were not visible from the u-root environment, probably because the nvme controller was compiled as a module in the kernel configuration I had chosen.
-
+The first outcome was that the disk devices were not visible from the u-root environment, probably because the nvme controller was compiled as a module in the kernel configuration I had chosen. So that would be the starting point for an eventual next chapter.
 
 ### Links:
 
 https://github.com/AsahiLinux/m1n1
+
 https://github.com/AsahiLinux/docs/wiki/m1n1%3AUser-Guide
+
 https://github.com/AsahiLinux/PKGBUILDs/tree/main/linux-asahi
+
 https://github.com/AsahiLinux/linux
+
 https://github.com/AsahiLinux/docs/wiki/Devices
+
 https://go.dev/doc/install
+
 https://www.linuxboot.org/
+
 https://github.com/linuxboot/book
+
 https://github.com/u-root/u-root

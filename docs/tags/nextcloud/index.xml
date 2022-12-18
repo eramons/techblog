@@ -29,7 +29,7 @@ See previous post to see how to install the OS on a LG G3 and my efforts to self
       <description>Goal:
 Rely on the /e platform for private cloud self-hosting and as android operating system
 /e is a mobile ecosystem that:
- is open source is presented as an environment which values privacy is un-googled but still compatible with android apps  The /e/ ROM is a fork of Android (more precisely from LineageOS).
+is open source is presented as an environment which values privacy is un-googled but still compatible with android apps The /e/ ROM is a fork of Android (more precisely from LineageOS).
 The /e/ cloud includes several applications and it’s built upon NextCloud, Postfix, Dovecot and OnlyOffice. It’s been integrated to offer a single login identity in /e/OS as well as online, where users can retrieve their data from the ecloud global services.</description>
     </item>
     

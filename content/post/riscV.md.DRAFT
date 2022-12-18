@@ -1,0 +1,39 @@
+Green is TX on the cable
+White is RX on the cable
+
+The TX of the cable (green) must be connected to the RX pin on the board.
+The RX of the cable (white) must be connected to the TX pin on the board.
+
+_FOTO_
+
+```
+sudo minicom -D /dev/ttyUSB0
+```
+
+```
+sipeed login: sipeed
+Password: 
+Linux sipeed 5.4.61 #15 PREEMPT Thu Jun 10 06:50:03 UTC 2021 riscv64
+```
+
+```
+sipeed@sipeed:~$ sudo dhclient eth0
+
+sipeed@sipeed:~$ ip address |grep eth0
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    inet 192.168.1.75/24 brd 192.168.1.255 scope global dynamic eth0
+
+sipeed@sipeed:~$ sudo apt-get update
+sipeed@sipeed:~$ sudo apt-get upgrade
+```
+
+To be able to connect via ssh, I had to create a new user.
+
+eramon@sipeed:~$ uname -ra
+Linux sipeed 5.4.61 #15 PREEMPT Thu Jun 10 06:50:03 UTC 2021 riscv64 GNU/Linux
+
+eramon@sipeed:~$ su
+Password: 
+root@sipeed:/home/eramon# apt-get install dmidecode
+
+

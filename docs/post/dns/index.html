@@ -40,8 +40,8 @@ Setting up a home made kubernetes cluster is quite straightforward. However, for
 In particular I had the issue of the internal host resolution. My internet box wasn&rsquo;t able to properly route requests to the own external IP address from inside the internal network." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://eramons.github.io/techblog/post/dns/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2020-05-19T10:00:00&#43;02:00" />
-<meta property="article:modified_time" content="2020-05-19T10:00:00&#43;02:00" />
+<meta property="article:published_time" content="2020-05-19T10:00:00+02:00" />
+<meta property="article:modified_time" content="2020-05-19T10:00:00+02:00" />
 
 
 <meta name="twitter:card" content="summary"/>
@@ -169,6 +169,12 @@ In particular I had the issue of the internal host resolution. My internet box w
         
         
         <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/asahi/">asahi</a>
+        </li>
+        
+        
+        
+        <li>
             <a class="gblog-nav__entry " href="/techblog/tags/coreboot/">coreboot</a>
         </li>
         
@@ -182,6 +188,12 @@ In particular I had the issue of the internal host resolution. My internet box w
         
         <li>
             <a class="gblog-nav__entry " href="/techblog/tags/debian/">debian</a>
+        </li>
+        
+        
+        
+        <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/home-automation/">home automation</a>
         </li>
         
         
@@ -272,7 +284,7 @@ In particular I had the issue of the internal host resolution. My internet box w
 <div class="gblog-post__anchorwrap"><h3 id="12-connect-to-the-router">1.2 Connect to the router<a data-clipboard-text="https://eramons.github.io/techblog/post/dns/#12-connect-to-the-router" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.2 Connect to the router" href="#12-connect-to-the-router"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>To connect to the router, first I disconnected the wifi on my laptop.</p>
 <p>Then I connected the eth0 port directly to my laptop with a network cable and configured a fix IP on the eth0 port of the laptop as follows:</p>
-<pre><code>sudo ifconfig eth0 192.168.1.4 netmask 255.255.255.0 up
+<pre tabindex="0"><code>sudo ifconfig eth0 192.168.1.4 netmask 255.255.255.0 up
 </code></pre><p>After this I was able to access the router on the browser under 192.168.1.1.</p>
 <p>Before proceeding with any configuration, I performed a firmware upgrade on the device.</p>
 <div class="gblog-post__anchorwrap"><h3 id="13-configure-switch-interface">1.3 Configure switch interface<a data-clipboard-text="https://eramons.github.io/techblog/post/dns/#13-configure-switch-interface" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 1.3 Configure switch interface" href="#13-configure-switch-interface"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
@@ -336,11 +348,11 @@ In particular I had the issue of the internal host resolution. My internet box w
 </ul>
 <div class="gblog-post__anchorwrap"><h2 id="3-cloudfare">3. Cloudfare<a data-clipboard-text="https://eramons.github.io/techblog/post/dns/#3-cloudfare" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 3. Cloudfare" href="#3-cloudfare"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h2></div>
 <p>I have a Cloudfare account and a registered domain. In cloudfare, I set up an alias by adding a CNAME DNS entry, pointing to the internet name I got from the DynDNS:</p>
-<pre><code>CNAME	example.com	example.myproviderbox.country
+<pre tabindex="0"><code>CNAME	example.com	example.myproviderbox.country
 CNAME	*.example.com	example.com
 </code></pre><p>The other thing I needed from Cloudfare was an API token for DNS01 challenge resolution for Let&rsquo;s Encrypt.</p>
 <p>Tokens can be created under <em>User Profile</em> &gt; <em>API Tokens</em> &gt; <em>API Tokens</em>. I used the recommended settings:</p>
-<pre><code>    Permissions:
+<pre tabindex="0"><code>    Permissions:
         Zone - DNS - Edit
         Zone - Zone - Read
     Zone Resources:

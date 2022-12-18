@@ -16,8 +16,8 @@
       <description>Radxa Rock 2 Square is a Rockchip RK3288 based solution.
 Available images
 The available images run with:
- A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel.  The goal is to get a pure Debian distribution up and running on the board:
- Debian u-boot Debian armhf linux-image kernel Pure Debian root file system  For this small project, we have two Radxa Rock 2 Square boards:</description>
+A modified version of u-boot The Rabian operating system (which is based on Debian 8) A custom radxa kernel. The goal is to get a pure Debian distribution up and running on the board:
+Debian u-boot Debian armhf linux-image kernel Pure Debian root file system For this small project, we have two Radxa Rock 2 Square boards:</description>
     </item>
     
   </channel>

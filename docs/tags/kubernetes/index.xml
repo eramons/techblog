@@ -6,7 +6,19 @@
     <description>Recent content in kubernetes on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2017-2021 E. Ramon</copyright>
-    <lastBuildDate>Thu, 07 Jan 2021 09:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Oct 2022 10:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Unifi Controller on K3s</title>
+      <link>https://eramons.github.io/techblog/post/unifi/</link>
+      <pubDate>Wed, 26 Oct 2022 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/unifi/</guid>
+      <description>Goal:
+Run the unifi controller as container on my home K3s cluster.
+Introduction The synology D916+ can run a docker application packed in a single container, which I found quite convenient to host a couple of applications in my home network:
+The unifi controller, to manage our two Unifi Access Points The Logitech Media Server - yes, I still own several squeezeboxes I wouldn&amp;rsquo;t change for anything :D Home Assistant Planning to add further applications - and having in mind a setup where the logs from some of the home applications are fed into a elasticsearch cluster later - I decided to move them to Kubernetes, which it meant to reactivate my K3s cluster, which I had installed on a Raspberry Pi 4 a while ago - see my previous post:</description>
+    </item>
+    
     <item>
       <title>Nextcloud self-hosting on K8s</title>
       <link>https://eramons.github.io/techblog/post/nextcloud/</link>
@@ -42,7 +54,7 @@ Deploy cozy on my homemade kubernetes cluster
 The K8s homemade cluster on baremetal was meant to be just an exercise and not a permanent setup. Still, I needed to find something to deploy on it :)
 I decided to try out Cozy Cloud deploying software and dependencies as containers in my K8s cluster.
 Cozy is a personal, free and self-hostable cloud platform, written in Go.
-Milestones  Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it  1.</description>
+Milestones Pre-requisites: make sure the infrastructure is ready Cozy Software: installation, dependencies and configuration Docker Images: which one are available and which new ones we need K8s Configuration: write manifests for deployment in the cluster Cozy instance: create a new cozy instance and test it 1.</description>
     </item>
     
     <item>
@@ -66,7 +78,7 @@ In particular I had the issue of the internal host resolution. My internet box w
       <description>Goal:
 Set up a home Kubernetes cluster with old hardware: 1 Master and 1 Worker
 Tasks:
- Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&amp;rsquo;s Encrypt) Storage  1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.</description>
+Find old hardware Install Ubuntu Server 18.04 LTS Set up Master Node Set up Worker Node Service Account Install helm Install ingress Install cert-manager Cluster Issuer (Let&amp;rsquo;s Encrypt) Storage 1. Find old hardware Since kubernetes is lightweight and can run almost everywhere, I decided to go down to the cellar and rescue some old PC which I thought could still work for this.</description>
     </item>
     
   </channel>
