@@ -112,7 +112,7 @@ I intend to tell more about this radio in an upcoming post, but - spoiler alert 
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/raspi_radio\/",
-    "wordCount" : "2746",
+    "wordCount" : "2738",
     "genre" : [ "home automation" , "raspberry pi" ]
 }
 </script>
@@ -406,6 +406,7 @@ hdmi:CARD=vc4hdmi,DEV=0
 <p><em>What I didn&rsquo;t find out: why is the audio jack not listed as a device? I didn&rsquo;t troubleshoot this further, since I wasn&rsquo;t going to use that output device anyway.</em></p>
 <div class="gblog-post__anchorwrap"><h3 id="7-hifiberry-miniamp">7. HiFiBerry MiniAmp<a data-clipboard-text="https://eramons.github.io/techblog/post/raspi_radio/#7-hifiberry-miniamp" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 7. HiFiBerry MiniAmp" href="#7-hifiberry-miniamp"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>And then, on a sunny Thursday morning, my miniamp was delivered :D</p>
+<p><img src="/techblog/img/vintage_radio/miniamp.jpg" alt="Miniamp"></p>
 <p>Connecting it to the raspberry pi was straighforward, just connect the small board over the GPIO pins. A thought arised: to use the GPIO interface later for switching on/off and controling the volume, I would need some kind of extension so I could still use the GPIO pins, which were now all blocked after connecting the miniamp. That should be possible, since only some of the pins are effectively used by miniamp.</p>
 <p>I followed the instructions in the hifiberry documentation to make the raspi recognise the hifiberry sound card. It wasn&rsquo;t much, just modifying a couple of config files, as described next.</p>
 <p>Apparently, only the hifiberry sound card must be enabled. To deactivate any other audio output, edit <em>/boot/config.txt</em> changing the following line:</p>
@@ -445,8 +446,6 @@ audio_output {
 <p>I found some in my cellar - which belonged to an old home sound system - so I connected two of them to the miniamp using their cables, following the polarity I found in the miniamp documentation (references below). Black is minus and red is plus, as far as I know:</p>
 <p><img src="/techblog/img/vintage_radio/connection.jpg" alt="Connection"></p>
 <p>Surprisingly enough, it worked at the first try, the music was playing, much loudly as expected :D</p>
-<p>This is my first raspberry pi radio prototype:</p>
-<p><img src="/techblog/img/vintage_radio/miniamp.jpg" alt="Miniamp"></p>
 <p>Now it&rsquo;s time to play a little around with the mpc client. First things first - adjust the volume before the neighbours come ringing at the door:</p>
 <pre tabindex="0"><code>mpc volume 20
 </code></pre><p>Then try to stop and play:</p>

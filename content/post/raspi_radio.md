@@ -227,6 +227,8 @@ _What I didn't find out: why is the audio jack not listed as a device? I didn't 
 
 And then, on a sunny Thursday morning, my miniamp was delivered :D 
 
+![Miniamp](/techblog/img/vintage_radio/miniamp.jpg)
+
 Connecting it to the raspberry pi was straighforward, just connect the small board over the GPIO pins. A thought arised: to use the GPIO interface later for switching on/off and controling the volume, I would need some kind of extension so I could still use the GPIO pins, which were now all blocked after connecting the miniamp. That should be possible, since only some of the pins are effectively used by miniamp.
 
 I followed the instructions in the hifiberry documentation to make the raspi recognise the hifiberry sound card. It wasn't much, just modifying a couple of config files, as described next.
@@ -283,10 +285,6 @@ I found some in my cellar - which belonged to an old home sound system - so I co
 ![Connection](/techblog/img/vintage_radio/connection.jpg)
 
 Surprisingly enough, it worked at the first try, the music was playing, much loudly as expected :D 
-
-This is my first raspberry pi radio prototype:
-
-![Miniamp](/techblog/img/vintage_radio/miniamp.jpg)
 
 Now it's time to play a little around with the mpc client. First things first - adjust the volume before the neighbours come ringing at the door:
 ```
