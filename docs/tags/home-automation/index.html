@@ -35,7 +35,6 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eramons.github.io/techblog/tags/home-automation/" />
 
-
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="home automation"/>
 <meta name="twitter:description" content="This is my hobby IT blog... or a slightly better way to keep my notes organised ;)"/>
@@ -163,6 +162,12 @@
         
         
         <li>
+            <a class="gblog-nav__entry " href="/techblog/tags/raspberry-pi/">raspberry pi</a>
+        </li>
+        
+        
+        
+        <li>
             <a class="gblog-nav__entry " href="/techblog/tags/u-boot/">u-boot</a>
         </li>
         
@@ -180,18 +185,17 @@
     
     <article class="gblog-post">
         <header class="gblog-post__header">
-            <h1><a href="/techblog/post/unifi/">Unifi Controller on K3s</a></h1>
+            <h1><a href="/techblog/post/raspi_radio/">Raspberry Pi Internet Radio</a></h1>
         </header>
 
         <section class="gblog-markdown">
-            Goal:
-Run the unifi controller as container on my home K3s cluster.
-Introduction The synology D916+ can run a docker application packed in a single container, which I found quite convenient to host a couple of applications in my home network:
-The unifi controller, to manage our two Unifi Access Points The Logitech Media Server - yes, I still own several squeezeboxes I wouldn&rsquo;t change for anything :D Home Assistant Planning to add further applications - and having in mind a setup where the logs from some of the home applications are fed into a elasticsearch cluster later - I decided to move them to Kubernetes, which it meant to reactivate my K3s cluster, which I had installed on a Raspberry Pi 4 a while ago - see my previous post:
+            Build an internet radio with an old Raspberry Pi 3 leveraging the Music Player Daemon (mpd).
+The ultimative goal is to refurbish a beautiful old radio from the 1930&rsquo;s.
+I intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume.
         </section>
         <div class="gblog-post__readmore">
             
-            <a class="flex-inline align-center fake-link" title="Read full post" href="/techblog/post/unifi/">Read full post</a>
+            <a class="flex-inline align-center fake-link" title="Read full post" href="/techblog/post/raspi_radio/">Read full post</a>
             
         </div>
 
@@ -199,16 +203,16 @@ The unifi controller, to manage our two Unifi Access Points The Logitech Media S
             <span class="no-wrap">
                 <svg class="icon date"><use xlink:href="#date"></use></svg>
                 <span class="gblog-post__tag">
-                    <time datetime="2022-10-26T10:00:00&#43;02:00">
+                    <time datetime="2024-02-19T10:00:00&#43;02:00">
                         
-                        Oct 26, 2022
+                        Feb 19, 2024
                     </time>
                 </span>
             </span>
 
             <span class="no-wrap">
                 <svg class="icon timer"><use xlink:href="#timer"></use></svg>
-                <span class="gblog-post__tag">11 min read</span>
+                <span class="gblog-post__tag">13 min read</span>
             </span>
 
             
@@ -239,7 +243,7 @@ The unifi controller, to manage our two Unifi Access Points The Logitech Media S
                     
                     
 <span class="gblog-post__tag gblog-button">
-    <a class="gblog-button__link" href="/techblog/tags/kubernetes/" title="All posts tagged with 'kubernetes'">kubernetes</a>
+    <a class="gblog-button__link" href="/techblog/tags/raspberry-pi/" title="All posts tagged with 'raspberry pi'">raspberry pi</a>
 </span>
 
                     

@@ -7,5 +7,31 @@
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2017-2021 E. Ramon</copyright>
     <lastBuildDate>Thu, 07 Jan 2021 09:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/e/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nextcloud self-hosting on K8s</title>
+      <link>https://eramons.github.io/techblog/post/nextcloud/</link>
+      <pubDate>Thu, 07 Jan 2021 09:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/nextcloud/</guid>
+      <description>Goal:
+Self-host Nextcloud on Kubernetes and use it as server-side for the /e operating system
+Nextcloud offers an on-premises content collaboration platform, which is open-source and free. The Nextcloud server is written in the PHP and JavaScript scripting languages.
+The /e/ ROM is a fork of Android (more precisely from LineageOS).
+See previous post to see how to install the OS on a LG G3 and my efforts to self-host the /e server beta version.</description>
+    </item>
+    
+    <item>
+      <title>/e self-hosting and /e OS on LG G3</title>
+      <link>https://eramons.github.io/techblog/post/e/</link>
+      <pubDate>Wed, 09 Dec 2020 15:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/e/</guid>
+      <description>Goal:
+Rely on the /e platform for private cloud self-hosting and as android operating system
+/e is a mobile ecosystem that:
+is open source is presented as an environment which values privacy is un-googled but still compatible with android apps The /e/ ROM is a fork of Android (more precisely from LineageOS).
+The /e/ cloud includes several applications and it’s built upon NextCloud, Postfix, Dovecot and OnlyOffice. It’s been integrated to offer a single login identity in /e/OS as well as online, where users can retrieve their data from the ecloud global services.</description>
+    </item>
+    
   </channel>
 </rss>

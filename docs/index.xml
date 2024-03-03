@@ -6,7 +6,7 @@
     <description>Recent content on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2017-2021 E. Ramon</copyright>
-    <lastBuildDate>Wed, 26 Oct 2022 10:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 19 Feb 2024 10:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
       <link>https://eramons.github.io/techblog/home/about/</link>
@@ -32,6 +32,17 @@
       
       <guid>https://eramons.github.io/techblog/home/contact/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi Internet Radio</title>
+      <link>https://eramons.github.io/techblog/post/raspi_radio/</link>
+      <pubDate>Mon, 19 Feb 2024 10:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/raspi_radio/</guid>
+      <description>Build an internet radio with an old Raspberry Pi 3 leveraging the Music Player Daemon (mpd).
+The ultimative goal is to refurbish a beautiful old radio from the 1930&amp;rsquo;s.
+I intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume.</description>
     </item>
     
     <item>
