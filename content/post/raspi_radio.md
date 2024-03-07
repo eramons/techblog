@@ -9,7 +9,7 @@ highlight = true
   caption = ""
 +++
 
-_Build an internet radio with an old Raspberry Pi 3 leveraging the Music Player Daemon (mpd)._
+_Build an internet radio with an old Raspberry Pi 3 and the Music Player Daemon (mpd)._
 
 The ultimative goal is to refurbish a beautiful old radio from the 1930's. 
 
@@ -170,7 +170,7 @@ mpc play
 ```
 For the first test, I connected the HDMI output of the raspberry Pi to the HDMI input of our living-room home cinema system. The speakers of the system are pasive speakers, but the system has already an amplifier and a DAC (Digital Analog Converter) built on it. 
 
-To test later directly directly with other passive speakers, I would need an analog audio output and an amplifier: the HiFiBerry Miniamp. At the moment of this first test it was already ordered but still on its way to me and was supposed to arrive in a couple of days. 
+_I would test later connecting passive speakers directly. For that, I would need analog audio output and therefore a DAC and an amplifier: the HiFiBerry Miniamp. At the moment of this first test it was already ordered but still on its way, it was supposed to arrive in a couple of days._
 
 I would like the music to keep playing between reboots:
 
@@ -187,7 +187,7 @@ After reboot, radio paradise started playing out of the home cinema speakers :)
 For a bit later, instead of using mpc as the client, there are interesting possibilities: 
 
  * Use an android mpc client, to play music remotely 
- * In order to build custom physical controls, use the GPIO interface of the Raspberry Pi and translate the microcontroller commands into mpc calls, using python code and the corresponding python-mpd and _rpi.gpio_ libraries  
+ * In order to build custom physical controls, use the GPIO interface of the Raspberry Pi and translate the microcontroller commands into mpc calls, using python code and the corresponding _python-mpd_ and _rpi.gpio_ libraries  
 
 I'll tell more about the physical controls and the GPIO interface in the upcoming post, since it will be the basis for the refurbishing of the vintage radio I mentioned at the beginning.
 
@@ -229,7 +229,9 @@ And then, on a sunny Thursday morning, my miniamp was delivered :D
 
 ![Miniamp](/techblog/img/vintage_radio/miniamp.jpg)
 
-Connecting it to the raspberry pi was straighforward, just connect the small board over the GPIO pins. A thought arised: to use the GPIO interface later for switching on/off and controling the volume, I would need some kind of extension so I could still use the GPIO pins, which were now all blocked after connecting the miniamp. That should be possible, since only some of the pins are effectively used by miniamp.
+Connecting it to the raspberry pi was straighforward, just connect the small board over the GPIO pins. 
+
+_A thought arised: to use the GPIO interface later for switching on/off and controling the volume, I would need some kind of extension so I could still use the GPIO pins, which were now all blocked after connecting the miniamp. That should be possible, since only some of the pins are effectively used by miniamp._
 
 I followed the instructions in the hifiberry documentation to make the raspi recognise the hifiberry sound card. It wasn't much, just modifying a couple of config files, as described next.
 
@@ -280,11 +282,11 @@ systemctl restart mpd
 
 And now? I needed some passive speakers to test if the little hifiberry amplifier was working. 
 
-I found some in my cellar - which belonged to an old home sound system - so I connected two of them to the miniamp using their cables, following the polarity I found in the miniamp documentation (references below). Black is minus and red is plus, as far as I know:
+I got two small passive speakers with an impedance of 4 Ohm and 3 watt of power. Then I connected them to the miniamp with thin copper wires, following the polarity I found in the miniamp documentation (references below) and taking into consideration that black is minus and red is plus.
 
-![Connection](/techblog/img/vintage_radio/connection.jpg)
+![Raspi](/techblog/img/vintage_radio/raspi_radio.jpg)
 
-Surprisingly enough, it worked at the first try, the music was playing, much loudly as expected :D 
+Surprisingly enough, it worked at the first try, the music was playing, much loudlier as expected :D 
 
 Now it's time to play a little around with the mpc client. First things first - adjust the volume before the neighbours come ringing at the door:
 ```

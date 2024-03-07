@@ -10,7 +10,7 @@
 
 
 
-    <meta name="description" content="Build an internet radio with an old Raspberry Pi 3 leveraging the Music Player Daemon (mpd).
+    <meta name="description" content="Build an internet radio with an old Raspberry Pi 3 and the Music Player Daemon (mpd).
 The ultimative goal is to refurbish a beautiful old radio from the 1930&rsquo;s.
 I intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume.">
 
@@ -33,7 +33,7 @@ I intend to tell more about this radio in an upcoming post, but - spoiler alert 
     
 
     <meta property="og:title" content="Raspberry Pi Internet Radio" />
-<meta property="og:description" content="Build an internet radio with an old Raspberry Pi 3 leveraging the Music Player Daemon (mpd).
+<meta property="og:description" content="Build an internet radio with an old Raspberry Pi 3 and the Music Player Daemon (mpd).
 The ultimative goal is to refurbish a beautiful old radio from the 1930&rsquo;s.
 I intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume." />
 <meta property="og:type" content="article" />
@@ -43,7 +43,7 @@ I intend to tell more about this radio in an upcoming post, but - spoiler alert 
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Raspberry Pi Internet Radio"/>
-<meta name="twitter:description" content="Build an internet radio with an old Raspberry Pi 3 leveraging the Music Player Daemon (mpd).
+<meta name="twitter:description" content="Build an internet radio with an old Raspberry Pi 3 and the Music Player Daemon (mpd).
 The ultimative goal is to refurbish a beautiful old radio from the 1930&rsquo;s.
 I intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume."/>
 
@@ -86,7 +86,7 @@ I intend to tell more about this radio in an upcoming post, but - spoiler alert 
     "name": "Raspberry Pi Internet Radio",
     "headline": "Raspberry Pi Internet Radio",
     "alternativeHeadline": "",
-    "description": "Build an internet radio with an old Raspberry Pi 3 leveraging the Music Player Daemon (mpd).\nThe ultimative goal is to refurbish a beautiful old radio from the 1930\u0026rsquo;s.\nI intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume.",
+    "description": "Build an internet radio with an old Raspberry Pi 3 and the Music Player Daemon (mpd).\nThe ultimative goal is to refurbish a beautiful old radio from the 1930\u0026rsquo;s.\nI intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume.",
     "inLanguage": "en",
     "isFamilyFriendly": "true",
     "mainEntityOfPage": {
@@ -112,7 +112,7 @@ I intend to tell more about this radio in an upcoming post, but - spoiler alert 
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/raspi_radio\/",
-    "wordCount" : "2738",
+    "wordCount" : "2740",
     "genre" : [ "home automation" , "raspberry pi" ]
 }
 </script>
@@ -263,7 +263,7 @@ I intend to tell more about this radio in an upcoming post, but - spoiler alert 
     
 
 
-<p><em>Build an internet radio with an old Raspberry Pi 3 leveraging the Music Player Daemon (mpd).</em></p>
+<p><em>Build an internet radio with an old Raspberry Pi 3 and the Music Player Daemon (mpd).</em></p>
 <p>The ultimative goal is to refurbish a beautiful old radio from the 1930&rsquo;s.</p>
 <p>I intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume.</p>
 <p>At the time of this writing I don&rsquo;t have everything figured out yet. However, since all things have a beginning, I&rsquo;ll start with the part I&rsquo;m more at ease at, that&rsquo;s the software side of things. My first goal will be to build an internet radio with an old Raspberry Pi 3 and a HiFiBerry amplifier, leveraging the Music Player Daemon.</p>
@@ -365,7 +365,7 @@ passwd eramon
 <pre tabindex="0"><code>mpc add http://stream-uk1.radioparadise.com/mp3-128
 mpc play
 </code></pre><p>For the first test, I connected the HDMI output of the raspberry Pi to the HDMI input of our living-room home cinema system. The speakers of the system are pasive speakers, but the system has already an amplifier and a DAC (Digital Analog Converter) built on it.</p>
-<p>To test later directly directly with other passive speakers, I would need an analog audio output and an amplifier: the HiFiBerry Miniamp. At the moment of this first test it was already ordered but still on its way to me and was supposed to arrive in a couple of days.</p>
+<p><em>I would test later connecting passive speakers directly. For that, I would need analog audio output and therefore a DAC and an amplifier: the HiFiBerry Miniamp. At the moment of this first test it was already ordered but still on its way, it was supposed to arrive in a couple of days.</em></p>
 <p>I would like the music to keep playing between reboots:</p>
 <ul>
 <li>Since the mpd daemon service is enabled, it will start automatically</li>
@@ -378,7 +378,7 @@ mpc play
 <p>For a bit later, instead of using mpc as the client, there are interesting possibilities:</p>
 <ul>
 <li>Use an android mpc client, to play music remotely</li>
-<li>In order to build custom physical controls, use the GPIO interface of the Raspberry Pi and translate the microcontroller commands into mpc calls, using python code and the corresponding python-mpd and <em>rpi.gpio</em> libraries</li>
+<li>In order to build custom physical controls, use the GPIO interface of the Raspberry Pi and translate the microcontroller commands into mpc calls, using python code and the corresponding <em>python-mpd</em> and <em>rpi.gpio</em> libraries</li>
 </ul>
 <p>I&rsquo;ll tell more about the physical controls and the GPIO interface in the upcoming post, since it will be the basis for the refurbishing of the vintage radio I mentioned at the beginning.</p>
 <div class="gblog-post__anchorwrap"><h3 id="6-understanding-sound-cards-and-sound-devices">6. Understanding sound cards and sound devices<a data-clipboard-text="https://eramons.github.io/techblog/post/raspi_radio/#6-understanding-sound-cards-and-sound-devices" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 6. Understanding sound cards and sound devices" href="#6-understanding-sound-cards-and-sound-devices"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
@@ -407,7 +407,8 @@ hdmi:CARD=vc4hdmi,DEV=0
 <div class="gblog-post__anchorwrap"><h3 id="7-hifiberry-miniamp">7. HiFiBerry MiniAmp<a data-clipboard-text="https://eramons.github.io/techblog/post/raspi_radio/#7-hifiberry-miniamp" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 7. HiFiBerry MiniAmp" href="#7-hifiberry-miniamp"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>And then, on a sunny Thursday morning, my miniamp was delivered :D</p>
 <p><img src="/techblog/img/vintage_radio/miniamp.jpg" alt="Miniamp"></p>
-<p>Connecting it to the raspberry pi was straighforward, just connect the small board over the GPIO pins. A thought arised: to use the GPIO interface later for switching on/off and controling the volume, I would need some kind of extension so I could still use the GPIO pins, which were now all blocked after connecting the miniamp. That should be possible, since only some of the pins are effectively used by miniamp.</p>
+<p>Connecting it to the raspberry pi was straighforward, just connect the small board over the GPIO pins.</p>
+<p><em>A thought arised: to use the GPIO interface later for switching on/off and controling the volume, I would need some kind of extension so I could still use the GPIO pins, which were now all blocked after connecting the miniamp. That should be possible, since only some of the pins are effectively used by miniamp.</em></p>
 <p>I followed the instructions in the hifiberry documentation to make the raspi recognise the hifiberry sound card. It wasn&rsquo;t much, just modifying a couple of config files, as described next.</p>
 <p>Apparently, only the hifiberry sound card must be enabled. To deactivate any other audio output, edit <em>/boot/config.txt</em> changing the following line:</p>
 <pre tabindex="0"><code>dtoverlay=vc4-kms-v3d,noaudio
@@ -443,9 +444,9 @@ audio_output {
 <pre tabindex="0"><code>systemctl restart mpd
 </code></pre><div class="gblog-post__anchorwrap"><h3 id="8-passive-speakers">8. Passive speakers<a data-clipboard-text="https://eramons.github.io/techblog/post/raspi_radio/#8-passive-speakers" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor 8. Passive speakers" href="#8-passive-speakers"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p>And now? I needed some passive speakers to test if the little hifiberry amplifier was working.</p>
-<p>I found some in my cellar - which belonged to an old home sound system - so I connected two of them to the miniamp using their cables, following the polarity I found in the miniamp documentation (references below). Black is minus and red is plus, as far as I know:</p>
-<p><img src="/techblog/img/vintage_radio/connection.jpg" alt="Connection"></p>
-<p>Surprisingly enough, it worked at the first try, the music was playing, much loudly as expected :D</p>
+<p>I got two small passive speakers with an impedance of 4 Ohm and 3 watt of power. Then I connected them to the miniamp with thin copper wires, following the polarity I found in the miniamp documentation (references below) and taking into consideration that black is minus and red is plus.</p>
+<p><img src="/techblog/img/vintage_radio/raspi_radio.jpg" alt="Raspi"></p>
+<p>Surprisingly enough, it worked at the first try, the music was playing, much loudlier as expected :D</p>
 <p>Now it&rsquo;s time to play a little around with the mpc client. First things first - adjust the volume before the neighbours come ringing at the door:</p>
 <pre tabindex="0"><code>mpc volume 20
 </code></pre><p>Then try to stop and play:</p>
