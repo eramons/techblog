@@ -15,7 +15,7 @@ The ultimative goal is to refurbish a beautiful old radio from the 1930's.
 
 I intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume.
 
-At the time of this writing I don't have everything figured out yet. However, since all things have a beginning, I'll start with the part I'm more at ease at, that's the software side of things. My first goal will be to build an internet radio with an old Raspberry Pi 3 and a HiFiBerry amplifier, leveraging the Music Player Daemon.
+At the I started thiw writing I didn't have everything figured out yet. However, since all things have a beginning, I decided to start with the part I'm more at ease at, that's the software side of things. My first goal would be to build an internet radio with an old Raspberry Pi 3 and a HiFiBerry amplifier, leveraging the Music Player Daemon.
 
 _Music Player Daemon (MPD) is a flexible, powerful, server-side application for playing music. Through plugins and libraries it can play a variety of sound files while being controlled by its network protocol._
 
@@ -35,11 +35,13 @@ _Music Player Daemon (MPD) is a flexible, powerful, server-side application for 
 
 I wanted a small device with low power consumption. Since my intended use case - at least for now - only needs the mpd daemon, I didn't need much RAM, CPU or storage. I decided to give my old Raspberry Pi 3 a chance. My little contribution to the environment is to always try to re-use old hardware for my experiments :)
 
-However, I still needed two little additional pieces of hardware for this project:
+However, I still needed three little additional pieces of hardware for this project:
 
  * A HiFi Berry Amplifier: I went for the smallest HiFiBerry amplifier - the MiniAmp
 
  * I decided to get the "official" raspberry pi 3 power supply, since all micro USB chargers I had at home kept showing me an "under voltage" warning
+
+ * Two small passive speakers
 
 ### 2. Operating System 
 
