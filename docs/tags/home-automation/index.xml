@@ -6,14 +6,26 @@
     <description>Recent content in home automation on Small Technical Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2017-2021 E. Ramon</copyright>
-    <lastBuildDate>Mon, 19 Feb 2024 10:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/home-automation/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 02 Jan 2025 09:00:00 +0200</lastBuildDate><atom:link href="https://eramons.github.io/techblog/tags/home-automation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vintage Internet Radio</title>
+      <link>https://eramons.github.io/techblog/post/radio/</link>
+      <pubDate>Thu, 02 Jan 2025 09:00:00 +0200</pubDate>
+      
+      <guid>https://eramons.github.io/techblog/post/radio/</guid>
+      <description>Make a broken vintage radio both beautiful and functional again.
+I got the privilege to inherite a wonderful antique radio from the 1930s, who had belonged to my great-grandmother. It wasn&amp;rsquo;t precisely in a good state, but the exterior could for sure be restored and the interior could be replaced by a newer radio device, to have it playing music again.
+It&amp;rsquo;s a beauty, isn&amp;rsquo;t it?
+The original radio was unfortunately beyond repair, at least for my knowledge and possibilities:</description>
+    </item>
+    
     <item>
       <title>Raspberry Pi Internet Radio</title>
       <link>https://eramons.github.io/techblog/post/raspi_radio/</link>
       <pubDate>Mon, 19 Feb 2024 10:00:00 +0200</pubDate>
       
       <guid>https://eramons.github.io/techblog/post/raspi_radio/</guid>
-      <description>Build an internet radio with an old Raspberry Pi 3 leveraging the Music Player Daemon (mpd).
+      <description>Build an internet radio with an old Raspberry Pi 3 and the Music Player Daemon (mpd).
 The ultimative goal is to refurbish a beautiful old radio from the 1930&amp;rsquo;s.
 I intend to tell more about this radio in an upcoming post, but - spoiler alert - I can already tell that the original radio mechanism is probably beyond repair. The most feasible way seems to build a new device inside the old radio and bind the original buttons to the new platform, to control things like switching the power on and adjusting the sound volume.</description>
     </item>

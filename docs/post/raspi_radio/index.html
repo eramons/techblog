@@ -112,7 +112,7 @@ I intend to tell more about this radio in an upcoming post, but - spoiler alert 
         }
     },
     "url" : "https:\/\/eramons.github.io\/techblog\/post\/raspi_radio\/",
-    "wordCount" : "2747",
+    "wordCount" : "2746",
     "genre" : [ "home automation" , "raspberry pi" ]
 }
 </script>
@@ -529,7 +529,8 @@ client.disconnect()
 <div class="gblog-post__anchorwrap"><h3 id="appendix-b">Appendix B.<a data-clipboard-text="https://eramons.github.io/techblog/post/raspi_radio/#appendix-b" class="gblog-post__anchor gblog-post__anchor--right clip" aria-label="Anchor Appendix B." href="#appendix-b"><svg class="icon link"><use xlink:href="#link"></use></svg></a></h3></div>
 <p><em><strong>Discarded approach: build and install mpd on RaspberryPi OS</strong></em></p>
 <p>When installing software, it&rsquo;s always worth of it to check the official available binaries. That&rsquo;s where I started when trying out this approach, however there were no available binaries for 32-bit ARM architectures. The only way would be to build mpd from source. I&rsquo;m including the instructions to do so.</p>
-<p>The precondition if choosing this approach would be that Raspberry OS is already up and running. Connect to the raspi via SSH and then install git:</p>
+<p><em>The precondition to follow this instructions is that Raspberry OS is already up and running.</em></p>
+<p>Connect to the raspi via SSH and then install git:</p>
 <pre tabindex="0"><code>sudo apt-get instal git
 </code></pre><p>Clone the source from the official github repo:</p>
 <pre tabindex="0"><code>git clone https://github.com/MusicPlayerDaemon/MPD.git
