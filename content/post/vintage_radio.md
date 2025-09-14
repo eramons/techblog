@@ -39,11 +39,11 @@ A little plaque inside the radio told me it is a Philips, the exact model number
 
 <img src="/techblog/img/vintage_radio/plaque.png" alt="Plaque" width="250" style="display:block; margin:0 auto;">
 
-After some intensive googling, I was thrilled to find an [old Philips advertisement from year 1936](/techblog/img/vintage_radio/1936.pdf). And there it was, the Philips 521 AR, looking exactly like ours.
+After some intensive googling, in the Radio Museum website, I was thrilled to find an [old Philips advertisement from year 1936](/techblog/img/vintage_radio/1936.pdf). And there it was, the Philips 521 AR, looking exactly like ours.
 
 <img src="/techblog/img/vintage_radio/Philips_1936_2.png" alt="Philips_1936" width="700" style="display:block; margin:0 auto;">
 
-Googling a little bit more, in the Radio Museum website, I found [a photograph of the original inside of the radio](/techblog/img/vintage_radio/inside_original.jpeg). According to the website, the radio dates from year 1935 and costed 495 spanish Pesetas back then, which was a fortune.
+Navigating a little bit more through the same website, I found [a photograph of the original inside of the radio](/techblog/img/vintage_radio/inside_original.jpeg). According to the website, the radio dates from year 1935 and costed 495 spanish Pesetas back then, which was a fortune.
 
 This is how our radio looked inside:
 
