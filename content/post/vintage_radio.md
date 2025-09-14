@@ -1,6 +1,6 @@
 +++
 math = true
-date = "2025-01-02T09:00:00+02:00"
+date = "2025-09-14T09:00:00+02:00"
 title = "Vintage Internet Radio"
 tags = ["home automation", "raspberry pi"]
 highlight = true
