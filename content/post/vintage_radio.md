@@ -11,7 +11,7 @@ highlight = true
 
 _Make a broken vintage radio both beautiful and functional again._
 
-I got the privilege to inherite a wonderful antique radio from the 1930s, who had belonged to my great-grandmother. It wasn't precisely in a good state, but the exterior could for sure be restored and the interior could be replaced by a newer radio device, to have it playing music again.
+I got the privilege to inherite a wonderful antique radio from the 1930s, which belonged to my great-grandmother. It wasn't precisely in a good state, but the exterior could for sure be restored and the interior could be replaced by a newer radio device, to have it playing music again.
 
 <img src="/techblog/img/vintage_radio/front.jpg" alt="Front" width="700" style="display:block; margin:0 auto;">
 
@@ -232,8 +232,8 @@ The lyrion server side exposes a [JSON-RPC 1.0 API over HTTP](https://lyrion.org
 To handle signals emited by the physical controls programatically, I wrote a small Python script. I tried the library RPi.GPIO first. Essentially it worked, but I had some issues with timeouts: after a couple of minutes the connection to the gpio controller would be lost and the controls didn't work anymore. I moved then to [gpiozero](https://gpiozero.readthedocs.io/en/latest/) - a wrapper around RPi.GPIO - which allows handling signals coming from the physical buttons via interrupts, solving the timeout issue. 
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
-    <img src="/techblog/img/vintage_radio/rotary_encoder.png" alt="Rotary Encoder" width="330">
-    <img src="/techblog/img/vintage_radio/wiring.png" alt="Wiring" width="300">
+    <img src="/techblog/img/vintage_radio/rotary_encoder.png" alt="Rotary Encoder" width="275">
+    <img src="/techblog/img/vintage_radio/wiring.png" alt="Wiring" width="250">
 </div>
 
 The mapping between the physical pins on the raspi, logical pins, rotary encoder pins and led pin is like follows:
@@ -371,4 +371,4 @@ https://www.youtube.com/watch?v=-WgsTaBBQE0
 
  * _No GenAI was used for writing or editing this blog, since the author firmly believes in the beauty of human writing, with all its perfect imperfections._ 
 
- * _This project took many, many hours, but I didn't have to do all alone: the assembling, wiring and outside restoration of the radio was a team effort._
+ * _This project took many, many hours, but I didn't have to do everything alone: the assembling, wiring and outside restoration of the radio was a team-of-two effort._
