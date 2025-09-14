@@ -1,4 +1,7 @@
+TODO.md
+.hugo_build.lock
 notes
 content/post/DRAFT/*
 docs/post/DRAFT/*
 config.toml.old
+static/img/vintage_radio/schematics/

@@ -231,7 +231,10 @@ The lyrion server side exposes a [JSON-RPC 1.0 API over HTTP](https://lyrion.org
 
 To handle signals emited by the physical controls programatically, I wrote a small Python script. I tried the library RPi.GPIO first. Essentially it worked, but I had some issues with timeouts: after a couple of minutes the connection to the gpio controller would be lost and the controls didn't work anymore. I moved then to [gpiozero](https://gpiozero.readthedocs.io/en/latest/) - a wrapper around RPi.GPIO - which allows handling signals coming from the physical buttons via interrupts, solving the timeout issue. 
 
-<img src="/techblog/img/vintage_radio/wiring.png" alt="Wiring" width="300" style="display:block; margin:0 auto;">
+<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <img src="/techblog/img/vintage_radio/rotary_encoder.png" alt="Rotary Encoder" width="330">
+    <img src="/techblog/img/vintage_radio/wiring.png" alt="Wiring" width="300">
+</div>
 
 The mapping between the physical pins on the raspi, logical pins, rotary encoder pins and led pin is like follows:
 
@@ -327,7 +330,7 @@ Both rotary encoders are fixed to the radio wall using a small, custom-made of w
 
 And the final touch: we returned some of the old condensators to their original place on the board, to keep a little bit of that vintage feeling.
 
-<img src="/techblog/img/vintage_radio/inside.jpg" alt="Inside" width="500" style="display:block; margin:0 auto;">
+<img src="/techblog/img/vintage_radio/inside_finished.jpg" alt="Inside" width="500" style="display:block; margin:0 auto;">
 
 ### 6.2 Outside
 
