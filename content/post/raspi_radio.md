@@ -402,7 +402,9 @@ ___Discarded approach: build and install mpd on RaspberryPi OS___
 
 When installing software, it's always worth of it to check the official available binaries. That's where I started when trying out this approach, however there were no available binaries for 32-bit ARM architectures. The only way would be to build mpd from source. I'm including the instructions to do so.
 
-The precondition if choosing this approach would be that Raspberry OS is already up and running. Connect to the raspi via SSH and then install git:
+_The precondition to follow this instructions is that Raspberry OS is already up and running._
+
+ Connect to the raspi via SSH and then install git:
 ```
 sudo apt-get instal git
 ```
